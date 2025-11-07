@@ -17,7 +17,11 @@ export const clerkClient = createClerkClient({
 export async function setupAuth(app: Express) {
   // Apply Clerk middleware globally to all routes
   // This attaches auth information to req.auth
-  app.use(clerkMiddleware());
+  // Explicitly pass keys to avoid environment variable detection issues
+  app.use(clerkMiddleware({
+    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }));
   
   // No additional routes needed - Clerk handles auth UI in the frontend
   // Just return to continue server setup
