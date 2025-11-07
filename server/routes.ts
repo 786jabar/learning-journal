@@ -1,18 +1,33 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated, clerkClient } from "./clerkAuth";
 import { insertJournalEntrySchema, insertProjectSchema, insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup Replit Auth
+  // Setup Clerk Auth (replaces Replit Auth)
   await setupAuth(app);
 
   // Auth route to get current user
+  // Syncs Clerk user data to our database
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      
+      // Fetch user from Clerk
+      const clerkUser = await clerkClient.users.getUser(userId);
+      
+      // Sync user to our database
+      await storage.upsertUser({
+        id: userId,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "",
+        firstName: clerkUser.firstName || "",
+        lastName: clerkUser.lastName || "",
+        profileImageUrl: clerkUser.imageUrl || "",
+      });
+      
+      // Return user from our database
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error) {

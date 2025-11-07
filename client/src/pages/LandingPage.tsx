@@ -1,14 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { SignInButton } from "@clerk/clerk-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { BookOpen, Lightbulb, TrendingUp, Users, Zap, Shield, Cloud, CheckCircle2, Sparkles, ArrowRight, Download, Lock } from "lucide-react";
 import { SiGoogle, SiGithub, SiX, SiApple } from "react-icons/si";
 
 export default function LandingPage() {
-  const handleLogin = () => {
-    window.location.href = "/api/login";
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -35,51 +32,55 @@ export default function LandingPage() {
               all while working seamlessly offline.
             </p>
 
-            {/* Login Buttons */}
+            {/* Login Buttons using Clerk */}
             <div className="max-w-md w-full space-y-3 mb-8">
               <p className="text-sm text-muted-foreground mb-6" data-testid="text-signin-prompt">
                 Get started in seconds with your account
               </p>
               
-              <Button 
-                size="lg" 
-                onClick={handleLogin}
-                className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300"
-                data-testid="button-login-google"
-              >
-                <SiGoogle className="h-5 w-5" />
-                Continue with Google
-              </Button>
+              <SignInButton mode="modal">
+                <Button 
+                  size="lg" 
+                  className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300"
+                  data-testid="button-login-google"
+                >
+                  <SiGoogle className="h-5 w-5" />
+                  Continue with Google
+                </Button>
+              </SignInButton>
               
-              <Button 
-                size="lg" 
-                onClick={handleLogin}
-                className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e]"
-                data-testid="button-login-github"
-              >
-                <SiGithub className="h-5 w-5" />
-                Continue with GitHub
-              </Button>
+              <SignInButton mode="modal">
+                <Button 
+                  size="lg" 
+                  className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e]"
+                  data-testid="button-login-github"
+                >
+                  <SiGithub className="h-5 w-5" />
+                  Continue with GitHub
+                </Button>
+              </SignInButton>
               
-              <Button 
-                size="lg" 
-                onClick={handleLogin}
-                className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
-                data-testid="button-login-x"
-              >
-                <SiX className="h-5 w-5" />
-                Continue with X
-              </Button>
+              <SignInButton mode="modal">
+                <Button 
+                  size="lg" 
+                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+                  data-testid="button-login-x"
+                >
+                  <SiX className="h-5 w-5" />
+                  Continue with X
+                </Button>
+              </SignInButton>
               
-              <Button 
-                size="lg" 
-                onClick={handleLogin}
-                className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
-                data-testid="button-login-apple"
-              >
-                <SiApple className="h-5 w-5" />
-                Continue with Apple
-              </Button>
+              <SignInButton mode="modal">
+                <Button 
+                  size="lg" 
+                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+                  data-testid="button-login-apple"
+                >
+                  <SiApple className="h-5 w-5" />
+                  Continue with Apple
+                </Button>
+              </SignInButton>
             </div>
 
             {/* Trust Indicators */}
@@ -284,15 +285,16 @@ export default function LandingPage() {
                 Join learners who are documenting their journey and tracking their progress. 
                 Get started in seconds with your preferred account.
               </p>
-              <Button 
-                size="lg" 
-                onClick={handleLogin}
-                className="gap-2"
-                data-testid="button-cta-getstarted"
-              >
-                Get Started Free
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <SignInButton mode="modal">
+                <Button 
+                  size="lg" 
+                  className="gap-2"
+                  data-testid="button-cta-getstarted"
+                >
+                  Get Started Free
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </SignInButton>
               <p className="text-sm text-muted-foreground mt-4">
                 No credit card required • Works offline • Export anytime
               </p>
