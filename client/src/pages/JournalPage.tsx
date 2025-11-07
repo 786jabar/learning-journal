@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen } from "lucide-react";
 import { useJournals } from "@/hooks/useJournalStore";
+import { ExportDialog } from "@/components/ExportDialog";
+import { exportToJSON, exportJournalsToMarkdown, exportJournalsToPDF, type ExportFormat } from "@/lib/export";
 
 export default function JournalPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -115,6 +117,23 @@ export default function JournalPage() {
     }
   };
 
+  const handleExport = (format: ExportFormat) => {
+    try {
+      if (format === "json") {
+        exportToJSON(journals, "learning-journal-entries");
+        toast({ title: "Success", description: `Exported ${journals.length} entries as JSON` });
+      } else if (format === "markdown") {
+        exportJournalsToMarkdown(journals);
+        toast({ title: "Success", description: `Exported ${journals.length} entries as Markdown` });
+      } else if (format === "pdf") {
+        exportJournalsToPDF(journals);
+        toast({ title: "Success", description: `Exported ${journals.length} entries as PDF` });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to export entries", variant: "destructive" });
+    }
+  };
+
   // Get all unique tags for filtering
   const allTags = Array.from(new Set(journals.flatMap(j => j.tags)));
 
@@ -137,10 +156,19 @@ export default function JournalPage() {
               Document your learning experiences and reflections
             </p>
           </div>
-          <Button onClick={() => handleOpenDialog()} data-testid="button-new-journal">
-            <Plus className="h-5 w-5 mr-2" />
-            New Entry
-          </Button>
+          <div className="flex gap-2">
+            {journals.length > 0 && (
+              <ExportDialog
+                title="Export Journal Entries"
+                description="Choose a format to export your journal entries"
+                onExport={handleExport}
+              />
+            )}
+            <Button onClick={() => handleOpenDialog()} data-testid="button-new-journal">
+              <Plus className="h-5 w-5 mr-2" />
+              New Entry
+            </Button>
+          </div>
         </div>
 
         {/* Search and Filter */}

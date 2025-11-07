@@ -3,8 +3,11 @@ import {
   type InsertJournalEntry,
   type Project,
   type InsertProject,
+  type UserProfile,
+  type InsertUserProfile,
   journalEntries,
-  projects
+  projects,
+  userProfile
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
@@ -24,6 +27,10 @@ export interface IStorage {
   createProject(project: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<Project>;
   updateProject(id: string, project: InsertProject): Promise<Project | undefined>;
   deleteProject(id: string): Promise<boolean>;
+
+  // User Profile operations
+  getProfile(): Promise<UserProfile | undefined>;
+  createOrUpdateProfile(profile: InsertUserProfile): Promise<UserProfile>;
 }
 
 export class DbStorage implements IStorage {
@@ -142,6 +149,41 @@ export class DbStorage implements IStorage {
       .where(eq(projects.id, id))
       .returning();
     return results.length > 0;
+  }
+
+  // User Profile operations
+  async getProfile(): Promise<UserProfile | undefined> {
+    const results = await db
+      .select()
+      .from(userProfile)
+      .limit(1);
+    return results[0];
+  }
+
+  async createOrUpdateProfile(insertProfile: InsertUserProfile): Promise<UserProfile> {
+    const existing = await this.getProfile();
+    const now = new Date();
+
+    const profile = {
+      id: 'profile',
+      ...insertProfile,
+      updatedAt: now,
+    };
+
+    if (existing) {
+      const results = await db
+        .update(userProfile)
+        .set(profile)
+        .where(eq(userProfile.id, 'profile'))
+        .returning();
+      return results[0];
+    } else {
+      const results = await db
+        .insert(userProfile)
+        .values(profile)
+        .returning();
+      return results[0];
+    }
   }
 }
 
