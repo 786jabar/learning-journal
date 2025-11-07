@@ -1,15 +1,205 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { insertJournalEntrySchema, insertProjectSchema } from "@shared/schema";
+import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  // Journal Entry Routes
+  
+  // GET /api/journals - Get all journal entries
+  app.get("/api/journals", async (req, res) => {
+    try {
+      const journals = await storage.getAllJournals();
+      res.json(journals);
+    } catch (error) {
+      console.error("Error fetching journals:", error);
+      res.status(500).json({ error: "Failed to fetch journals" });
+    }
+  });
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  // GET /api/journals/:id - Get single journal entry
+  app.get("/api/journals/:id", async (req, res) => {
+    try {
+      const journal = await storage.getJournal(req.params.id);
+      if (!journal) {
+        return res.status(404).json({ error: "Journal not found" });
+      }
+      res.json(journal);
+    } catch (error) {
+      console.error("Error fetching journal:", error);
+      res.status(500).json({ error: "Failed to fetch journal" });
+    }
+  });
+
+  // POST /api/journals - Create new journal entry
+  app.post("/api/journals", async (req, res) => {
+    try {
+      // Accept client-provided ID, createdAt, updatedAt for offline-first sync
+      const data = {
+        ...req.body,
+        date: req.body.date ? new Date(req.body.date) : new Date(),
+        createdAt: req.body.createdAt ? new Date(req.body.createdAt) : undefined,
+        updatedAt: req.body.updatedAt ? new Date(req.body.updatedAt) : undefined,
+      };
+      
+      // Validate only the required fields
+      insertJournalEntrySchema.parse({
+        title: data.title,
+        content: data.content,
+        tags: data.tags,
+        date: data.date,
+      });
+      
+      const journal = await storage.createJournal(data);
+      res.status(201).json(journal);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error creating journal:", error);
+      res.status(500).json({ error: "Failed to create journal" });
+    }
+  });
+
+  // PUT /api/journals/:id - Update journal entry
+  app.put("/api/journals/:id", async (req, res) => {
+    try {
+      // Extract only the fields we need for validation, ignore id/createdAt/updatedAt
+      const data = {
+        title: req.body.title,
+        content: req.body.content,
+        tags: req.body.tags,
+        date: req.body.date ? new Date(req.body.date) : new Date(),
+      };
+      
+      // Validate the extracted fields
+      insertJournalEntrySchema.parse(data);
+      
+      const journal = await storage.updateJournal(req.params.id, data);
+      if (!journal) {
+        return res.status(404).json({ error: "Journal not found" });
+      }
+      res.json(journal);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error updating journal:", error);
+      res.status(500).json({ error: "Failed to update journal" });
+    }
+  });
+
+  // DELETE /api/journals/:id - Delete journal entry
+  app.delete("/api/journals/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteJournal(req.params.id);
+      if (!success) {
+        return res.status(404).json({ error: "Journal not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting journal:", error);
+      res.status(500).json({ error: "Failed to delete journal" });
+    }
+  });
+
+  // Project Routes
+  
+  // GET /api/projects - Get all projects
+  app.get("/api/projects", async (req, res) => {
+    try {
+      const projects = await storage.getAllProjects();
+      res.json(projects);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      res.status(500).json({ error: "Failed to fetch projects" });
+    }
+  });
+
+  // GET /api/projects/:id - Get single project
+  app.get("/api/projects/:id", async (req, res) => {
+    try {
+      const project = await storage.getProject(req.params.id);
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      res.json(project);
+    } catch (error) {
+      console.error("Error fetching project:", error);
+      res.status(500).json({ error: "Failed to fetch project" });
+    }
+  });
+
+  // POST /api/projects - Create new project
+  app.post("/api/projects", async (req, res) => {
+    try {
+      // Accept client-provided ID, createdAt, updatedAt for offline-first sync
+      const data = {
+        ...req.body,
+        createdAt: req.body.createdAt ? new Date(req.body.createdAt) : undefined,
+        updatedAt: req.body.updatedAt ? new Date(req.body.updatedAt) : undefined,
+      };
+      
+      // Validate only the required fields
+      insertProjectSchema.parse({
+        name: data.name,
+        description: data.description,
+        techStack: data.techStack,
+      });
+      
+      const project = await storage.createProject(data);
+      res.status(201).json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error creating project:", error);
+      res.status(500).json({ error: "Failed to create project" });
+    }
+  });
+
+  // PUT /api/projects/:id - Update project
+  app.put("/api/projects/:id", async (req, res) => {
+    try {
+      // Extract only the fields we need for validation, ignore id/createdAt/updatedAt
+      const data = {
+        name: req.body.name,
+        description: req.body.description,
+        techStack: req.body.techStack,
+      };
+      
+      // Validate the extracted fields
+      insertProjectSchema.parse(data);
+      
+      const project = await storage.updateProject(req.params.id, data);
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      res.json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error updating project:", error);
+      res.status(500).json({ error: "Failed to update project" });
+    }
+  });
+
+  // DELETE /api/projects/:id - Delete project
+  app.delete("/api/projects/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteProject(req.params.id);
+      if (!success) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      res.status(500).json({ error: "Failed to delete project" });
+    }
+  });
 
   const httpServer = createServer(app);
-
   return httpServer;
 }
