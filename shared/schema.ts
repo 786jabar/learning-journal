@@ -5,7 +5,7 @@ import { z } from "zod";
 
 // Journal Entries Schema
 export const journalEntries = pgTable("journal_entries", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id", { length: 255 }).primaryKey(),
   title: text("title").notNull(),
   content: text("content").notNull(),
   tags: text("tags").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -30,7 +30,7 @@ export type JournalEntry = typeof journalEntries.$inferSelect;
 
 // Projects Schema
 export const projects = pgTable("projects", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id", { length: 255 }).primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
   techStack: text("tech_stack").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -51,17 +51,3 @@ export const insertProjectSchema = createInsertSchema(projects).omit({
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;
 
-// Remove user schema since it's not needed for this app
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
-
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
