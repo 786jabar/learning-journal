@@ -8,6 +8,15 @@ Learning Journal is a productivity-focused web application that helps users docu
 
 ## Recent Changes
 
+### November 7, 2025 - Multi-User Authentication Complete ✅
+- Implemented Replit Auth with OpenID Connect (Google, GitHub, X, Apple)
+- Added PostgreSQL database with users and sessions tables
+- Created complete data isolation - each user sees only their own data
+- Built beautiful landing page with branded provider buttons
+- Synchronous route protection prevents unauthorized access
+- Logout functionality with session cleanup
+- Comprehensive end-to-end testing passed
+
 ### November 7, 2025 - MVP Complete ✅
 - Implemented complete offline-first architecture with IndexedDB
 - Fixed critical ID reconciliation for proper offline sync
@@ -31,9 +40,12 @@ Learning Journal is a productivity-focused web application that helps users docu
 
 ### Backend Stack
 - **Runtime**: Node.js with Express
-- **Storage**: In-memory storage (MemStorage) with IndexedDB sync
+- **Database**: PostgreSQL (Neon) for users, sessions, and data persistence
+- **Authentication**: Replit Auth with OpenID Connect (Passport.js)
+- **Session Management**: express-session with PostgreSQL storage
+- **Storage**: Database storage with user-scoped queries
 - **Validation**: Zod schemas
-- **API**: RESTful endpoints with proper error handling
+- **API**: RESTful endpoints with authentication middleware
 
 ### Key Design Decisions
 
@@ -55,15 +67,17 @@ Learning Journal is a productivity-focused web application that helps users docu
 ```
 ├── client/src/
 │   ├── components/       # Reusable UI components (Navbar, Footer, Cards)
-│   ├── pages/           # Page components (Home, Journal, Projects, About)
-│   ├── hooks/           # Custom hooks (useJournals, useProjects, useSyncQueue)
+│   ├── pages/           # Page components (Landing, Home, Journal, Projects, About)
+│   ├── hooks/           # Custom hooks (useAuth, useJournals, useProjects, useSyncQueue)
 │   ├── lib/             # Utilities (db, theme-provider, queryClient)
-│   └── App.tsx          # Main app with routing
+│   └── App.tsx          # Main app with auth-protected routing
 ├── server/
-│   ├── routes.ts        # API endpoints with validation
-│   └── storage.ts       # In-memory storage with interface
+│   ├── replitAuth.ts    # Replit Auth/OpenID Connect setup
+│   ├── routes.ts        # API endpoints with authentication
+│   ├── storage.ts       # Database storage with user scoping
+│   └── db.ts            # Drizzle ORM database connection
 ├── shared/
-│   └── schema.ts        # Shared types and Zod schemas
+│   └── schema.ts        # Shared types, Zod schemas, database schema
 └── design_guidelines.md # UI/UX design system
 ```
 
@@ -77,6 +91,15 @@ Learning Journal is a productivity-focused web application that helps users docu
 - **User Experience**: Fast, responsive, with smooth animations
 
 ## Features
+
+### Multi-User Authentication
+- **Login Providers**: Google, GitHub, X (Twitter), Apple
+- **Landing Page**: Beautiful branded buttons for each provider
+- **Session Management**: Secure PostgreSQL-backed sessions
+- **Route Protection**: Synchronous guards prevent unauthorized access
+- **Data Isolation**: Complete separation - users only see their own data
+- **Logout**: Clean session termination with redirect to landing page
+- **No Branding**: Clean UI without provider branding in app interface
 
 ### Journal Entries
 - Create, edit, delete journal entries
@@ -109,7 +132,13 @@ Learning Journal is a productivity-focused web application that helps users docu
 
 ## API Endpoints
 
-All endpoints accept and preserve client-generated IDs for offline-first sync:
+All endpoints require authentication and are scoped by userId for data isolation. Client-generated IDs are preserved for offline-first sync.
+
+### Authentication
+- `GET /api/login` - Initiate OAuth login flow
+- `GET /api/callback` - OAuth callback handler
+- `GET /api/logout` - Logout and clear session
+- `GET /api/auth/user` - Get current authenticated user
 
 ### Journals
 - `GET /api/journals` - Fetch all journal entries
@@ -119,13 +148,23 @@ All endpoints accept and preserve client-generated IDs for offline-first sync:
 - `DELETE /api/journals/:id` - Delete entry
 
 ### Projects
-- `GET /api/projects` - Fetch all projects
-- `GET /api/projects/:id` - Fetch single project
+- `GET /api/projects` - Fetch all projects (user-scoped)
+- `GET /api/projects/:id` - Fetch single project (user-scoped)
 - `POST /api/projects` - Create project (accepts id, createdAt, updatedAt)
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
+- `PUT /api/projects/:id` - Update project (user-scoped)
+- `DELETE /api/projects/:id` - Delete project (user-scoped)
+
+### Profile
+- `GET /api/profile` - Get user's profile
+- `POST /api/profile` - Create/update user profile
 
 ## Custom Hooks
+
+### useAuth()
+Returns: `{ user, isAuthenticated, isLoading }`
+- Checks authentication status via `/api/auth/user`
+- Provides current user information
+- Used for route protection and conditional rendering
 
 ### useJournals()
 Returns: `{ journals, isLoading, createJournal, updateJournal, deleteJournal, isCreating, isUpdating }`
@@ -170,6 +209,11 @@ npm run dev  # Starts both frontend (Vite) and backend (Express)
 ## Testing
 
 End-to-end testing verified:
+- ✅ Landing page with branded login buttons (Google, GitHub, X, Apple)
+- ✅ Protected route blocking for unauthenticated users
+- ✅ Authentication flow with OAuth providers
+- ✅ Complete data isolation between users
+- ✅ Logout functionality and session cleanup
 - ✅ Journal entry creation, editing, deletion
 - ✅ Project creation with tech stack management
 - ✅ Theme toggle persistence
@@ -192,10 +236,31 @@ Potential improvements for future iterations:
 
 ## Technical Notes
 
+- **Authentication**: Replit Auth with OpenID Connect supporting Google, GitHub, X, and Apple
+- **Database**: PostgreSQL (Neon) with Drizzle ORM for type-safe queries
+- **Sessions**: PostgreSQL-backed sessions with connect-pg-simple for reliability
 - **Service Worker**: Configured via vite-plugin-pwa (requires additional setup for full offline caching)
-- **Database**: Currently using in-memory storage on backend; can be migrated to PostgreSQL for production
-- **Authentication**: Not yet implemented; can add Replit Auth or other providers
 - **Deployment**: Ready for deployment via Replit publishing
+
+## Database Schema
+
+### Users Table
+- `id`: varchar (primary key, UUID from OAuth sub claim)
+- `email`: varchar (unique)
+- `firstName`, `lastName`: varchar
+- `profileImageUrl`: varchar
+- `createdAt`, `updatedAt`: timestamp
+
+### Sessions Table
+- `sid`: varchar (primary key)
+- `sess`: jsonb (session data)
+- `expire`: timestamp (session expiration)
+
+### User Data Tables
+All user data tables (`journal_entries`, `projects`, `user_profiles`) include:
+- `userId`: varchar (foreign key to users.id)
+- Cascade delete when user is removed
+- All queries filtered by userId for data isolation
 
 ## Support
 
