@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/clerk-react";
 import { useTheme } from "@/lib/theme-provider";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
-import { Moon, Sun, BookOpen, Wifi, WifiOff, RefreshCw, LogOut } from "lucide-react";
+import { Moon, Sun, BookOpen, Wifi, WifiOff, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export function Navbar() {
@@ -45,7 +46,7 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right Section: Status, Theme Toggle & Logout */}
+          {/* Right Section: Status, Theme Toggle & User Button */}
           <div className="flex items-center gap-3">
             {/* Offline Status Badge */}
             {isSyncing ? (
@@ -80,16 +81,17 @@ export function Navbar() {
               <span className="sr-only">Toggle theme</span>
             </Button>
 
-            {/* Logout Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => window.location.href = "/api/logout"}
-              data-testid="button-logout"
-            >
-              <LogOut className="h-5 w-5" />
-              <span className="sr-only">Logout</span>
-            </Button>
+            {/* Clerk User Button (includes profile & sign out) */}
+            <div data-testid="clerk-user-button">
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "h-9 w-9",
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
 
