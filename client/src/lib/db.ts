@@ -83,4 +83,8 @@ export const db = {
   async clearSyncQueue(): Promise<void> {
     await syncQueue.clear();
   },
+
+  async removeFromSyncQueue(key: string): Promise<void> {
+    await syncQueue.removeItem(key);
+  },
 };

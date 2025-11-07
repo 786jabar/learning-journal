@@ -46,12 +46,7 @@ export function useSyncQueue() {
           }
 
           // Remove from queue after successful sync
-          await db.getSyncQueue().then(async (currentQueue) => {
-            const queueStore = await import("localforage").then(lf => 
-              lf.default.createInstance({ name: "learning-journal", storeName: "syncQueue" })
-            );
-            await queueStore.removeItem(key);
-          });
+          await db.removeFromSyncQueue(key);
         } catch (error) {
           console.error("Failed to sync operation:", operation, error);
           // Keep in queue for next sync attempt
