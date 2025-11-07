@@ -1,11 +1,37 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, index, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Session storage table (required for Replit Auth)
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// Users table (required for Replit Auth)
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
 
 // Journal Entries Schema
 export const journalEntries = pgTable("journal_entries", {
   id: varchar("id", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   content: text("content").notNull(),
   tags: text("tags").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -16,6 +42,7 @@ export const journalEntries = pgTable("journal_entries", {
 
 export const insertJournalEntrySchema = createInsertSchema(journalEntries).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 }).extend({
@@ -31,6 +58,7 @@ export type JournalEntry = typeof journalEntries.$inferSelect;
 // Projects Schema
 export const projects = pgTable("projects", {
   id: varchar("id", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description").notNull(),
   techStack: text("tech_stack").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -40,6 +68,7 @@ export const projects = pgTable("projects", {
 
 export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true,
+  userId: true,
   createdAt: true,
   updatedAt: true,
 }).extend({
@@ -51,9 +80,10 @@ export const insertProjectSchema = createInsertSchema(projects).omit({
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;
 
-// User Profile Schema
+// User Profile Schema (extended profile info for each user)
 export const userProfile = pgTable("user_profile", {
-  id: varchar("id", { length: 255 }).primaryKey().default('profile'),
+  id: varchar("id", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull().unique().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   studentId: text("student_id").notNull(),
   university: text("university").notNull(),
@@ -68,6 +98,7 @@ export const userProfile = pgTable("user_profile", {
 
 export const insertUserProfileSchema = createInsertSchema(userProfile).omit({
   id: true,
+  userId: true,
   updatedAt: true,
 }).extend({
   name: z.string().min(1, "Name is required"),
