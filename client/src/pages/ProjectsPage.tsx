@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Code2 } from "lucide-react";
 import { useProjects } from "@/hooks/useProjectStore";
+import { ExportDialog } from "@/components/ExportDialog";
+import { exportToJSON, exportProjectsToMarkdown, exportProjectsToPDF, type ExportFormat } from "@/lib/export";
 
 export default function ProjectsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -110,6 +112,23 @@ export default function ProjectsPage() {
     }
   };
 
+  const handleExport = (format: ExportFormat) => {
+    try {
+      if (format === "json") {
+        exportToJSON(projects, "learning-journal-projects");
+        toast({ title: "Success", description: `Exported ${projects.length} projects as JSON` });
+      } else if (format === "markdown") {
+        exportProjectsToMarkdown(projects);
+        toast({ title: "Success", description: `Exported ${projects.length} projects as Markdown` });
+      } else if (format === "pdf") {
+        exportProjectsToPDF(projects);
+        toast({ title: "Success", description: `Exported ${projects.length} projects as PDF` });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to export projects", variant: "destructive" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -121,10 +140,19 @@ export default function ProjectsPage() {
               Track your learning projects and technologies
             </p>
           </div>
-          <Button onClick={() => handleOpenDialog()} data-testid="button-new-project">
-            <Plus className="h-5 w-5 mr-2" />
-            New Project
-          </Button>
+          <div className="flex gap-2">
+            {projects.length > 0 && (
+              <ExportDialog
+                title="Export Projects"
+                description="Choose a format to export your projects"
+                onExport={handleExport}
+              />
+            )}
+            <Button onClick={() => handleOpenDialog()} data-testid="button-new-project">
+              <Plus className="h-5 w-5 mr-2" />
+              New Project
+            </Button>
+          </div>
         </div>
 
         {/* Projects Grid */}

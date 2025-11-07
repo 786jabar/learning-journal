@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertJournalEntrySchema, insertProjectSchema } from "@shared/schema";
+import { insertJournalEntrySchema, insertProjectSchema, insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -197,6 +197,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting project:", error);
       res.status(500).json({ error: "Failed to delete project" });
+    }
+  });
+
+  // User Profile Routes
+  
+  // GET /api/profile - Get user profile
+  app.get("/api/profile", async (req, res) => {
+    try {
+      const profile = await storage.getProfile();
+      res.json(profile || null);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  // POST /api/profile - Create or update user profile
+  app.post("/api/profile", async (req, res) => {
+    try {
+      insertUserProfileSchema.parse(req.body);
+      const profile = await storage.createOrUpdateProfile(req.body);
+      res.status(200).json(profile);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error saving profile:", error);
+      res.status(500).json({ error: "Failed to save profile" });
     }
   });
 
