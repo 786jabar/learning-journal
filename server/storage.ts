@@ -1,150 +1,148 @@
 import { 
-  type User, 
-  type InsertUser,
   type JournalEntry,
   type InsertJournalEntry,
   type Project,
-  type InsertProject
+  type InsertProject,
+  journalEntries,
+  projects
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { eq, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations (existing)
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-
   // Journal Entry operations
   getAllJournals(): Promise<JournalEntry[]>;
   getJournal(id: string): Promise<JournalEntry | undefined>;
-  createJournal(journal: InsertJournalEntry): Promise<JournalEntry>;
+  createJournal(journal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<JournalEntry>;
   updateJournal(id: string, journal: InsertJournalEntry): Promise<JournalEntry | undefined>;
   deleteJournal(id: string): Promise<boolean>;
 
   // Project operations
   getAllProjects(): Promise<Project[]>;
   getProject(id: string): Promise<Project | undefined>;
-  createProject(project: InsertProject): Promise<Project>;
+  createProject(project: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<Project>;
   updateProject(id: string, project: InsertProject): Promise<Project | undefined>;
   deleteProject(id: string): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private journals: Map<string, JournalEntry>;
-  private projects: Map<string, Project>;
-
-  constructor() {
-    this.users = new Map();
-    this.journals = new Map();
-    this.projects = new Map();
-  }
-
-  // User operations
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
-  }
-
+export class DbStorage implements IStorage {
   // Journal Entry operations
   async getAllJournals(): Promise<JournalEntry[]> {
-    return Array.from(this.journals.values()).sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    const results = await db
+      .select()
+      .from(journalEntries)
+      .orderBy(desc(journalEntries.date));
+    return results;
   }
 
   async getJournal(id: string): Promise<JournalEntry | undefined> {
-    return this.journals.get(id);
+    const results = await db
+      .select()
+      .from(journalEntries)
+      .where(eq(journalEntries.id, id))
+      .limit(1);
+    return results[0];
   }
 
   async createJournal(insertJournal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<JournalEntry> {
     const id = insertJournal.id || randomUUID();
     const now = new Date();
-    const journal: JournalEntry = {
-      ...insertJournal,
+    
+    const journal = {
       id,
+      title: insertJournal.title,
+      content: insertJournal.content,
+      tags: insertJournal.tags || [],
       date: insertJournal.date || now,
       createdAt: insertJournal.createdAt || now,
       updatedAt: insertJournal.updatedAt || now,
     };
-    this.journals.set(id, journal);
-    return journal;
+
+    const results = await db
+      .insert(journalEntries)
+      .values(journal)
+      .returning();
+    return results[0];
   }
 
   async updateJournal(id: string, insertJournal: InsertJournalEntry): Promise<JournalEntry | undefined> {
-    const existing = this.journals.get(id);
-    if (!existing) return undefined;
-
-    const updated: JournalEntry = {
-      ...existing,
-      ...insertJournal,
-      id: existing.id,
-      date: insertJournal.date || existing.date,
-      createdAt: existing.createdAt,
-      updatedAt: new Date(),
-    };
-    this.journals.set(id, updated);
-    return updated;
+    const results = await db
+      .update(journalEntries)
+      .set({
+        ...insertJournal,
+        updatedAt: new Date(),
+      })
+      .where(eq(journalEntries.id, id))
+      .returning();
+    return results[0];
   }
 
   async deleteJournal(id: string): Promise<boolean> {
-    return this.journals.delete(id);
+    const results = await db
+      .delete(journalEntries)
+      .where(eq(journalEntries.id, id))
+      .returning();
+    return results.length > 0;
   }
 
   // Project operations
   async getAllProjects(): Promise<Project[]> {
-    return Array.from(this.projects.values()).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    const results = await db
+      .select()
+      .from(projects)
+      .orderBy(desc(projects.createdAt));
+    return results;
   }
 
   async getProject(id: string): Promise<Project | undefined> {
-    return this.projects.get(id);
+    const results = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.id, id))
+      .limit(1);
+    return results[0];
   }
 
   async createProject(insertProject: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<Project> {
     const id = insertProject.id || randomUUID();
     const now = new Date();
-    const project: Project = {
-      ...insertProject,
+    
+    const project = {
       id,
+      name: insertProject.name,
+      description: insertProject.description,
+      techStack: insertProject.techStack || [],
       createdAt: insertProject.createdAt || now,
       updatedAt: insertProject.updatedAt || now,
     };
-    this.projects.set(id, project);
-    return project;
+
+    const results = await db
+      .insert(projects)
+      .values(project)
+      .returning();
+    return results[0];
   }
 
   async updateProject(id: string, insertProject: InsertProject): Promise<Project | undefined> {
-    const existing = this.projects.get(id);
-    if (!existing) return undefined;
-
-    const updated: Project = {
-      ...existing,
-      ...insertProject,
-      id: existing.id,
-      createdAt: existing.createdAt,
-      updatedAt: new Date(),
-    };
-    this.projects.set(id, updated);
-    return updated;
+    const results = await db
+      .update(projects)
+      .set({
+        ...insertProject,
+        updatedAt: new Date(),
+      })
+      .where(eq(projects.id, id))
+      .returning();
+    return results[0];
   }
 
   async deleteProject(id: string): Promise<boolean> {
-    return this.projects.delete(id);
+    const results = await db
+      .delete(projects)
+      .where(eq(projects.id, id))
+      .returning();
+    return results.length > 0;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DbStorage();
