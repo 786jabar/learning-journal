@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Lightbulb, TrendingUp, Users } from "lucide-react";
+import { SiGoogle, SiGithub, SiX, SiApple } from "react-icons/si";
 
 export default function LandingPage() {
   const handleLogin = () => {
@@ -22,14 +23,50 @@ export default function LandingPage() {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
             Document your learning journey, track projects, and grow your knowledge — all in one beautiful, offline-first app.
           </p>
-          <Button 
-            size="lg" 
-            onClick={handleLogin}
-            className="text-lg px-8 py-6"
-            data-testid="button-login"
-          >
-            Sign in with Replit
-          </Button>
+          
+          <div className="max-w-md mx-auto space-y-3">
+            <p className="text-sm text-muted-foreground mb-4">Sign in with your preferred account</p>
+            
+            <Button 
+              size="lg" 
+              onClick={handleLogin}
+              className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300"
+              data-testid="button-login-google"
+            >
+              <SiGoogle className="h-5 w-5" />
+              Continue with Google
+            </Button>
+            
+            <Button 
+              size="lg" 
+              onClick={handleLogin}
+              className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e]"
+              data-testid="button-login-github"
+            >
+              <SiGithub className="h-5 w-5" />
+              Continue with GitHub
+            </Button>
+            
+            <Button 
+              size="lg" 
+              onClick={handleLogin}
+              className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+              data-testid="button-login-x"
+            >
+              <SiX className="h-5 w-5" />
+              Continue with X
+            </Button>
+            
+            <Button 
+              size="lg" 
+              onClick={handleLogin}
+              className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+              data-testid="button-login-apple"
+            >
+              <SiApple className="h-5 w-5" />
+              Continue with Apple
+            </Button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
