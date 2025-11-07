@@ -51,3 +51,36 @@ export const insertProjectSchema = createInsertSchema(projects).omit({
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;
 
+// User Profile Schema
+export const userProfile = pgTable("user_profile", {
+  id: varchar("id", { length: 255 }).primaryKey().default('profile'),
+  name: text("name").notNull(),
+  studentId: text("student_id").notNull(),
+  university: text("university").notNull(),
+  program: text("program").notNull(),
+  email: text("email").notNull(),
+  courseDirector: text("course_director").notNull(),
+  courseDirectorEmail: text("course_director_email").notNull(),
+  profilePicture: text("profile_picture"),
+  bio: text("bio"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertUserProfileSchema = createInsertSchema(userProfile).omit({
+  id: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Name is required"),
+  studentId: z.string().min(1, "Student ID is required"),
+  university: z.string().min(1, "University is required"),
+  program: z.string().min(1, "Program is required"),
+  email: z.string().email("Invalid email"),
+  courseDirector: z.string().min(1, "Course director name is required"),
+  courseDirectorEmail: z.string().email("Invalid course director email"),
+  profilePicture: z.string().nullable().optional().transform(val => val || undefined),
+  bio: z.string().nullable().optional().transform(val => val || undefined),
+});
+
+export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
+export type UserProfile = typeof userProfile.$inferSelect;
+
