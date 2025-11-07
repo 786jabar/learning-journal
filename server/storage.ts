@@ -5,59 +5,89 @@ import {
   type InsertProject,
   type UserProfile,
   type InsertUserProfile,
+  type User,
+  type UpsertUser,
   journalEntries,
   projects,
-  userProfile
+  userProfile,
+  users
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
+  // User operations (required for Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+
   // Journal Entry operations
-  getAllJournals(): Promise<JournalEntry[]>;
-  getJournal(id: string): Promise<JournalEntry | undefined>;
-  createJournal(journal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<JournalEntry>;
-  updateJournal(id: string, journal: InsertJournalEntry): Promise<JournalEntry | undefined>;
-  deleteJournal(id: string): Promise<boolean>;
+  getAllJournals(userId: string): Promise<JournalEntry[]>;
+  getJournal(id: string, userId: string): Promise<JournalEntry | undefined>;
+  createJournal(journal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<JournalEntry>;
+  updateJournal(id: string, journal: InsertJournalEntry, userId: string): Promise<JournalEntry | undefined>;
+  deleteJournal(id: string, userId: string): Promise<boolean>;
 
   // Project operations
-  getAllProjects(): Promise<Project[]>;
-  getProject(id: string): Promise<Project | undefined>;
-  createProject(project: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<Project>;
-  updateProject(id: string, project: InsertProject): Promise<Project | undefined>;
-  deleteProject(id: string): Promise<boolean>;
+  getAllProjects(userId: string): Promise<Project[]>;
+  getProject(id: string, userId: string): Promise<Project | undefined>;
+  createProject(project: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<Project>;
+  updateProject(id: string, project: InsertProject, userId: string): Promise<Project | undefined>;
+  deleteProject(id: string, userId: string): Promise<boolean>;
 
   // User Profile operations
-  getProfile(): Promise<UserProfile | undefined>;
-  createOrUpdateProfile(profile: InsertUserProfile): Promise<UserProfile>;
+  getProfile(userId: string): Promise<UserProfile | undefined>;
+  createOrUpdateProfile(profile: InsertUserProfile, userId: string): Promise<UserProfile>;
 }
 
 export class DbStorage implements IStorage {
+  // User operations (required for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
   // Journal Entry operations
-  async getAllJournals(): Promise<JournalEntry[]> {
+  async getAllJournals(userId: string): Promise<JournalEntry[]> {
     const results = await db
       .select()
       .from(journalEntries)
+      .where(eq(journalEntries.userId, userId))
       .orderBy(desc(journalEntries.date));
     return results;
   }
 
-  async getJournal(id: string): Promise<JournalEntry | undefined> {
+  async getJournal(id: string, userId: string): Promise<JournalEntry | undefined> {
     const results = await db
       .select()
       .from(journalEntries)
-      .where(eq(journalEntries.id, id))
+      .where(sql`${journalEntries.id} = ${id} AND ${journalEntries.userId} = ${userId}`)
       .limit(1);
     return results[0];
   }
 
-  async createJournal(insertJournal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<JournalEntry> {
+  async createJournal(insertJournal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<JournalEntry> {
     const id = insertJournal.id || randomUUID();
     const now = new Date();
     
     const journal = {
       id,
+      userId,
       title: insertJournal.title,
       content: insertJournal.content,
       tags: insertJournal.tags || [],
@@ -73,50 +103,52 @@ export class DbStorage implements IStorage {
     return results[0];
   }
 
-  async updateJournal(id: string, insertJournal: InsertJournalEntry): Promise<JournalEntry | undefined> {
+  async updateJournal(id: string, insertJournal: InsertJournalEntry, userId: string): Promise<JournalEntry | undefined> {
     const results = await db
       .update(journalEntries)
       .set({
         ...insertJournal,
         updatedAt: new Date(),
       })
-      .where(eq(journalEntries.id, id))
+      .where(sql`${journalEntries.id} = ${id} AND ${journalEntries.userId} = ${userId}`)
       .returning();
     return results[0];
   }
 
-  async deleteJournal(id: string): Promise<boolean> {
+  async deleteJournal(id: string, userId: string): Promise<boolean> {
     const results = await db
       .delete(journalEntries)
-      .where(eq(journalEntries.id, id))
+      .where(sql`${journalEntries.id} = ${id} AND ${journalEntries.userId} = ${userId}`)
       .returning();
     return results.length > 0;
   }
 
   // Project operations
-  async getAllProjects(): Promise<Project[]> {
+  async getAllProjects(userId: string): Promise<Project[]> {
     const results = await db
       .select()
       .from(projects)
+      .where(eq(projects.userId, userId))
       .orderBy(desc(projects.createdAt));
     return results;
   }
 
-  async getProject(id: string): Promise<Project | undefined> {
+  async getProject(id: string, userId: string): Promise<Project | undefined> {
     const results = await db
       .select()
       .from(projects)
-      .where(eq(projects.id, id))
+      .where(sql`${projects.id} = ${id} AND ${projects.userId} = ${userId}`)
       .limit(1);
     return results[0];
   }
 
-  async createProject(insertProject: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }): Promise<Project> {
+  async createProject(insertProject: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<Project> {
     const id = insertProject.id || randomUUID();
     const now = new Date();
     
     const project = {
       id,
+      userId,
       name: insertProject.name,
       description: insertProject.description,
       techStack: insertProject.techStack || [],
@@ -131,41 +163,43 @@ export class DbStorage implements IStorage {
     return results[0];
   }
 
-  async updateProject(id: string, insertProject: InsertProject): Promise<Project | undefined> {
+  async updateProject(id: string, insertProject: InsertProject, userId: string): Promise<Project | undefined> {
     const results = await db
       .update(projects)
       .set({
         ...insertProject,
         updatedAt: new Date(),
       })
-      .where(eq(projects.id, id))
+      .where(sql`${projects.id} = ${id} AND ${projects.userId} = ${userId}`)
       .returning();
     return results[0];
   }
 
-  async deleteProject(id: string): Promise<boolean> {
+  async deleteProject(id: string, userId: string): Promise<boolean> {
     const results = await db
       .delete(projects)
-      .where(eq(projects.id, id))
+      .where(sql`${projects.id} = ${id} AND ${projects.userId} = ${userId}`)
       .returning();
     return results.length > 0;
   }
 
   // User Profile operations
-  async getProfile(): Promise<UserProfile | undefined> {
+  async getProfile(userId: string): Promise<UserProfile | undefined> {
     const results = await db
       .select()
       .from(userProfile)
+      .where(eq(userProfile.userId, userId))
       .limit(1);
     return results[0];
   }
 
-  async createOrUpdateProfile(insertProfile: InsertUserProfile): Promise<UserProfile> {
-    const existing = await this.getProfile();
+  async createOrUpdateProfile(insertProfile: InsertUserProfile, userId: string): Promise<UserProfile> {
+    const existing = await this.getProfile(userId);
     const now = new Date();
 
     const profile = {
-      id: 'profile',
+      id: randomUUID(),
+      userId,
       ...insertProfile,
       updatedAt: now,
     };
@@ -173,8 +207,11 @@ export class DbStorage implements IStorage {
     if (existing) {
       const results = await db
         .update(userProfile)
-        .set(profile)
-        .where(eq(userProfile.id, 'profile'))
+        .set({
+          ...insertProfile,
+          updatedAt: now,
+        })
+        .where(eq(userProfile.userId, userId))
         .returning();
       return results[0];
     } else {
