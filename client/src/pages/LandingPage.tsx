@@ -7,41 +7,47 @@ import { SiGoogle, SiGithub, SiX, SiApple } from "react-icons/si";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container relative mx-auto px-4 py-20 sm:py-28">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Background Gradients */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+      </div>
+
+      {/* Hero Section - Glassmorphism */}
+      <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-20">
+        <div className="container relative mx-auto">
           <div className="flex flex-col items-center text-center">
-            {/* Badge */}
-            <Badge className="mb-6 gap-1" variant="secondary" data-testid="badge-pwa">
-              <Sparkles className="h-3 w-3" />
+            {/* Floating Badge */}
+            <Badge className="mb-8 gap-2 glass-card animate-float px-6 py-2 text-sm" variant="secondary" data-testid="badge-pwa">
+              <Sparkles className="h-4 w-4" />
               Progressive Web App
             </Badge>
 
-            {/* Main Heading */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-tight" data-testid="heading-main">
+            {/* Main Heading with Gradient Text */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-8 leading-tight max-w-5xl" data-testid="heading-main">
               Your Learning Journey,
               <br />
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Beautifully Documented</span>
+              <span className="gradient-text">Beautifully Documented</span>
             </h1>
 
             {/* Subheading */}
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mb-12 leading-relaxed" data-testid="text-description">
               Track your learning progress with journal entries, manage projects, and visualize your growth — 
-              all while working seamlessly offline.
+              all while working seamlessly offline with stunning glassmorphism design.
             </p>
 
-            {/* Login Buttons using Clerk */}
-            <div className="max-w-md w-full space-y-3 mb-8">
-              <p className="text-sm text-muted-foreground mb-6" data-testid="text-signin-prompt">
+            {/* Glass Card for Login Buttons */}
+            <div className="glass-card rounded-3xl p-8 max-w-md w-full space-y-4 mb-12 animate-glow">
+              <p className="text-sm text-foreground/80 mb-6 font-medium" data-testid="text-signin-prompt">
                 Get started in seconds with your account
               </p>
               
               <SignInButton mode="modal">
                 <Button 
                   size="lg" 
-                  className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300"
+                  className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300 hover-elevate"
                   data-testid="button-login-google"
                 >
                   <SiGoogle className="h-5 w-5" />
@@ -52,7 +58,7 @@ export default function LandingPage() {
               <SignInButton mode="modal">
                 <Button 
                   size="lg" 
-                  className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e]"
+                  className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e] hover-elevate"
                   data-testid="button-login-github"
                 >
                   <SiGithub className="h-5 w-5" />
@@ -63,7 +69,7 @@ export default function LandingPage() {
               <SignInButton mode="modal">
                 <Button 
                   size="lg" 
-                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black hover-elevate"
                   data-testid="button-login-x"
                 >
                   <SiX className="h-5 w-5" />
@@ -74,7 +80,7 @@ export default function LandingPage() {
               <SignInButton mode="modal">
                 <Button 
                   size="lg" 
-                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black"
+                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black hover-elevate"
                   data-testid="button-login-apple"
                 >
                   <SiApple className="h-5 w-5" />
@@ -83,18 +89,18 @@ export default function LandingPage() {
               </SignInButton>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
+            {/* Trust Indicators - Glass Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
                 <Shield className="h-4 w-4 text-primary" />
                 <span>Secure & Private</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Cloud className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
+                <Cloud className="h-4 w-4 text-secondary" />
                 <span>Works Offline</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
+                <Zap className="h-4 w-4 text-accent" />
                 <span>Lightning Fast</span>
               </div>
             </div>
@@ -102,163 +108,155 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+      {/* Features Grid - Glassmorphism Cards */}
+      <section className="py-24 px-4 relative">
+        <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4" data-testid="heading-features">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6 gradient-text" data-testid="heading-features">
               Everything You Need to Learn Better
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               A powerful set of features designed to help you document, organize, and analyze your learning journey
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover-elevate" data-testid="card-feature-journal">
-              <CardHeader>
-                <div className="h-12 w-12 bg-gradient-to-br from-primary to-primary/60 rounded-xl flex items-center justify-center mb-4">
-                  <BookOpen className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <CardTitle>Rich Journal Entries</CardTitle>
-                <CardDescription>
-                  Write detailed entries with full Markdown support, code blocks, and rich formatting
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300" data-testid="card-feature-journal">
+              <div className="h-14 w-14 gradient-bg rounded-2xl flex items-center justify-center mb-6 animate-glow">
+                <BookOpen className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Rich Journal Entries</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Write detailed entries with full Markdown support, code blocks, and rich formatting
+              </p>
+            </div>
 
-            <Card className="hover-elevate" data-testid="card-feature-projects">
-              <CardHeader>
-                <div className="h-12 w-12 bg-gradient-to-br from-primary to-primary/60 rounded-xl flex items-center justify-center mb-4">
-                  <Lightbulb className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <CardTitle>Project Tracking</CardTitle>
-                <CardDescription>
-                  Manage your learning projects with tech stack tracking and progress monitoring
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300" data-testid="card-feature-projects">
+              <div className="h-14 w-14 gradient-bg rounded-2xl flex items-center justify-center mb-6 animate-glow">
+                <Lightbulb className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Project Tracking</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Manage your learning projects with tech stack tracking and progress monitoring
+              </p>
+            </div>
 
-            <Card className="hover-elevate" data-testid="card-feature-analytics">
-              <CardHeader>
-                <div className="h-12 w-12 bg-gradient-to-br from-primary to-primary/60 rounded-xl flex items-center justify-center mb-4">
-                  <TrendingUp className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <CardTitle>Visual Analytics</CardTitle>
-                <CardDescription>
-                  Beautiful charts and graphs to visualize your learning patterns and progress
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300" data-testid="card-feature-analytics">
+              <div className="h-14 w-14 gradient-bg rounded-2xl flex items-center justify-center mb-6 animate-glow">
+                <TrendingUp className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Visual Analytics</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Beautiful charts and graphs to visualize your learning patterns and progress
+              </p>
+            </div>
 
-            <Card className="hover-elevate" data-testid="card-feature-multiuser">
-              <CardHeader>
-                <div className="h-12 w-12 bg-gradient-to-br from-primary to-primary/60 rounded-xl flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <CardTitle>Personal Workspace</CardTitle>
-                <CardDescription>
-                  Your own secure, private space with complete data isolation from other users
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300" data-testid="card-feature-multiuser">
+              <div className="h-14 w-14 gradient-bg rounded-2xl flex items-center justify-center mb-6 animate-glow">
+                <Users className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Personal Workspace</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Your own secure, private space with complete data isolation from other users
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Key Benefits Section */}
-      <section className="py-20 bg-gradient-to-br from-muted/30 via-background to-muted/20">
-        <div className="container mx-auto px-4">
+      {/* Key Benefits Section - Minimalist with Glass Accents */}
+      <section className="py-24 px-4">
+        <div className="container mx-auto">
           <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Why Choose Learning Journal?
+            <div className="text-center mb-20">
+              <h2 className="text-4xl sm:text-5xl font-bold mb-6">
+                Why Choose <span className="gradient-text">Learning Journal</span>?
               </h2>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 Built with modern web technologies for the best learning experience
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Cloud className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <Cloud className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Offline-First Architecture</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Offline-First Architecture</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Continue working even without internet. Your data is stored locally and syncs automatically when you're back online.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Lock className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <Lock className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Private & Secure</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Private & Secure</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Your data is completely isolated. Each user has their own secure workspace with encrypted sessions.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <CheckCircle2 className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Markdown Support</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Markdown Support</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Write with full Markdown formatting, including code blocks, tables, lists, and more with live preview.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Download className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <Download className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Export Your Data</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Export Your Data</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Own your content. Export journal entries and projects as JSON, Markdown, or PDF anytime.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Sparkles className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Beautiful Dark Mode</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Beautiful Dark Mode</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Seamlessly switch between light and dark themes. Your preference is saved and synced across devices.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="glass-card rounded-2xl p-6 flex gap-4">
                 <div className="flex-shrink-0">
-                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-primary" />
+                  <div className="h-12 w-12 gradient-bg rounded-xl flex items-center justify-center">
+                    <TrendingUp className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Track Your Progress</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2">Track Your Progress</h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     Visualize your learning journey with charts, statistics, and insights about your study patterns.
                   </p>
                 </div>
@@ -268,51 +266,49 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-primary/10">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto border-2" data-testid="card-cta">
-            <CardContent className="pt-12 pb-12 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="h-16 w-16 bg-gradient-to-br from-primary to-primary/60 rounded-2xl flex items-center justify-center">
-                  <BookOpen className="h-8 w-8 text-primary-foreground" />
-                </div>
+      {/* CTA Section - Glass Card with Gradient */}
+      <section className="py-24 px-4">
+        <div className="container mx-auto">
+          <div className="glass-card rounded-3xl p-12 max-w-4xl mx-auto text-center animate-glow" data-testid="card-cta">
+            <div className="flex justify-center mb-8">
+              <div className="h-20 w-20 gradient-bg rounded-3xl flex items-center justify-center">
+                <BookOpen className="h-10 w-10 text-white" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Start Your Learning Journal Today
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join learners who are documenting their journey and tracking their progress. 
-                Get started in seconds with your preferred account.
-              </p>
-              <SignInButton mode="modal">
-                <Button 
-                  size="lg" 
-                  className="gap-2"
-                  data-testid="button-cta-getstarted"
-                >
-                  Get Started Free
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </SignInButton>
-              <p className="text-sm text-muted-foreground mt-4">
-                No credit card required • Works offline • Export anytime
-              </p>
-            </CardContent>
-          </Card>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6">
+              Start Your <span className="gradient-text">Learning Journal</span> Today
+            </h2>
+            <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              Join learners who are documenting their journey and tracking their progress. 
+              Get started in seconds with your preferred account.
+            </p>
+            <SignInButton mode="modal">
+              <Button 
+                size="lg" 
+                className="gap-2 gradient-bg text-white hover:opacity-90 transition-opacity text-lg px-8 py-6"
+                data-testid="button-cta-getstarted"
+              >
+                Get Started Free
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </SignInButton>
+            <p className="text-sm text-muted-foreground mt-6">
+              No credit card required • Works offline • Export anytime
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t bg-card">
-        <div className="container mx-auto px-4 py-12">
+      {/* Footer - Glass Effect */}
+      <footer className="glass border-t px-4 py-12">
+        <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-primary-foreground" />
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 gradient-bg rounded-2xl flex items-center justify-center">
+                <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="font-semibold">Learning Journal</p>
+                <p className="font-bold text-lg">Learning Journal</p>
                 <p className="text-sm text-muted-foreground">Document. Organize. Grow.</p>
               </div>
             </div>
@@ -322,7 +318,7 @@ export default function LandingPage() {
                 © {new Date().getFullYear()} Learning Journal. All rights reserved.
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Progressive Web App • Offline-First • Open Source
+                Progressive Web App • Offline-First • Glassmorphism Design
               </p>
             </div>
           </div>
