@@ -48,33 +48,40 @@
 
   --popover-border: 240 5% 88%;
 
-  --primary: 221 83% 53%;
+  --primary: 250 100% 65%;
 
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 240 5% 90%;
+  --secondary: 330 85% 60%;
 
-  --secondary-foreground: 240 10% 10%;
+  --secondary-foreground: 0 0% 100%;
 
   --muted: 240 5% 94%;
 
   --muted-foreground: 240 4% 46%;
 
-  --accent: 240 6% 92%;
+  --accent: 190 95% 55%;
 
-  --accent-foreground: 240 10% 10%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
 
   --destructive-foreground: 0 0% 98%;
 
   --input: 240 6% 85%;
-  --ring: 221 83% 53%;
-  --chart-1: 221 83% 53%;
-  --chart-2: 142 76% 36%;
-  --chart-3: 262 83% 58%;
-  --chart-4: 32 95% 44%;
-  --chart-5: 340 82% 52%;
+  --ring: 250 100% 65%;
+  --chart-1: 250 100% 65%;
+  --chart-2: 142 76% 50%;
+  --chart-3: 330 85% 60%;
+  --chart-4: 32 100% 55%;
+  --chart-5: 280 90% 65%;
+  
+  /* Glassmorphism & Gradient Colors */
+  --gradient-start: 250 100% 65%;
+  --gradient-middle: 330 85% 60%;
+  --gradient-end: 190 95% 55%;
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
 
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: Georgia, serif;
@@ -166,33 +173,40 @@
 
   --popover-border: 240 5% 14%;
 
-  --primary: 221 83% 53%;
+  --primary: 250 100% 70%;
 
-  --primary-foreground: 210 40% 98%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 240 5% 14%;
+  --secondary: 330 85% 65%;
 
-  --secondary-foreground: 0 0% 98%;
+  --secondary-foreground: 0 0% 100%;
 
   --muted: 240 5% 12%;
 
   --muted-foreground: 240 5% 64%;
 
-  --accent: 240 5% 14%;
+  --accent: 190 95% 60%;
 
-  --accent-foreground: 0 0% 98%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
 
   --destructive-foreground: 0 0% 98%;
 
   --input: 240 5% 18%;
-  --ring: 221 83% 53%;
-  --chart-1: 221 83% 70%;
+  --ring: 250 100% 70%;
+  --chart-1: 250 100% 70%;
   --chart-2: 142 76% 65%;
-  --chart-3: 262 83% 75%;
-  --chart-4: 32 95% 70%;
-  --chart-5: 340 82% 68%;
+  --chart-3: 330 85% 65%;
+  --chart-4: 32 100% 65%;
+  --chart-5: 280 90% 70%;
+  
+  /* Glassmorphism & Gradient Colors - Dark Mode */
+  --gradient-start: 250 100% 70%;
+  --gradient-middle: 330 85% 65%;
+  --gradient-end: 190 95% 60%;
+  --glass-bg: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.1);
 
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.15);
   --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.20);
@@ -312,5 +326,73 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+  
+  /* Glassmorphism Effects */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+  }
+  
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, 
+      hsl(var(--gradient-start)), 
+      hsl(var(--gradient-middle)), 
+      hsl(var(--gradient-end)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Gradient Backgrounds */
+  .gradient-bg {
+    background: linear-gradient(135deg, 
+      hsl(var(--gradient-start)), 
+      hsl(var(--gradient-middle)), 
+      hsl(var(--gradient-end)));
+  }
+  
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(135deg, 
+      hsl(var(--gradient-start)), 
+      hsl(var(--gradient-middle)), 
+      hsl(var(--gradient-end)));
+    background-clip: padding-box;
+  }
+  
+  /* Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.5); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite;
   }
 }
