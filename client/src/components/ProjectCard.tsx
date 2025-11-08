@@ -12,14 +12,14 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   return (
-    <Card className="hover-elevate transition-all duration-200 overflow-visible h-full flex flex-col" data-testid={`card-project-${project.id}`}>
+    <Card className="glass-card hover:scale-105 transition-all duration-300 overflow-visible h-full flex flex-col border-l-4 border-l-secondary" data-testid={`card-project-${project.id}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-primary/10 rounded-md">
-            <Code2 className="h-5 w-5 text-primary" />
+          <div className="p-3 gradient-bg rounded-xl">
+            <Code2 className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg line-clamp-1" data-testid={`text-project-name-${project.id}`}>
+            <h3 className="font-bold text-lg line-clamp-1" data-testid={`text-project-name-${project.id}`}>
               {project.name}
             </h3>
           </div>
@@ -31,18 +31,17 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           {project.description}
         </p>
 
-        <div className="space-y-2">
-          <h4 className="text-xs font-medium text-muted-foreground">Tech Stack</h4>
+        <div className="space-y-3">
+          <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Tech Stack</h4>
           <div className="flex flex-wrap gap-2">
             {project.techStack.map((tech, index) => (
-              <Badge 
+              <div 
                 key={index} 
-                variant="default" 
-                className="text-xs font-mono"
+                className="gradient-bg px-3 py-1 rounded-full text-xs font-mono font-medium text-white"
                 data-testid={`badge-project-tech-${project.id}-${index}`}
               >
                 {tech}
-              </Badge>
+              </div>
             ))}
           </div>
         </div>
