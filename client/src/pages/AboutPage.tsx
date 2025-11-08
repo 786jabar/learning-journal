@@ -139,7 +139,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-semibold mb-6 gradient-text">Learning Journal Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature, index) => (
-                <Card key={index} className="glass-card hover:scale-105 transition-all duration-300 overflow-visible">
+                <Card key={index} className="glass-card hover-elevate overflow-visible">
                   <CardHeader>
                     <div className="flex items-center gap-3">
                       <div className="p-3 gradient-bg rounded-xl">
@@ -431,7 +431,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-semibold mb-6 gradient-text">Learning Journal Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card key={index} className="glass-card hover:scale-105 transition-all duration-300 overflow-visible">
+              <Card key={index} className="glass-card hover-elevate overflow-visible">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="p-3 gradient-bg rounded-xl">
