@@ -18,7 +18,7 @@ export function JournalCard({ entry, onEdit, onDelete }: JournalCardProps) {
     : entry.content;
 
   return (
-    <Card className="glass-card hover:scale-105 transition-all duration-300 overflow-visible h-full flex flex-col border-l-4 border-l-primary" data-testid={`card-journal-${entry.id}`}>
+    <Card className="glass-card hover:scale-105 transition-all duration-300 overflow-visible h-full flex flex-col" data-testid={`card-journal-${entry.id}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-bold text-lg line-clamp-2" data-testid={`text-journal-title-${entry.id}`}>
