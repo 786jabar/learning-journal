@@ -8,6 +8,29 @@ Learning Journal is a productivity-focused web application that helps users docu
 
 ## Recent Changes
 
+### November 8, 2025 - Critical Auth Fix: Legacy User Migration ✅
+- **Problem**: Users with legacy accounts couldn't sign in with Clerk (duplicate email error)
+- **Root Cause**: `onConflictDoUpdate` cannot update primary keys, causing ID mismatch
+- **Solution**: Implemented transactional migration in `upsertUser`:
+  1. Look up existing user by email
+  2. If found with different ID, UPDATE primary key to Clerk ID
+  3. ON UPDATE CASCADE automatically migrates all journals, projects, and profiles
+  4. If not found, insert new user normally
+- **Result**: Legacy users can now sign in with Clerk and access all their data
+- **Database Changes**: Added ON UPDATE CASCADE to all foreign key constraints
+- **Verified**: Architect-approved implementation preserves all user data during migration
+
+### November 8, 2025 - Profile Page: Glassmorphism Redesign ✅
+- **Complete redesign** of About/Profile page with stunning visual effects:
+  - Frosted glass cards with backdrop blur effects
+  - Vibrant gradient backgrounds and animated floating avatar
+  - Glass info boxes with gradient icons for profile data
+  - Gradient text headings and smooth hover elevations
+- **Profile Picture**: URL-based input (not file upload)
+  - Users can provide a URL to their profile picture
+  - Future enhancement: Consider adding file upload capability
+- **Design Compliance**: Architect-verified removal of prohibited hover transforms
+
 ### November 8, 2025 - Stunning UI Redesign with Glassmorphism ✅
 - **Complete UI transformation** combining three design aesthetics:
   - ✨ Modern Glassmorphism with frosted glass effects and backdrop blur
