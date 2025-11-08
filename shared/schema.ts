@@ -31,7 +31,7 @@ export type User = typeof users.$inferSelect;
 // Journal Entries Schema
 export const journalEntries = pgTable("journal_entries", {
   id: varchar("id", { length: 255 }).primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
   title: text("title").notNull(),
   content: text("content").notNull(),
   tags: text("tags").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -58,7 +58,7 @@ export type JournalEntry = typeof journalEntries.$inferSelect;
 // Projects Schema
 export const projects = pgTable("projects", {
   id: varchar("id", { length: 255 }).primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+  userId: varchar("user_id", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
   name: text("name").notNull(),
   description: text("description").notNull(),
   techStack: text("tech_stack").array().notNull().default(sql`ARRAY[]::text[]`),
@@ -83,7 +83,7 @@ export type Project = typeof projects.$inferSelect;
 // User Profile Schema (extended profile info for each user)
 export const userProfile = pgTable("user_profile", {
   id: varchar("id", { length: 255 }).primaryKey(),
-  userId: varchar("user_id", { length: 255 }).notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  userId: varchar("user_id", { length: 255 }).notNull().unique().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
   name: text("name").notNull(),
   studentId: text("student_id").notNull(),
   university: text("university").notNull(),
