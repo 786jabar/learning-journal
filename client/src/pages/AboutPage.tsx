@@ -113,21 +113,21 @@ export default function AboutPage() {
   // Show empty state if no profile exists
   if (!profile) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Empty State */}
-          <Card className="mb-12 overflow-hidden border-2">
+          <Card className="mb-12 overflow-visible glass-card">
             <CardContent className="py-16 text-center">
               <div className="flex justify-center mb-6">
-                <div className="h-24 w-24 bg-muted rounded-full flex items-center justify-center">
-                  <User className="h-12 w-12 text-muted-foreground" />
+                <div className="h-24 w-24 gradient-bg rounded-full flex items-center justify-center shadow-lg animate-float">
+                  <User className="h-12 w-12 text-white" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold mb-4">Complete Your Profile</h2>
+              <h2 className="text-3xl font-bold mb-4 gradient-text">Complete Your Profile</h2>
               <p className="text-muted-foreground max-w-md mx-auto mb-8">
                 Create your profile to personalize your Learning Journal experience. Add your details to get started.
               </p>
-              <Button onClick={handleOpenEdit} size="lg" data-testid="button-create-profile">
+              <Button onClick={handleOpenEdit} size="lg" className="gradient-bg border-0 shadow-lg" data-testid="button-create-profile">
                 <PlusCircle className="h-5 w-5 mr-2" />
                 Create Profile
               </Button>
@@ -136,14 +136,14 @@ export default function AboutPage() {
 
           {/* Features */}
           <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6">Learning Journal Features</h2>
+            <h2 className="text-2xl font-semibold mb-6 gradient-text">Learning Journal Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature, index) => (
-                <Card key={index} className="hover-elevate transition-all duration-200">
+                <Card key={index} className="glass-card hover:scale-105 transition-all duration-300 overflow-visible">
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-md">
-                        <feature.icon className="h-5 w-5 text-primary" />
+                      <div className="p-3 gradient-bg rounded-xl">
+                        <feature.icon className="h-5 w-5 text-white" />
                       </div>
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                     </div>
@@ -157,9 +157,9 @@ export default function AboutPage() {
           </div>
 
           {/* About */}
-          <Card>
+          <Card className="glass-card overflow-visible">
             <CardHeader>
-              <CardTitle>About This Learning Journal</CardTitle>
+              <CardTitle className="gradient-text">About This Learning Journal</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
@@ -347,42 +347,42 @@ export default function AboutPage() {
 
   // Show profile when it exists
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Profile Hero Section */}
-        <Card className="mb-12 overflow-hidden border-2">
-          <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-background"></div>
+        <Card className="mb-12 overflow-visible glass-card">
+          <div className="h-40 gradient-bg"></div>
           <CardContent className="relative px-8 pb-8">
-            <div className="flex flex-col md:flex-row items-start gap-6 -mt-16">
-              <div className="relative group">
-                <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
+            <div className="flex flex-col md:flex-row items-start gap-6 -mt-20">
+              <div className="relative group animate-float">
+                <Avatar className="h-40 w-40 border-4 border-background shadow-2xl ring-4 ring-primary/20">
                   <AvatarImage src={profile.profilePicture || undefined} alt={profile.name} />
-                  <AvatarFallback className="text-3xl font-bold bg-primary text-primary-foreground">
+                  <AvatarFallback className="text-4xl font-bold gradient-bg text-white">
                     {getInitials(profile.name)}
                   </AvatarFallback>
                 </Avatar>
               </div>
 
-              <div className="flex-1 mt-4 md:mt-16">
+              <div className="flex-1 mt-4 md:mt-20">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                   <div>
-                    <h1 className="text-3xl font-bold mb-1" data-testid="text-profile-name">{profile.name}</h1>
-                    <p className="text-lg text-muted-foreground" data-testid="text-profile-program">{profile.program} Student</p>
+                    <h1 className="text-4xl font-bold mb-2 gradient-text" data-testid="text-profile-name">{profile.name}</h1>
+                    <p className="text-xl text-muted-foreground" data-testid="text-profile-program">{profile.program} Student</p>
                   </div>
-                  <Button onClick={handleOpenEdit} variant="outline" size="sm" data-testid="button-edit-profile">
+                  <Button onClick={handleOpenEdit} className="gradient-bg border-0 shadow-lg" size="sm" data-testid="button-edit-profile">
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Profile
                   </Button>
                 </div>
 
                 {profile.bio && (
-                  <p className="text-muted-foreground mb-6">{profile.bio}</p>
+                  <p className="text-muted-foreground mb-6 italic">{profile.bio}</p>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-md mt-0.5">
-                      <Building2 className="h-4 w-4 text-primary" />
+                  <div className="flex items-start gap-3 glass p-3 rounded-xl">
+                    <div className="p-2 gradient-bg rounded-lg mt-0.5">
+                      <Building2 className="h-4 w-4 text-white" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">University</p>
@@ -390,9 +390,9 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-md mt-0.5">
-                      <User className="h-4 w-4 text-primary" />
+                  <div className="flex items-start gap-3 glass p-3 rounded-xl">
+                    <div className="p-2 gradient-bg rounded-lg mt-0.5">
+                      <User className="h-4 w-4 text-white" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Student ID</p>
@@ -400,9 +400,9 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-md mt-0.5">
-                      <Mail className="h-4 w-4 text-primary" />
+                  <div className="flex items-start gap-3 glass p-3 rounded-xl">
+                    <div className="p-2 gradient-bg rounded-lg mt-0.5">
+                      <Mail className="h-4 w-4 text-white" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Student Email</p>
@@ -410,9 +410,9 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-md mt-0.5">
-                      <GraduationCap className="h-4 w-4 text-primary" />
+                  <div className="flex items-start gap-3 glass p-3 rounded-xl">
+                    <div className="p-2 gradient-bg rounded-lg mt-0.5">
+                      <GraduationCap className="h-4 w-4 text-white" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Course Director</p>
@@ -428,14 +428,14 @@ export default function AboutPage() {
 
         {/* Features */}
         <div className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Learning Journal Features</h2>
+          <h2 className="text-2xl font-semibold mb-6 gradient-text">Learning Journal Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card key={index} className="hover-elevate transition-all duration-200">
+              <Card key={index} className="glass-card hover:scale-105 transition-all duration-300 overflow-visible">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-md">
-                      <feature.icon className="h-5 w-5 text-primary" />
+                    <div className="p-3 gradient-bg rounded-xl">
+                      <feature.icon className="h-5 w-5 text-white" />
                     </div>
                     <CardTitle className="text-lg">{feature.title}</CardTitle>
                   </div>
@@ -449,9 +449,9 @@ export default function AboutPage() {
         </div>
 
         {/* About */}
-        <Card>
+        <Card className="glass-card overflow-visible">
           <CardHeader>
-            <CardTitle>About This Learning Journal</CardTitle>
+            <CardTitle className="gradient-text">About This Learning Journal</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground">
             <p>
@@ -478,9 +478,9 @@ export default function AboutPage() {
 
         {/* Edit Profile Dialog */}
         <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass-card">
             <DialogHeader>
-              <DialogTitle>Edit Profile</DialogTitle>
+              <DialogTitle className="gradient-text text-2xl">Edit Profile</DialogTitle>
             </DialogHeader>
 
             <Form {...form}>
