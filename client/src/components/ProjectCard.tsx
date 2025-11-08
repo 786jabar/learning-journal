@@ -12,7 +12,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   return (
-    <Card className="glass-card hover:scale-105 transition-all duration-300 overflow-visible h-full flex flex-col border-l-4 border-l-secondary" data-testid={`card-project-${project.id}`}>
+    <Card className="glass-card hover:scale-105 transition-all duration-300 overflow-visible h-full flex flex-col" data-testid={`card-project-${project.id}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
           <div className="p-3 gradient-bg rounded-xl">
