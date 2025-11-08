@@ -48,18 +48,52 @@ export class DbStorage implements IStorage {
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.email,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
-    return user;
+    // Two-step migration for legacy users with same email but different ID
+    return await db.transaction(async (tx) => {
+      // Step 1: Look up existing user by email
+      const [existingUser] = await tx
+        .select()
+        .from(users)
+        .where(eq(users.email, userData.email!));
+
+      if (existingUser && existingUser.id !== userData.id) {
+        // Step 2: Migrate legacy user - update ID (cascades to all child records)
+        console.log(`Migrating user ${existingUser.id} to ${userData.id} for email ${userData.email}`);
+        
+        await tx
+          .update(users)
+          .set({
+            id: userData.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            profileImageUrl: userData.profileImageUrl,
+            updatedAt: new Date(),
+          })
+          .where(eq(users.email, userData.email!));
+
+        const [updatedUser] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.id, userData.id!));
+        
+        return updatedUser;
+      }
+
+      // Step 3: Insert or update normally if no migration needed
+      const [user] = await tx
+        .insert(users)
+        .values(userData)
+        .onConflictDoUpdate({
+          target: users.id,
+          set: {
+            ...userData,
+            updatedAt: new Date(),
+          },
+        })
+        .returning();
+      
+      return user;
+    });
   }
 
   // Journal Entry operations
