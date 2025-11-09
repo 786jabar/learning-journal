@@ -17,7 +17,7 @@ import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations (required for Replit Auth)
+  // User operations for authentication
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
 
@@ -41,7 +41,7 @@ export interface IStorage {
 }
 
 export class DbStorage implements IStorage {
-  // User operations (required for Replit Auth)
+  // User operations for authentication
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;

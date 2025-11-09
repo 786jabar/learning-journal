@@ -1,5 +1,4 @@
-// Clerk Auth hook for checking authentication status
-// Replaces Replit Auth for portable deployment
+// Authentication hook for checking user session status
 
 import { useUser, useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
