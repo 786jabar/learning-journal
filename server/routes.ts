@@ -6,7 +6,7 @@ import { insertJournalEntrySchema, insertProjectSchema, insertUserProfileSchema 
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup Clerk Auth (replaces Replit Auth)
+  // Setup authentication middleware
   await setupAuth(app);
 
   // Auth route to get current user
