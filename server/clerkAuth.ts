@@ -1,5 +1,4 @@
-// Clerk Authentication setup for Express
-// Replaces Replit Auth to enable deployment from GitHub to any platform
+// Clerk Authentication setup for Express application
 
 import { clerkMiddleware, createClerkClient, requireAuth, getAuth } from "@clerk/express";
 import type { Express, RequestHandler } from "express";
@@ -11,8 +10,7 @@ export const clerkClient = createClerkClient({
 });
 
 /**
- * Setup Clerk authentication middleware
- * This replaces the Replit Auth setup
+ * Setup Clerk authentication middleware for the application
  */
 export async function setupAuth(app: Express) {
   // Apply Clerk middleware globally to all routes
@@ -30,7 +28,6 @@ export async function setupAuth(app: Express) {
 
 /**
  * Middleware to require authentication for protected routes
- * Replaces the isAuthenticated middleware from Replit Auth
  */
 export const isAuthenticated: RequestHandler = (req, res, next) => {
   const auth = getAuth(req);
