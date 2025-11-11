@@ -70,16 +70,17 @@ export default function HomePage() {
   const recentJournals = journals.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden page-transition">
       {/* Background Gradients */}
       <div className="fixed inset-0 -z-10 opacity-30">
-        <div className="absolute top-20 right-20 w-72 h-72 bg-primary/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 left-20 w-96 h-96 bg-secondary/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-40 left-20 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/20 rounded-full blur-3xl animate-spin-slow"></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section - Glass Card */}
-        <div className="glass-card rounded-3xl p-8 mb-12">
+        <div className="glass-card rounded-3xl p-8 mb-12 animate-pulse-glow">
           <h1 className="text-5xl font-bold mb-4" data-testid="text-welcome">
             Welcome to Your <span className="gradient-text">Learning Journal</span>
           </h1>
@@ -87,7 +88,7 @@ export default function HomePage() {
             Track your progress, reflect on your journey, and build amazing projects with our stunning glassmorphism design.
           </p>
           <Link href="/journal" asChild>
-            <Button size="lg" className="gradient-bg text-white hover:opacity-90 transition-opacity" data-testid="button-new-entry">
+            <Button size="lg" className="gradient-bg text-white glow-button" data-testid="button-new-entry">
               <Plus className="h-5 w-5 mr-2" />
               New Journal Entry
             </Button>
@@ -96,7 +97,7 @@ export default function HomePage() {
 
         {/* Stats Cards - Glassmorphism */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-6 card-hover-lift">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">Total Entries</h3>
               <div className="h-10 w-10 gradient-bg rounded-xl flex items-center justify-center">
@@ -109,7 +110,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-6 card-hover-lift">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">Projects</h3>
               <div className="h-10 w-10 gradient-bg rounded-xl flex items-center justify-center">
@@ -122,10 +123,10 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-6 card-hover-lift">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">Current Streak</h3>
-              <div className="h-10 w-10 gradient-bg rounded-xl flex items-center justify-center">
+              <div className="h-10 w-10 gradient-bg rounded-xl flex items-center justify-center animate-glow">
                 <Calendar className="h-5 w-5 text-white" />
               </div>
             </div>
@@ -135,7 +136,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-6 card-hover-lift">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">This Week</h3>
               <div className="h-10 w-10 gradient-bg rounded-xl flex items-center justify-center">
