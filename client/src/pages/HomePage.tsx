@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, TrendingUp, BookOpen, Code2, Calendar } from "lucide-react";
 import { Link } from "wouter";
 import { JournalCard } from "@/components/JournalCard";
+import { CalendarHeatmap } from "@/components/CalendarHeatmap";
 import type { JournalEntry } from "@shared/schema";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { format, subDays, startOfDay } from "date-fns";
@@ -41,22 +42,28 @@ export default function HomePage() {
     .slice(0, 5)
     .map(([name, value]) => ({ name, value }));
 
-  // Calculate streak
-  const sortedJournals = [...journals].sort((a, b) => 
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  // Calculate streak - fixed version
+  const journalsByDate = journals.reduce((acc, journal) => {
+    const dateKey = startOfDay(new Date(journal.date)).getTime();
+    acc[dateKey] = true;
+    return acc;
+  }, {} as Record<number, boolean>);
   
   let streak = 0;
-  let currentDate = new Date();
+  let checkDate = startOfDay(new Date());
   
-  for (const journal of sortedJournals) {
-    const journalDate = startOfDay(new Date(journal.date));
-    const expectedDate = startOfDay(subDays(currentDate, streak));
-    
-    if (journalDate.getTime() === expectedDate.getTime()) {
+  // Check from today backwards
+  while (journalsByDate[checkDate.getTime()]) {
+    streak++;
+    checkDate = subDays(checkDate, 1);
+  }
+  
+  // If no entry today, check if streak should start from yesterday
+  if (streak === 0 && journalsByDate[subDays(startOfDay(new Date()), 1).getTime()]) {
+    checkDate = subDays(startOfDay(new Date()), 1);
+    while (journalsByDate[checkDate.getTime()]) {
       streak++;
-    } else if (journalDate.getTime() < expectedDate.getTime()) {
-      break;
+      checkDate = subDays(checkDate, 1);
     }
   }
 
@@ -207,6 +214,13 @@ export default function HomePage() {
             )}
           </div>
         </div>
+
+        {/* Calendar Heatmap */}
+        {journals.length > 0 && (
+          <div className="mb-12">
+            <CalendarHeatmap journals={journals} />
+          </div>
+        )}
 
         {/* Recent Entries */}
         {recentJournals.length > 0 && (

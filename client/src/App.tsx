@@ -13,6 +13,7 @@ import HomePage from "@/pages/HomePage";
 import JournalPage from "@/pages/JournalPage";
 import ProjectsPage from "@/pages/ProjectsPage";
 import AboutPage from "@/pages/AboutPage";
+import AnalyticsPage from "@/pages/AnalyticsPage";
 import LandingPage from "@/pages/LandingPage";
 
 function Router() {
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/journal" component={JournalPage} />
       <Route path="/projects" component={ProjectsPage} />
+      <Route path="/analytics" component={AnalyticsPage} />
       <Route path="/about" component={AboutPage} />
       <Route component={NotFound} />
     </Switch>
