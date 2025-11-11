@@ -67,7 +67,13 @@ export default function AnalyticsPage() {
   }
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden page-transition">
+      {/* Animated Background */}
+      <div className="fixed inset-0 -z-10 opacity-20">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-2 gradient-text">Analytics Dashboard</h1>
@@ -77,7 +83,7 @@ export default function AnalyticsPage() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
@@ -89,7 +95,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
           
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
@@ -101,7 +107,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
           
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <Tag className="h-4 w-4" />
@@ -113,7 +119,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
           
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <Clock className="h-4 w-4" />
@@ -135,7 +141,7 @@ export default function AnalyticsPage() {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader>
               <CardTitle className="gradient-text">6-Month Trend</CardTitle>
             </CardHeader>
@@ -169,7 +175,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
           
-          <Card className="glass-card overflow-visible">
+          <Card className="glass-card overflow-visible card-hover-lift">
             <CardHeader>
               <CardTitle className="gradient-text">Top Technologies</CardTitle>
             </CardHeader>
@@ -207,7 +213,7 @@ export default function AnalyticsPage() {
           </Card>
         </div>
         
-        <Card className="glass-card overflow-visible">
+        <Card className="glass-card overflow-visible card-hover-lift">
           <CardHeader>
             <CardTitle className="gradient-text">Tag Cloud</CardTitle>
             <p className="text-sm text-muted-foreground">All topics you've explored</p>
