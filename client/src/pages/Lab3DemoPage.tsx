@@ -42,7 +42,7 @@ export default function Lab3DemoPage() {
       themeSwitcher.addEventListener("click", function() {
         demoContainer.classList.toggle("dark-theme");
         const isDark = demoContainer.classList.contains("dark-theme");
-        themeSwitcher.textContent = isDark ? "🌞 Light Mode" : "🌙 Dark Mode";
+        themeSwitcher.textContent = isDark ? "Switch to Light Mode" : "Switch to Dark Mode";
         
         // Change CSS styles dynamically
         if (isDark) {
@@ -87,11 +87,11 @@ export default function Lab3DemoPage() {
         const words = text.split(/\s+/).filter(word => word.length > 0);
         
         if (words.length < 10) {
-          validationMsg.textContent = `❌ Entry must contain at least 10 words. You have ${words.length}.`;
+          validationMsg.textContent = `Entry must contain at least 10 words. You have ${words.length}.`;
           validationMsg.style.color = "#ef4444";
           validationMsg.style.display = "block";
         } else {
-          validationMsg.textContent = `✅ Entry saved! (${words.length} words)`;
+          validationMsg.textContent = `Success! Entry saved (${words.length} words)`;
           validationMsg.style.color = "#22c55e";
           validationMsg.style.display = "block";
           
@@ -116,7 +116,7 @@ export default function Lab3DemoPage() {
         if (content) {
           const isHidden = content.style.display === "none";
           content.style.display = isHidden ? "block" : "none";
-          button.textContent = isHidden ? "▼ Click to Collapse" : "▶ Click to Expand";
+          button.textContent = isHidden ? "Click to Collapse" : "Click to Expand";
         }
       });
     });
@@ -127,11 +127,11 @@ export default function Lab3DemoPage() {
       const navHTML = `
         <nav style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
           <ul style="list-style: none; display: flex; gap: 1rem; margin: 0; padding: 0; flex-wrap: wrap;">
-            <li><a href="/" style="color: white; text-decoration: none; font-weight: 500;">🏠 Home</a></li>
-            <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500;">📝 Journal</a></li>
-            <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500;">🎯 Projects</a></li>
-            <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500;">📊 Analytics</a></li>
-            <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 500; background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 4px;">🔬 Lab 3</a></li>
+            <li><a href="/" style="color: white; text-decoration: none; font-weight: 500;">Home</a></li>
+            <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500;">Journal</a></li>
+            <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500;">Projects</a></li>
+            <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500;">Analytics</a></li>
+            <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 500; background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 4px;">Lab 3 Demo</a></li>
           </ul>
         </nav>
       `;
@@ -192,7 +192,7 @@ export default function Lab3DemoPage() {
                 className="w-full text-lg"
                 variant="default"
               >
-                🌙 Dark Mode
+                Switch to Dark Mode
               </Button>
               <div className="mt-4 p-4 bg-muted rounded-lg">
                 <p className="text-sm font-mono text-muted-foreground">
@@ -249,7 +249,7 @@ export default function Lab3DemoPage() {
                     data-target="section1"
                     data-testid="collapse-btn-1"
                   >
-                    ▶ Click to Expand
+                    Click to Expand
                   </Button>
                   <div id="section1" data-testid="section1" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
                     <h4 className="font-semibold mb-2">DOM Selection Methods Used:</h4>
@@ -268,7 +268,7 @@ export default function Lab3DemoPage() {
                     data-target="section2"
                     data-testid="collapse-btn-2"
                   >
-                    ▶ Click to Expand
+                    Click to Expand
                   </Button>
                   <div id="section2" data-testid="section2" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
                     <h4 className="font-semibold mb-2">Event Handling Techniques:</h4>
@@ -288,7 +288,7 @@ export default function Lab3DemoPage() {
                     data-target="section3"
                     data-testid="collapse-btn-3"
                   >
-                    ▶ Click to Expand
+                    Click to Expand
                   </Button>
                   <div id="section3" data-testid="section3" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
                     <h4 className="font-semibold mb-2">Dynamic Content Manipulation:</h4>
