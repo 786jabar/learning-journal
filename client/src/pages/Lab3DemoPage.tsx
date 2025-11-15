@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Code2, FileEdit, ChevronDown, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Clock, Code2, FileEdit, ChevronRight, CheckCircle2 } from "lucide-react";
 
 export default function Lab3DemoPage() {
   useEffect(() => {
@@ -153,9 +152,8 @@ export default function Lab3DemoPage() {
 
   return (
     <div className="min-h-screen pb-12">
-      {/* Header Section with Gradient Background */}
+      {/* Header Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 text-white">
-        <div className="absolute inset-0 bg-grid-white/10"></div>
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <Badge className="mb-4 bg-white/20 hover:bg-white/30 text-white border-white/30">
@@ -227,14 +225,13 @@ export default function Lab3DemoPage() {
                 <CardDescription>Dynamic CSS manipulation with classList.toggle()</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button 
+                <button 
                   id="vanilla-theme-toggle" 
                   data-testid="vanilla-theme-toggle"
-                  className="w-full h-12 text-base font-semibold"
-                  variant="default"
+                  className="w-full h-12 px-4 rounded-md bg-primary text-primary-foreground font-semibold hover-elevate active-elevate-2 transition-colors"
                 >
                   Switch to Dark Mode
-                </Button>
+                </button>
                 <div className="bg-muted/50 p-4 rounded-lg border">
                   <p className="text-sm text-muted-foreground">
                     <span className="font-semibold text-foreground">Event:</span> click listener
@@ -271,9 +268,13 @@ export default function Lab3DemoPage() {
                       0 words
                     </span>
                   </div>
-                  <Button type="submit" data-testid="submit-entry" size="lg">
+                  <button 
+                    type="submit" 
+                    data-testid="submit-entry"
+                    className="px-6 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold hover-elevate active-elevate-2 transition-colors"
+                  >
                     Submit Entry
-                  </Button>
+                  </button>
                 </div>
                 <div className="validation-message" data-testid="validation-message" style={{ display: "none" }}></div>
               </form>
@@ -299,15 +300,14 @@ export default function Lab3DemoPage() {
             <CardContent className="space-y-3">
               {/* Section 1 */}
               <div>
-                <Button 
-                  className="collapsible-btn w-full justify-between" 
-                  variant="outline"
+                <button 
+                  className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section1"
                   data-testid="collapse-btn-1"
                 >
-                  <span>DOM Selection Methods</span>
-                  <span className="collapse-icon">▶</span>
-                </Button>
+                  <span className="font-medium">DOM Selection Methods</span>
+                  <span className="collapse-icon text-lg">▶</span>
+                </button>
                 <div id="section1" data-testid="section1" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
                   <h4 className="font-semibold mb-3 text-foreground">DOM Selection Methods Used:</h4>
                   <ul className="space-y-2 text-sm">
@@ -329,15 +329,14 @@ export default function Lab3DemoPage() {
 
               {/* Section 2 */}
               <div>
-                <Button 
-                  className="collapsible-btn w-full justify-between" 
-                  variant="outline"
+                <button 
+                  className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section2"
                   data-testid="collapse-btn-2"
                 >
-                  <span>Event Handling</span>
-                  <span className="collapse-icon">▶</span>
-                </Button>
+                  <span className="font-medium">Event Handling</span>
+                  <span className="collapse-icon text-lg">▶</span>
+                </button>
                 <div id="section2" data-testid="section2" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
                   <h4 className="font-semibold mb-3 text-foreground">Event Handling Techniques:</h4>
                   <ul className="space-y-2 text-sm">
@@ -363,15 +362,14 @@ export default function Lab3DemoPage() {
 
               {/* Section 3 */}
               <div>
-                <Button 
-                  className="collapsible-btn w-full justify-between" 
-                  variant="outline"
+                <button 
+                  className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section3"
                   data-testid="collapse-btn-3"
                 >
-                  <span>Dynamic Content Updates</span>
-                  <span className="collapse-icon">▶</span>
-                </Button>
+                  <span className="font-medium">Dynamic Content Updates</span>
+                  <span className="collapse-icon text-lg">▶</span>
+                </button>
                 <div id="section3" data-testid="section3" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
                   <h4 className="font-semibold mb-3 text-foreground">DOM Manipulation Methods:</h4>
                   <ul className="space-y-2 text-sm">
