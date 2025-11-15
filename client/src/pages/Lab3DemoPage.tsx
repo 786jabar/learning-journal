@@ -6,147 +6,195 @@ import { Clock, Code2, FileEdit, ChevronRight, CheckCircle2 } from "lucide-react
 export default function Lab3DemoPage() {
   useEffect(() => {
     // Lab 3 Requirement: Vanilla JavaScript DOM Manipulation
-    console.log("Lab 3: DOM Selection Methods Initialized");
+    console.log("🚀 Lab 3: DOM Selection Methods Initialized");
 
-    // 1. Live Date/Time Feature
-    function updateDateTime() {
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      };
-      const dateElement = document.getElementById("live-date");
-      if (dateElement) {
-        dateElement.textContent = now.toLocaleDateString('en-US', options);
+    let dateInterval: NodeJS.Timeout | null = null;
+
+    // Add a small delay to ensure DOM is ready
+    setTimeout(() => {
+      console.log("🔍 Starting element search...");
+
+      // 1. Live Date/Time Feature
+      function updateDateTime() {
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        };
+        const dateElement = document.getElementById("live-date");
+        if (dateElement) {
+          dateElement.textContent = now.toLocaleDateString('en-US', options);
+        }
       }
-    }
-    
-    updateDateTime();
-    const dateInterval = setInterval(updateDateTime, 1000);
+      
+      updateDateTime();
+      dateInterval = setInterval(updateDateTime, 1000);
+      console.log("✅ Live Date/Time: Initialized");
 
-    // 2. Theme Switcher
-    const themeSwitcher = document.getElementById("vanilla-theme-toggle");
-    const demoContainer = document.getElementById("demo-container");
-    
-    if (themeSwitcher && demoContainer) {
-      themeSwitcher.addEventListener("click", function() {
-        demoContainer.classList.toggle("dark-theme");
-        const isDark = demoContainer.classList.contains("dark-theme");
-        themeSwitcher.textContent = isDark ? "Switch to Light Mode" : "Switch to Dark Mode";
-        
-        if (isDark) {
-          demoContainer.style.backgroundColor = "#1a1a2e";
-          demoContainer.style.color = "#eee";
-        } else {
-          demoContainer.style.backgroundColor = "transparent";
-          demoContainer.style.color = "inherit";
-        }
-      });
-    }
-
-    // 3. Form Validation
-    const journalForm = document.getElementById("lab3-journal-form") as HTMLFormElement;
-    const journalInput = document.getElementById("journal-entry") as HTMLTextAreaElement;
-    const validationMsg = document.querySelector(".validation-message") as HTMLElement;
-    const wordCount = document.getElementById("word-count") as HTMLElement;
-
-    if (journalInput && wordCount) {
-      journalInput.addEventListener("input", function() {
-        const text = journalInput.value.trim();
-        const words = text.split(/\s+/).filter(word => word.length > 0);
-        const count = words.length;
-        
-        wordCount.textContent = `${count} words`;
-        
-        if (count < 10 && text.length > 0) {
-          wordCount.style.color = "#ef4444";
-          wordCount.style.fontWeight = "600";
-        } else if (count >= 10) {
-          wordCount.style.color = "#22c55e";
-          wordCount.style.fontWeight = "600";
-        } else {
-          wordCount.style.color = "#94a3b8";
-          wordCount.style.fontWeight = "400";
-        }
-      });
-    }
-
-    if (journalForm && journalInput && validationMsg) {
-      journalForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        const text = journalInput.value.trim();
-        const words = text.split(/\s+/).filter(word => word.length > 0);
-        
-        if (words.length < 10) {
-          validationMsg.textContent = `Entry must contain at least 10 words. Currently: ${words.length} words`;
-          validationMsg.style.color = "#ef4444";
-          validationMsg.style.display = "block";
-          validationMsg.style.padding = "0.75rem";
-          validationMsg.style.borderRadius = "0.5rem";
-          validationMsg.style.backgroundColor = "rgba(239, 68, 68, 0.1)";
-        } else {
-          validationMsg.textContent = `Success! Entry saved (${words.length} words)`;
-          validationMsg.style.color = "#22c55e";
-          validationMsg.style.display = "block";
-          validationMsg.style.padding = "0.75rem";
-          validationMsg.style.borderRadius = "0.5rem";
-          validationMsg.style.backgroundColor = "rgba(34, 197, 94, 0.1)";
+      // 2. Theme Switcher
+      const themeSwitcher = document.getElementById("vanilla-theme-toggle");
+      const demoContainer = document.getElementById("demo-container");
+      
+      console.log("🔍 Theme Switcher button:", themeSwitcher ? "FOUND" : "NOT FOUND");
+      console.log("🔍 Demo Container:", demoContainer ? "FOUND" : "NOT FOUND");
+      
+      if (themeSwitcher && demoContainer) {
+        themeSwitcher.addEventListener("click", function(e) {
+          console.log("🎨 Theme Toggle CLICKED!");
+          e.preventDefault();
+          e.stopPropagation();
           
-          setTimeout(() => {
-            journalInput.value = "";
-            wordCount.textContent = "0 words";
+          demoContainer.classList.toggle("dark-theme");
+          const isDark = demoContainer.classList.contains("dark-theme");
+          themeSwitcher.textContent = isDark ? "Switch to Light Mode" : "Switch to Dark Mode";
+          
+          if (isDark) {
+            demoContainer.style.backgroundColor = "#1a1a2e";
+            demoContainer.style.color = "#eee";
+            console.log("🌙 Switched to DARK mode");
+          } else {
+            demoContainer.style.backgroundColor = "transparent";
+            demoContainer.style.color = "inherit";
+            console.log("☀️ Switched to LIGHT mode");
+          }
+        }, true);
+        console.log("✅ Theme Switcher: Event listener attached");
+      } else {
+        console.error("❌ Theme Switcher: Failed to attach event listener");
+      }
+
+      // 3. Form Validation
+      const journalForm = document.getElementById("lab3-journal-form") as HTMLFormElement;
+      const journalInput = document.getElementById("journal-entry") as HTMLTextAreaElement;
+      const validationMsg = document.querySelector(".validation-message") as HTMLElement;
+      const wordCount = document.getElementById("word-count") as HTMLElement;
+
+      console.log("🔍 Form:", journalForm ? "FOUND" : "NOT FOUND");
+      console.log("🔍 Textarea:", journalInput ? "FOUND" : "NOT FOUND");
+      console.log("🔍 Word Count:", wordCount ? "FOUND" : "NOT FOUND");
+
+      if (journalInput && wordCount) {
+        journalInput.addEventListener("input", function() {
+          const text = journalInput.value.trim();
+          const words = text.split(/\s+/).filter(word => word.length > 0);
+          const count = words.length;
+          
+          wordCount.textContent = `${count} words`;
+          console.log(`📝 Word count: ${count}`);
+          
+          if (count < 10 && text.length > 0) {
+            wordCount.style.color = "#ef4444";
+            wordCount.style.fontWeight = "600";
+          } else if (count >= 10) {
+            wordCount.style.color = "#22c55e";
+            wordCount.style.fontWeight = "600";
+          } else {
             wordCount.style.color = "#94a3b8";
-            validationMsg.style.display = "none";
-          }, 2000);
-        }
+            wordCount.style.fontWeight = "400";
+          }
+        });
+        console.log("✅ Form: Input event listener attached");
+      }
+
+      if (journalForm && journalInput && validationMsg) {
+        journalForm.addEventListener("submit", function(event) {
+          event.preventDefault();
+          console.log("📤 Form SUBMITTED!");
+          
+          const text = journalInput.value.trim();
+          const words = text.split(/\s+/).filter(word => word.length > 0);
+          
+          if (words.length < 10) {
+            validationMsg.textContent = `Entry must contain at least 10 words. Currently: ${words.length} words`;
+            validationMsg.style.color = "#ef4444";
+            validationMsg.style.display = "block";
+            validationMsg.style.padding = "0.75rem";
+            validationMsg.style.borderRadius = "0.5rem";
+            validationMsg.style.backgroundColor = "rgba(239, 68, 68, 0.1)";
+            console.log("❌ Validation failed:", words.length, "words");
+          } else {
+            validationMsg.textContent = `Success! Entry saved (${words.length} words)`;
+            validationMsg.style.color = "#22c55e";
+            validationMsg.style.display = "block";
+            validationMsg.style.padding = "0.75rem";
+            validationMsg.style.borderRadius = "0.5rem";
+            validationMsg.style.backgroundColor = "rgba(34, 197, 94, 0.1)";
+            console.log("✅ Validation passed:", words.length, "words");
+            
+            setTimeout(() => {
+              journalInput.value = "";
+              wordCount.textContent = "0 words";
+              wordCount.style.color = "#94a3b8";
+              validationMsg.style.display = "none";
+              console.log("🧹 Form cleared");
+            }, 2000);
+          }
+        });
+        console.log("✅ Form: Submit event listener attached");
+      }
+
+      // 4. Collapsible Sections
+      const collapsibleButtons = document.querySelectorAll(".collapsible-btn");
+      console.log(`🔍 Found ${collapsibleButtons.length} collapsible buttons`);
+      
+      collapsibleButtons.forEach((button, index) => {
+        button.addEventListener("click", function(e) {
+          console.log(`📂 Collapsible button ${index + 1} CLICKED!`);
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const targetId = (button as HTMLElement).dataset.target;
+          const content = document.getElementById(targetId!);
+          const icon = (button as HTMLElement).querySelector(".collapse-icon");
+          
+          console.log(`   Target ID: ${targetId}`);
+          console.log(`   Content element: ${content ? 'FOUND' : 'NOT FOUND'}`);
+          console.log(`   Icon element: ${icon ? 'FOUND' : 'NOT FOUND'}`);
+          
+          if (content && icon) {
+            const isHidden = content.style.display === "none" || !content.style.display;
+            content.style.display = isHidden ? "block" : "none";
+            icon.textContent = isHidden ? "▼" : "▶";
+            console.log(`   ${isHidden ? '📖 EXPANDED' : '📕 COLLAPSED'}`);
+          }
+        }, true);
       });
-    }
+      console.log("✅ Collapsible: Event listeners attached to all buttons");
 
-    // 4. Collapsible Sections
-    const collapsibleButtons = document.querySelectorAll(".collapsible-btn");
-    
-    collapsibleButtons.forEach(button => {
-      button.addEventListener("click", function() {
-        const targetId = (button as HTMLElement).dataset.target;
-        const content = document.getElementById(targetId!);
-        const icon = (button as HTMLElement).querySelector(".collapse-icon");
-        
-        if (content && icon) {
-          const isHidden = content.style.display === "none" || !content.style.display;
-          content.style.display = isHidden ? "block" : "none";
-          icon.textContent = isHidden ? "▼" : "▶";
-        }
-      });
-    });
+      // 5. Dynamic Navigation Menu
+      const navContainer = document.getElementById("dynamic-nav");
+      if (navContainer) {
+        const navHTML = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+            <div style="color: white; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; opacity: 0.9;">Dynamic Navigation (Inserted via JavaScript)</div>
+            <nav>
+              <ul style="list-style: none; display: flex; gap: 0.75rem; margin: 0; padding: 0; flex-wrap: wrap;">
+                <li><a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Home</a></li>
+                <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Journal</a></li>
+                <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Projects</a></li>
+                <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Analytics</a></li>
+                <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.3); transition: all 0.2s; display: inline-block;">Lab 3 Demo ✓</a></li>
+              </ul>
+            </nav>
+          </div>
+        `;
+        navContainer.innerHTML = navHTML;
+        console.log("✅ Dynamic Navigation: Inserted");
+      }
 
-    // 5. Dynamic Navigation Menu
-    const navContainer = document.getElementById("dynamic-nav");
-    if (navContainer) {
-      const navHTML = `
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-          <div style="color: white; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; opacity: 0.9;">Dynamic Navigation (Inserted via JavaScript)</div>
-          <nav>
-            <ul style="list-style: none; display: flex; gap: 0.75rem; margin: 0; padding: 0; flex-wrap: wrap;">
-              <li><a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Home</a></li>
-              <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Journal</a></li>
-              <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Projects</a></li>
-              <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Analytics</a></li>
-              <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.3); transition: all 0.2s; display: inline-block;">Lab 3 Demo ✓</a></li>
-            </ul>
-          </nav>
-        </div>
-      `;
-      navContainer.innerHTML = navHTML;
-    }
+      console.log("🎉 All Lab 3 features initialized successfully!");
+    }, 100); // 100ms delay to ensure DOM is ready
 
+    // Cleanup function
     return () => {
-      clearInterval(dateInterval);
+      if (dateInterval) {
+        clearInterval(dateInterval);
+      }
     };
   }, []);
 
