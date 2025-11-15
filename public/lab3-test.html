@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3 Vanilla JavaScript Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #667eea; margin-bottom: 0.5rem; }
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        button:hover { background: #5568d3; }
+        button:active { transform: scale(0.98); }
+        .date-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .word-count {
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .collapsible-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapsible-btn:hover {
+            background: #f7fafc;
+        }
+        .content {
+            display: none;
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 0.75rem;
+        }
+        .success { color: #22c55e; font-weight: 600; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Lab 3: Vanilla JavaScript Test</h1>
+            <p>Pure HTML + JavaScript (No React)</p>
+        </div>
+
+        <!-- Feature 1: Live Date/Time -->
+        <div class="card">
+            <h2>⏰ Live Date & Time</h2>
+            <div id="live-date" class="date-display">Loading...</div>
+            <p class="success" style="display:block; margin-top: 1rem;">✅ Using getElementById()</p>
+        </div>
+
+        <!-- Feature 2: Theme Toggle -->
+        <div class="card">
+            <h2>🎨 Theme Switcher</h2>
+            <button id="theme-toggle">Switch to Dark Mode</button>
+            <p class="success" style="display:block; margin-top: 1rem;">✅ Using getElementById() + addEventListener()</p>
+        </div>
+
+        <!-- Feature 3: Form Validation -->
+        <div class="card">
+            <h2>✍️ Form Validation</h2>
+            <form id="test-form">
+                <textarea id="text-input" placeholder="Type at least 10 words..."></textarea>
+                <div id="word-count" class="word-count">0 words</div>
+                <button type="submit">Submit Entry</button>
+                <div id="validation-message" class="message"></div>
+            </form>
+            <p class="success" style="display:block;">✅ Using querySelector() + submit event</p>
+        </div>
+
+        <!-- Feature 4: Collapsible Sections -->
+        <div class="card">
+            <h2>📂 Collapsible Sections</h2>
+            <button class="collapsible-btn" data-target="section1">
+                <span>Click to Expand Section 1</span>
+                <span class="icon">▶</span>
+            </button>
+            <div id="section1" class="content">
+                <strong>Section 1 Content:</strong> This section uses querySelectorAll() to find all collapsible buttons and attach click events!
+            </div>
+
+            <button class="collapsible-btn" data-target="section2">
+                <span>Click to Expand Section 2</span>
+                <span class="icon">▶</span>
+            </button>
+            <div id="section2" class="content">
+                <strong>Section 2 Content:</strong> Each button toggles visibility and changes the arrow icon dynamically!
+            </div>
+
+            <button class="collapsible-btn" data-target="section3">
+                <span>Click to Expand Section 3</span>
+                <span class="icon">▶</span>
+            </button>
+            <div id="section3" class="content">
+                <strong>Section 3 Content:</strong> This demonstrates DOM manipulation with style.display and textContent!
+            </div>
+            <p class="success" style="display:block; margin-top: 1rem;">✅ Using querySelectorAll() + forEach()</p>
+        </div>
+    </div>
+
+    <script>
+        console.log("🚀 Vanilla JavaScript Test Started");
+
+        // 1. LIVE DATE/TIME
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const dateElement = document.getElementById("live-date");
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        console.log("✅ Live Date/Time initialized");
+
+        // 2. THEME TOGGLE
+        const themeToggle = document.getElementById("theme-toggle");
+        const body = document.body;
+        
+        themeToggle.addEventListener("click", function() {
+            console.log("🎨 Theme button clicked!");
+            if (body.style.background.includes("667eea")) {
+                body.style.background = "#1a1a2e";
+                body.style.color = "#eee";
+                themeToggle.textContent = "Switch to Light Mode";
+                console.log("→ Switched to DARK mode");
+            } else {
+                body.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+                body.style.color = "#333";
+                themeToggle.textContent = "Switch to Dark Mode";
+                console.log("→ Switched to LIGHT mode");
+            }
+        });
+        console.log("✅ Theme toggle initialized");
+
+        // 3. FORM VALIDATION
+        const form = document.getElementById("test-form");
+        const input = document.getElementById("text-input");
+        const wordCount = document.getElementById("word-count");
+        const validationMsg = document.getElementById("validation-message");
+
+        input.addEventListener("input", function() {
+            const text = input.value.trim();
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const count = words.length;
+            
+            wordCount.textContent = `${count} words`;
+            console.log(`📝 Word count: ${count}`);
+            
+            if (count < 10 && text.length > 0) {
+                wordCount.style.color = "#ef4444";
+            } else if (count >= 10) {
+                wordCount.style.color = "#22c55e";
+            } else {
+                wordCount.style.color = "#94a3b8";
+            }
+        });
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            console.log("📤 Form submitted!");
+            
+            const text = input.value.trim();
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            
+            if (words.length < 10) {
+                validationMsg.textContent = `❌ Need at least 10 words. You have: ${words.length}`;
+                validationMsg.style.color = "#ef4444";
+                validationMsg.style.backgroundColor = "rgba(239, 68, 68, 0.1)";
+                validationMsg.style.display = "block";
+                console.log("→ Validation FAILED");
+            } else {
+                validationMsg.textContent = `✅ Success! Entry saved (${words.length} words)`;
+                validationMsg.style.color = "#22c55e";
+                validationMsg.style.backgroundColor = "rgba(34, 197, 94, 0.1)";
+                validationMsg.style.display = "block";
+                console.log("→ Validation PASSED");
+                
+                setTimeout(() => {
+                    input.value = "";
+                    wordCount.textContent = "0 words";
+                    wordCount.style.color = "#94a3b8";
+                    validationMsg.style.display = "none";
+                    console.log("→ Form cleared");
+                }, 2000);
+            }
+        });
+        console.log("✅ Form validation initialized");
+
+        // 4. COLLAPSIBLE SECTIONS
+        const buttons = document.querySelectorAll(".collapsible-btn");
+        console.log(`🔍 Found ${buttons.length} collapsible buttons`);
+        
+        buttons.forEach((btn, index) => {
+            btn.addEventListener("click", function() {
+                console.log(`📂 Button ${index + 1} clicked`);
+                const targetId = btn.dataset.target;
+                const content = document.getElementById(targetId);
+                const icon = btn.querySelector(".icon");
+                
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                    icon.textContent = "▶";
+                    console.log(`→ Section ${index + 1} COLLAPSED`);
+                } else {
+                    content.style.display = "block";
+                    icon.textContent = "▼";
+                    console.log(`→ Section ${index + 1} EXPANDED`);
+                }
+            });
+        });
+        console.log("✅ Collapsible sections initialized");
+
+        console.log("🎉 ALL FEATURES READY!");
+    </script>
+</body>
+</html>
