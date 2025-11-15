@@ -1,19 +1,15 @@
 import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Code2, FileEdit, ChevronDown, ChevronRight, CheckCircle2 } from "lucide-react";
 
 export default function Lab3DemoPage() {
   useEffect(() => {
     // Lab 3 Requirement: Vanilla JavaScript DOM Manipulation
-    // This demonstrates getElementById, querySelector, event handling, and dynamic content
+    console.log("Lab 3: DOM Selection Methods Initialized");
 
-    // 1. DOM Selection Methods Demo
-    console.log("Lab 3: DOM Selection Methods");
-    const dateElement = document.getElementById("live-date");
-    const validationMessage = document.querySelector(".validation-message");
-    console.log("Selected elements:", { dateElement, validationMessage });
-
-    // 2. Live Date/Time Feature
+    // 1. Live Date/Time Feature
     function updateDateTime() {
       const now = new Date();
       const options: Intl.DateTimeFormatOptions = {
@@ -25,16 +21,16 @@ export default function Lab3DemoPage() {
         minute: '2-digit',
         second: '2-digit'
       };
+      const dateElement = document.getElementById("live-date");
       if (dateElement) {
         dateElement.textContent = now.toLocaleDateString('en-US', options);
       }
     }
     
-    // Update date immediately and every second
     updateDateTime();
     const dateInterval = setInterval(updateDateTime, 1000);
 
-    // 3. Theme Switcher (Vanilla JS Toggle)
+    // 2. Theme Switcher
     const themeSwitcher = document.getElementById("vanilla-theme-toggle");
     const demoContainer = document.getElementById("demo-container");
     
@@ -44,18 +40,17 @@ export default function Lab3DemoPage() {
         const isDark = demoContainer.classList.contains("dark-theme");
         themeSwitcher.textContent = isDark ? "Switch to Light Mode" : "Switch to Dark Mode";
         
-        // Change CSS styles dynamically
         if (isDark) {
-          demoContainer.style.backgroundColor = "#1a1a1a";
-          demoContainer.style.color = "#ffffff";
+          demoContainer.style.backgroundColor = "#1a1a2e";
+          demoContainer.style.color = "#eee";
         } else {
-          demoContainer.style.backgroundColor = "#ffffff";
-          demoContainer.style.color = "#000000";
+          demoContainer.style.backgroundColor = "transparent";
+          demoContainer.style.color = "inherit";
         }
       });
     }
 
-    // 4. Form Validation (10 word minimum)
+    // 3. Form Validation
     const journalForm = document.getElementById("lab3-journal-form") as HTMLFormElement;
     const journalInput = document.getElementById("journal-entry") as HTMLTextAreaElement;
     const validationMsg = document.querySelector(".validation-message") as HTMLElement;
@@ -71,10 +66,13 @@ export default function Lab3DemoPage() {
         
         if (count < 10 && text.length > 0) {
           wordCount.style.color = "#ef4444";
+          wordCount.style.fontWeight = "600";
         } else if (count >= 10) {
           wordCount.style.color = "#22c55e";
+          wordCount.style.fontWeight = "600";
         } else {
-          wordCount.style.color = "#64748b";
+          wordCount.style.color = "#94a3b8";
+          wordCount.style.fontWeight = "400";
         }
       });
     }
@@ -87,270 +85,381 @@ export default function Lab3DemoPage() {
         const words = text.split(/\s+/).filter(word => word.length > 0);
         
         if (words.length < 10) {
-          validationMsg.textContent = `Entry must contain at least 10 words. You have ${words.length}.`;
+          validationMsg.textContent = `Entry must contain at least 10 words. Currently: ${words.length} words`;
           validationMsg.style.color = "#ef4444";
           validationMsg.style.display = "block";
+          validationMsg.style.padding = "0.75rem";
+          validationMsg.style.borderRadius = "0.5rem";
+          validationMsg.style.backgroundColor = "rgba(239, 68, 68, 0.1)";
         } else {
           validationMsg.textContent = `Success! Entry saved (${words.length} words)`;
           validationMsg.style.color = "#22c55e";
           validationMsg.style.display = "block";
+          validationMsg.style.padding = "0.75rem";
+          validationMsg.style.borderRadius = "0.5rem";
+          validationMsg.style.backgroundColor = "rgba(34, 197, 94, 0.1)";
           
-          // Clear form after 2 seconds
           setTimeout(() => {
             journalInput.value = "";
             wordCount.textContent = "0 words";
+            wordCount.style.color = "#94a3b8";
             validationMsg.style.display = "none";
           }, 2000);
         }
       });
     }
 
-    // 5. Collapsible Sections
+    // 4. Collapsible Sections
     const collapsibleButtons = document.querySelectorAll(".collapsible-btn");
     
     collapsibleButtons.forEach(button => {
       button.addEventListener("click", function() {
         const targetId = (button as HTMLElement).dataset.target;
         const content = document.getElementById(targetId!);
+        const icon = (button as HTMLElement).querySelector(".collapse-icon");
         
-        if (content) {
-          const isHidden = content.style.display === "none";
+        if (content && icon) {
+          const isHidden = content.style.display === "none" || !content.style.display;
           content.style.display = isHidden ? "block" : "none";
-          button.textContent = isHidden ? "Click to Collapse" : "Click to Expand";
+          icon.textContent = isHidden ? "▼" : "▶";
         }
       });
     });
 
-    // 6. Dynamic Navigation Menu Insertion (Lab 3 Requirement)
+    // 5. Dynamic Navigation Menu
     const navContainer = document.getElementById("dynamic-nav");
     if (navContainer) {
       const navHTML = `
-        <nav style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-          <ul style="list-style: none; display: flex; gap: 1rem; margin: 0; padding: 0; flex-wrap: wrap;">
-            <li><a href="/" style="color: white; text-decoration: none; font-weight: 500;">Home</a></li>
-            <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500;">Journal</a></li>
-            <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500;">Projects</a></li>
-            <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500;">Analytics</a></li>
-            <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 500; background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 4px;">Lab 3 Demo</a></li>
-          </ul>
-        </nav>
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+          <div style="color: white; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; opacity: 0.9;">Dynamic Navigation (Inserted via JavaScript)</div>
+          <nav>
+            <ul style="list-style: none; display: flex; gap: 0.75rem; margin: 0; padding: 0; flex-wrap: wrap;">
+              <li><a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Home</a></li>
+              <li><a href="/journal" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Journal</a></li>
+              <li><a href="/projects" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Projects</a></li>
+              <li><a href="/analytics" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.15); transition: all 0.2s; display: inline-block;">Analytics</a></li>
+              <li><a href="/lab3-demo" style="color: white; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.3); transition: all 0.2s; display: inline-block;">Lab 3 Demo ✓</a></li>
+            </ul>
+          </nav>
+        </div>
       `;
       navContainer.innerHTML = navHTML;
     }
 
-    // Cleanup interval on unmount
     return () => {
       clearInterval(dateInterval);
     };
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      {/* Dynamic Navigation Menu (inserted via JavaScript) */}
-      <div id="dynamic-nav" data-testid="dynamic-nav"></div>
-
-      <div id="demo-container" className="transition-colors duration-300" style={{ padding: "2rem", borderRadius: "12px" }}>
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Lab 3: JavaScript & DOM Manipulation
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Demonstrating vanilla JavaScript DOM methods, event handling, and dynamic content updates
-          </p>
+    <div className="min-h-screen pb-12">
+      {/* Header Section with Gradient Background */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 text-white">
+        <div className="absolute inset-0 bg-grid-white/10"></div>
+        <div className="container mx-auto px-4 py-16 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <Badge className="mb-4 bg-white/20 hover:bg-white/30 text-white border-white/30">
+              FGCT6021 Mobile Application Development
+            </Badge>
+            <h1 className="text-5xl font-bold mb-4">
+              Lab 3: JavaScript & DOM
+            </h1>
+            <p className="text-xl text-blue-100 mb-6">
+              Demonstrating vanilla JavaScript DOM manipulation, event handling, and interactive features
+            </p>
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Badge variant="secondary" className="bg-white/90 text-purple-700">
+                <Code2 className="w-3 h-3 mr-1" />
+                getElementById()
+              </Badge>
+              <Badge variant="secondary" className="bg-white/90 text-purple-700">
+                <Code2 className="w-3 h-3 mr-1" />
+                querySelector()
+              </Badge>
+              <Badge variant="secondary" className="bg-white/90 text-purple-700">
+                <Code2 className="w-3 h-3 mr-1" />
+                addEventListener()
+              </Badge>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className="grid gap-6">
-          {/* Feature 1: Live Date/Time */}
-          <Card className="hover-elevate">
-            <CardHeader>
-              <CardTitle>1. Live Date & Time Display</CardTitle>
-              <CardDescription>Using JavaScript Date() object and setInterval()</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-semibold text-center p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg">
-                <div id="live-date" data-testid="live-date">Loading...</div>
-              </div>
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <p className="text-sm font-mono text-muted-foreground">
-                  <strong>DOM Method:</strong> document.getElementById("live-date")<br />
-                  <strong>Updates:</strong> Every second using setInterval()
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="container mx-auto px-4 -mt-8 max-w-6xl">
+        {/* Dynamic Navigation */}
+        <div id="dynamic-nav" data-testid="dynamic-nav"></div>
 
-          {/* Feature 2: Theme Switcher */}
-          <Card className="hover-elevate">
-            <CardHeader>
-              <CardTitle>2. Vanilla JS Theme Switcher</CardTitle>
-              <CardDescription>Toggle dark/light mode by changing CSS classes and styles</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                id="vanilla-theme-toggle" 
-                data-testid="vanilla-theme-toggle"
-                className="w-full text-lg"
-                variant="default"
-              >
-                Switch to Dark Mode
-              </Button>
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <p className="text-sm font-mono text-muted-foreground">
-                  <strong>DOM Method:</strong> document.getElementById()<br />
-                  <strong>Event:</strong> click event listener<br />
-                  <strong>Action:</strong> classList.toggle() + style modifications
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Demo Container */}
+        <div id="demo-container" className="transition-all duration-300 rounded-xl p-6">
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+            {/* Feature 1: Live Date/Time */}
+            <Card className="hover-elevate border-2">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <CardTitle className="text-xl">Live Date & Time</CardTitle>
+                </div>
+                <CardDescription>Real-time updates using setInterval() and Date()</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-6 rounded-lg">
+                  <div id="live-date" data-testid="live-date" className="text-xl font-semibold text-white text-center">
+                    Loading...
+                  </div>
+                </div>
+                <div className="bg-muted/50 p-4 rounded-lg border">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Method:</span> <code className="bg-background px-1.5 py-0.5 rounded text-xs">getElementById()</code>
+                    <br />
+                    <span className="font-semibold text-foreground">Updates:</span> Every 1000ms
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Feature 2: Theme Switcher */}
+            <Card className="hover-elevate border-2">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Code2 className="w-5 h-5 text-purple-600" />
+                  <CardTitle className="text-xl">Theme Switcher</CardTitle>
+                </div>
+                <CardDescription>Dynamic CSS manipulation with classList.toggle()</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button 
+                  id="vanilla-theme-toggle" 
+                  data-testid="vanilla-theme-toggle"
+                  className="w-full h-12 text-base font-semibold"
+                  variant="default"
+                >
+                  Switch to Dark Mode
+                </Button>
+                <div className="bg-muted/50 p-4 rounded-lg border">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Event:</span> click listener
+                    <br />
+                    <span className="font-semibold text-foreground">Action:</span> Toggle classes & inline styles
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* Feature 3: Form Validation */}
-          <Card className="hover-elevate">
-            <CardHeader>
-              <CardTitle>3. Form Validation (10 Word Minimum)</CardTitle>
-              <CardDescription>Validate journal entries must have at least 10 words</CardDescription>
+          <Card className="mb-6 hover-elevate border-2">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2 mb-1">
+                <FileEdit className="w-5 h-5 text-green-600" />
+                <CardTitle className="text-xl">Form Validation with Real-time Feedback</CardTitle>
+              </div>
+              <CardDescription>10-word minimum validation using input event handling</CardDescription>
             </CardHeader>
             <CardContent>
-              <form id="lab3-journal-form" data-testid="lab3-journal-form">
-                <textarea
-                  id="journal-entry"
-                  data-testid="journal-entry"
-                  className="w-full min-h-[120px] p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Write your journal entry here (minimum 10 words)..."
-                ></textarea>
-                <div className="flex justify-between items-center mt-2">
-                  <span id="word-count" data-testid="word-count" className="text-sm text-muted-foreground">0 words</span>
-                  <Button type="submit" data-testid="submit-entry">Submit Entry</Button>
+              <form id="lab3-journal-form" data-testid="lab3-journal-form" className="space-y-4">
+                <div>
+                  <textarea
+                    id="journal-entry"
+                    data-testid="journal-entry"
+                    className="w-full min-h-[140px] p-4 border-2 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    placeholder="Write your journal entry here... (minimum 10 words required)"
+                  ></textarea>
                 </div>
-                <div className="validation-message mt-2 hidden" data-testid="validation-message" style={{ display: "none" }}></div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <span id="word-count" data-testid="word-count" className="text-sm font-medium text-muted-foreground">
+                      0 words
+                    </span>
+                  </div>
+                  <Button type="submit" data-testid="submit-entry" size="lg">
+                    Submit Entry
+                  </Button>
+                </div>
+                <div className="validation-message" data-testid="validation-message" style={{ display: "none" }}></div>
               </form>
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <p className="text-sm font-mono text-muted-foreground">
-                  <strong>DOM Methods:</strong> querySelector(), getElementById()<br />
-                  <strong>Events:</strong> input, submit<br />
-                  <strong>Validation:</strong> Word count using split() and filter()
+              <div className="mt-4 bg-muted/50 p-4 rounded-lg border">
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Methods:</span> <code className="bg-background px-1.5 py-0.5 rounded text-xs">querySelector()</code>, <code className="bg-background px-1.5 py-0.5 rounded text-xs">getElementById()</code>
+                  <br />
+                  <span className="font-semibold text-foreground">Events:</span> input (real-time), submit (validation)
                 </p>
               </div>
             </CardContent>
           </Card>
 
           {/* Feature 4: Collapsible Sections */}
-          <Card className="hover-elevate">
-            <CardHeader>
-              <CardTitle>4. Collapsible Sections</CardTitle>
-              <CardDescription>Click to expand/collapse content dynamically</CardDescription>
+          <Card className="mb-6 hover-elevate border-2">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2 mb-1">
+                <ChevronRight className="w-5 h-5 text-orange-600" />
+                <CardTitle className="text-xl">Collapsible Sections</CardTitle>
+              </div>
+              <CardDescription>Click to expand/collapse using querySelectorAll() and forEach()</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Button 
-                    className="collapsible-btn w-full justify-start" 
-                    variant="outline"
-                    data-target="section1"
-                    data-testid="collapse-btn-1"
-                  >
-                    Click to Expand
-                  </Button>
-                  <div id="section1" data-testid="section1" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
-                    <h4 className="font-semibold mb-2">DOM Selection Methods Used:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li><code>document.getElementById()</code> - Fast, direct element selection</li>
-                      <li><code>document.querySelector()</code> - CSS selector-based selection</li>
-                      <li><code>document.querySelectorAll()</code> - Multiple elements selection</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div>
-                  <Button 
-                    className="collapsible-btn w-full justify-start" 
-                    variant="outline"
-                    data-target="section2"
-                    data-testid="collapse-btn-2"
-                  >
-                    Click to Expand
-                  </Button>
-                  <div id="section2" data-testid="section2" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
-                    <h4 className="font-semibold mb-2">Event Handling Techniques:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li><code>addEventListener("click")</code> - Button interactions</li>
-                      <li><code>addEventListener("input")</code> - Real-time form validation</li>
-                      <li><code>addEventListener("submit")</code> - Form submission handling</li>
-                      <li><code>event.preventDefault()</code> - Prevent default form behavior</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div>
-                  <Button 
-                    className="collapsible-btn w-full justify-start" 
-                    variant="outline"
-                    data-target="section3"
-                    data-testid="collapse-btn-3"
-                  >
-                    Click to Expand
-                  </Button>
-                  <div id="section3" data-testid="section3" style={{ display: "none" }} className="mt-2 p-4 bg-muted rounded-lg">
-                    <h4 className="font-semibold mb-2">Dynamic Content Manipulation:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li><code>element.textContent</code> - Update text content</li>
-                      <li><code>element.innerHTML</code> - Insert HTML dynamically</li>
-                      <li><code>element.style.property</code> - Modify CSS styles</li>
-                      <li><code>element.classList.toggle()</code> - Add/remove CSS classes</li>
-                    </ul>
-                  </div>
+            <CardContent className="space-y-3">
+              {/* Section 1 */}
+              <div>
+                <Button 
+                  className="collapsible-btn w-full justify-between" 
+                  variant="outline"
+                  data-target="section1"
+                  data-testid="collapse-btn-1"
+                >
+                  <span>DOM Selection Methods</span>
+                  <span className="collapse-icon">▶</span>
+                </Button>
+                <div id="section1" data-testid="section1" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
+                  <h4 className="font-semibold mb-3 text-foreground">DOM Selection Methods Used:</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">getElementById()</code> - Direct element selection by ID</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">querySelector()</code> - CSS selector-based selection</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">querySelectorAll()</code> - Multiple elements selection</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <p className="text-sm font-mono text-muted-foreground">
-                  <strong>DOM Methods:</strong> querySelectorAll(), forEach()<br />
-                  <strong>Event:</strong> click with data attributes<br />
-                  <strong>Action:</strong> Toggle display property
-                </p>
+              {/* Section 2 */}
+              <div>
+                <Button 
+                  className="collapsible-btn w-full justify-between" 
+                  variant="outline"
+                  data-target="section2"
+                  data-testid="collapse-btn-2"
+                >
+                  <span>Event Handling</span>
+                  <span className="collapse-icon">▶</span>
+                </Button>
+                <div id="section2" data-testid="section2" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
+                  <h4 className="font-semibold mb-3 text-foreground">Event Handling Techniques:</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">addEventListener("click")</code> - Button interactions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">addEventListener("input")</code> - Real-time validation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">addEventListener("submit")</code> - Form submission</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">event.preventDefault()</code> - Prevent default behavior</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Section 3 */}
+              <div>
+                <Button 
+                  className="collapsible-btn w-full justify-between" 
+                  variant="outline"
+                  data-target="section3"
+                  data-testid="collapse-btn-3"
+                >
+                  <span>Dynamic Content Updates</span>
+                  <span className="collapse-icon">▶</span>
+                </Button>
+                <div id="section3" data-testid="section3" style={{ display: "none" }} className="mt-2 p-4 bg-muted/50 rounded-lg border">
+                  <h4 className="font-semibold mb-3 text-foreground">DOM Manipulation Methods:</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">element.textContent</code> - Update text dynamically</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">element.innerHTML</code> - Insert HTML structure</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">element.style.property</code> - Modify CSS styles</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      <span><code className="bg-background px-1.5 py-0.5 rounded text-xs">element.classList.toggle()</code> - Toggle CSS classes</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Lab 3 Summary */}
-          <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-300 dark:border-purple-700">
+          {/* Summary Card */}
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-2 border-green-200 dark:border-green-800">
             <CardHeader>
-              <CardTitle>✅ Lab 3 Requirements Completed</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                <CheckCircle2 className="w-6 h-6" />
+                Lab 3 Requirements Completed
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-6">
                 <div>
-                  <h4 className="font-semibold mb-2">DOM Selection Methods:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>✓ document.getElementById()</li>
-                    <li>✓ document.querySelector()</li>
-                    <li>✓ document.querySelectorAll()</li>
+                  <h4 className="font-semibold mb-3 text-foreground">Interactive Features</h4>
+                  <ul className="text-sm space-y-1.5">
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                      Live Date/Time Display
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                      Theme Switcher
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                      Form Validation
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                      Collapsible Sections
+                    </li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Event Handling:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>✓ click events</li>
-                    <li>✓ input events</li>
-                    <li>✓ submit events</li>
+                  <h4 className="font-semibold mb-3 text-foreground">DOM Methods</h4>
+                  <ul className="text-sm space-y-1.5">
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                      getElementById()
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                      querySelector()
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                      querySelectorAll()
+                    </li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Interactive Features:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>✓ Live Date/Time</li>
-                    <li>✓ Theme Switcher</li>
-                    <li>✓ Form Validation</li>
-                    <li>✓ Collapsible Sections</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">DOM Manipulation:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>✓ Dynamic Navigation Menu</li>
-                    <li>✓ Text Content Changes</li>
-                    <li>✓ CSS Style Modifications</li>
-                    <li>✓ Class Toggle</li>
+                  <h4 className="font-semibold mb-3 text-foreground">Event Handling</h4>
+                  <ul className="text-sm space-y-1.5">
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-600"></div>
+                      click events
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-600"></div>
+                      input events
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-600"></div>
+                      submit events
+                    </li>
                   </ul>
                 </div>
               </div>
