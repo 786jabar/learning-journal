@@ -138,33 +138,29 @@ export default function Lab3DemoPage() {
         console.log("✅ Form: Submit event listener attached");
       }
 
-      // 4. Collapsible Sections
+      // 4. Collapsible Sections - Define global toggle function
+      // @ts-ignore - Attach to window for onclick handlers
+      window.toggleCollapsible = function(buttonId: string, targetId: string) {
+        console.log(`📂 Collapsible button clicked! Target: ${targetId}`);
+        
+        const content = document.getElementById(targetId);
+        const button = document.getElementById(buttonId);
+        const icon = button?.querySelector(".collapse-icon");
+        
+        console.log(`   Content element: ${content ? 'FOUND' : 'NOT FOUND'}`);
+        console.log(`   Icon element: ${icon ? 'FOUND' : 'NOT FOUND'}`);
+        
+        if (content && icon) {
+          const isHidden = content.style.display === "none" || !content.style.display;
+          content.style.display = isHidden ? "block" : "none";
+          icon.textContent = isHidden ? "▼" : "▶";
+          console.log(`   ${isHidden ? '📖 EXPANDED' : '📕 COLLAPSED'}`);
+        }
+      };
+      
       const collapsibleButtons = document.querySelectorAll(".collapsible-btn");
       console.log(`🔍 Found ${collapsibleButtons.length} collapsible buttons`);
-      
-      collapsibleButtons.forEach((button, index) => {
-        button.addEventListener("click", function(e) {
-          console.log(`📂 Collapsible button ${index + 1} CLICKED!`);
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const targetId = (button as HTMLElement).dataset.target;
-          const content = document.getElementById(targetId!);
-          const icon = (button as HTMLElement).querySelector(".collapse-icon");
-          
-          console.log(`   Target ID: ${targetId}`);
-          console.log(`   Content element: ${content ? 'FOUND' : 'NOT FOUND'}`);
-          console.log(`   Icon element: ${icon ? 'FOUND' : 'NOT FOUND'}`);
-          
-          if (content && icon) {
-            const isHidden = content.style.display === "none" || !content.style.display;
-            content.style.display = isHidden ? "block" : "none";
-            icon.textContent = isHidden ? "▼" : "▶";
-            console.log(`   ${isHidden ? '📖 EXPANDED' : '📕 COLLAPSED'}`);
-          }
-        }, true);
-      });
-      console.log("✅ Collapsible: Event listeners attached to all buttons");
+      console.log("✅ Collapsible: Toggle function attached to window.toggleCollapsible()");
 
       // 5. Dynamic Navigation Menu
       const navContainer = document.getElementById("dynamic-nav");
@@ -349,9 +345,11 @@ export default function Lab3DemoPage() {
               {/* Section 1 */}
               <div>
                 <button 
+                  id="collapse-btn-1"
                   className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section1"
                   data-testid="collapse-btn-1"
+                  onClick={() => (window as any).toggleCollapsible('collapse-btn-1', 'section1')}
                 >
                   <span className="font-medium">DOM Selection Methods</span>
                   <span className="collapse-icon text-lg">▶</span>
@@ -378,9 +376,11 @@ export default function Lab3DemoPage() {
               {/* Section 2 */}
               <div>
                 <button 
+                  id="collapse-btn-2"
                   className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section2"
                   data-testid="collapse-btn-2"
+                  onClick={() => (window as any).toggleCollapsible('collapse-btn-2', 'section2')}
                 >
                   <span className="font-medium">Event Handling</span>
                   <span className="collapse-icon text-lg">▶</span>
@@ -411,9 +411,11 @@ export default function Lab3DemoPage() {
               {/* Section 3 */}
               <div>
                 <button 
+                  id="collapse-btn-3"
                   className="collapsible-btn w-full flex justify-between items-center px-4 py-2 rounded-md border-2 bg-background hover-elevate active-elevate-2 transition-colors" 
                   data-target="section3"
                   data-testid="collapse-btn-3"
+                  onClick={() => (window as any).toggleCollapsible('collapse-btn-3', 'section3')}
                 >
                   <span className="font-medium">Dynamic Content Updates</span>
                   <span className="collapse-icon text-lg">▶</span>
