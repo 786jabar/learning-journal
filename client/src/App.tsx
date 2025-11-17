@@ -16,6 +16,7 @@ import AboutPage from "@/pages/AboutPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import LandingPage from "@/pages/LandingPage";
 import Lab3DemoPage from "@/pages/Lab3DemoPage";
+import Lab3Report from "@/pages/Lab3Report";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/projects" component={ProjectsPage} />
       <Route path="/analytics" component={AnalyticsPage} />
       <Route path="/lab3-demo" component={Lab3DemoPage} />
+      <Route path="/lab3-report" component={Lab3Report} />
       <Route path="/about" component={AboutPage} />
       <Route component={NotFound} />
     </Switch>
