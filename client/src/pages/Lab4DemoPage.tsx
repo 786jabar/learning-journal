@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Database, HardDrive, FileText, Copy, Bell, MapPin, Cloud, Quote, Github, ExternalLink } from "lucide-react";
+import { Loader2, Database, HardDrive, FileText, Copy, Bell, MapPin, Cloud, Quote, Github, ExternalLink, Video, Users, MessageCircle, BarChart3 } from "lucide-react";
 
 export default function Lab4DemoPage() {
   const { toast } = useToast();
@@ -18,6 +20,11 @@ export default function Lab4DemoPage() {
   const [noteContent, setNoteContent] = useState("");
   const [clipboardText, setClipboardText] = useState("");
   const [githubUsername, setGithubUsername] = useState("786jabar");
+  const [tiktokUsername, setTiktokUsername] = useState("charlidamelio");
+  
+  // State for TikTok data
+  const [tiktokData, setTiktokData] = useState<any>(null);
+  const [tiktokTab, setTiktokTab] = useState("profile");
 
   // State for outputs
   const [outputs, setOutputs] = useState<Record<string, string>>({});
@@ -365,6 +372,142 @@ export default function Lab4DemoPage() {
     }
   };
 
+  // === TIKTOK ===
+  // Demo mode: TikTok's official API requires OAuth and developer credentials
+  const handleGetTikTokProfile = async () => {
+    if (!tiktokUsername.trim()) {
+      toast({ title: "Warning", description: "Please enter a TikTok username", variant: "destructive" });
+      return;
+    }
+    setLoading(prev => ({ ...prev, tiktok: true }));
+    try {
+      // Demo mode: Generate sample data
+      const profileData = {
+        username: tiktokUsername,
+        displayName: tiktokUsername.charAt(0).toUpperCase() + tiktokUsername.slice(1),
+        avatar: `https://ui-avatars.com/api/?name=${tiktokUsername}&size=200&background=random`,
+        bio: `TikTok creator @${tiktokUsername}`,
+        followers: Math.floor(Math.random() * 100000) + 1000,
+        following: Math.floor(Math.random() * 5000) + 100,
+        likes: Math.floor(Math.random() * 1000000) + 10000,
+        videos: Math.floor(Math.random() * 500) + 10,
+        verified: false,
+        profileUrl: `https://www.tiktok.com/@${tiktokUsername}`
+      };
+      
+      setTiktokData(profileData);
+      setTiktokTab('profile');
+      toast({ 
+        title: "Demo Mode", 
+        description: "Showing sample data. Real API requires TikTok developer credentials." 
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to load profile", variant: "destructive" });
+    } finally {
+      setLoading(prev => ({ ...prev, tiktok: false }));
+    }
+  };
+
+  const handleGetTikTokFollowers = async () => {
+    if (!tiktokUsername.trim()) {
+      toast({ title: "Warning", description: "Please enter a TikTok username", variant: "destructive" });
+      return;
+    }
+    setLoading(prev => ({ ...prev, tiktokFollowers: true }));
+    try {
+      // Demo mode: Generate mock followers
+      const followers = Array.from({ length: 10 }, (_, i) => ({
+        username: `user${Math.floor(Math.random() * 10000)}`,
+        displayName: `TikTok User ${i + 1}`,
+        avatar: `https://ui-avatars.com/api/?name=User${i + 1}&size=100&background=random`,
+        isFollowing: Math.random() > 0.5,
+        followerCount: Math.floor(Math.random() * 50000)
+      }));
+      
+      setTiktokData((prev: any) => ({ ...prev, followers }));
+      setTiktokTab('followers');
+      toast({ 
+        title: "Demo Mode", 
+        description: `Loaded ${followers.length} sample followers` 
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to load followers", variant: "destructive" });
+    } finally {
+      setLoading(prev => ({ ...prev, tiktokFollowers: false }));
+    }
+  };
+
+  const handleGetTikTokStats = async () => {
+    if (!tiktokUsername.trim()) {
+      toast({ title: "Warning", description: "Please enter a TikTok username", variant: "destructive" });
+      return;
+    }
+    setLoading(prev => ({ ...prev, tiktokStats: true }));
+    try {
+      // Demo mode: Generate mock video stats
+      const stats = {
+        totalVideos: Math.floor(Math.random() * 500) + 10,
+        totalViews: Math.floor(Math.random() * 10000000) + 100000,
+        totalLikes: Math.floor(Math.random() * 1000000) + 10000,
+        totalComments: Math.floor(Math.random() * 100000) + 1000,
+        totalShares: Math.floor(Math.random() * 50000) + 500,
+        averageViews: 0,
+        averageLikes: 0
+      };
+      
+      stats.averageViews = Math.floor(stats.totalViews / stats.totalVideos);
+      stats.averageLikes = Math.floor(stats.totalLikes / stats.totalVideos);
+      
+      setTiktokData((prev: any) => ({ ...prev, stats }));
+      setTiktokTab('stats');
+      toast({ 
+        title: "Demo Mode", 
+        description: "Sample video statistics loaded" 
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to load stats", variant: "destructive" });
+    } finally {
+      setLoading(prev => ({ ...prev, tiktokStats: false }));
+    }
+  };
+
+  const handleGetTikTokComments = async () => {
+    if (!tiktokUsername.trim()) {
+      toast({ title: "Warning", description: "Please enter a TikTok username", variant: "destructive" });
+      return;
+    }
+    setLoading(prev => ({ ...prev, tiktokComments: true }));
+    try {
+      const sampleComments = [
+        'This is amazing!', 'Love your content!', 'Keep it up!',
+        'So creative!', 'Best video ever!', 'You inspire me!',
+        'Can\'t stop watching!', 'Absolutely stunning!',
+        'This made my day!', 'More please!'
+      ];
+      
+      // Demo mode: Generate mock comments
+      const comments = Array.from({ length: 10 }, (_, i) => ({
+        id: `comment_${Date.now()}_${i}`,
+        username: `commenter${Math.floor(Math.random() * 10000)}`,
+        text: sampleComments[Math.floor(Math.random() * sampleComments.length)],
+        likes: Math.floor(Math.random() * 1000),
+        timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        replies: Math.floor(Math.random() * 20)
+      }));
+      
+      setTiktokData((prev: any) => ({ ...prev, comments }));
+      setTiktokTab('comments');
+      toast({ 
+        title: "Demo Mode", 
+        description: `Loaded ${comments.length} sample comments` 
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to load comments", variant: "destructive" });
+    } finally {
+      setLoading(prev => ({ ...prev, tiktokComments: false }));
+    }
+  };
+
   // Render output function
   const renderOutput = (key: string) => {
     const output = outputs[key];
@@ -626,11 +769,11 @@ export default function Lab4DemoPage() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-bold gradient-text">Third-Party APIs</h2>
           <span className="text-sm text-muted-foreground px-3 py-1 bg-secondary rounded-md">
-            Weather • Quotes • GitHub
+            Weather • Quotes • GitHub • TikTok
           </span>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Weather */}
           <Card data-testid="card-weather">
             <CardHeader>
@@ -695,6 +838,192 @@ export default function Lab4DemoPage() {
               <div className="p-3 bg-secondary/50 rounded-md min-h-[100px]" data-testid="output-github">
                 {renderOutput('github')}
               </div>
+            </CardContent>
+          </Card>
+
+          {/* TikTok - Spans 2 columns for larger display */}
+          <Card className="md:col-span-2" data-testid="card-tiktok">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Video className="h-5 w-5" />
+                TikTok API (Demo Mode)
+              </CardTitle>
+              <CardDescription>
+                View profile, followers, likes, comments, and stats (Demo data - Real API requires TikTok developer credentials)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="TikTok username..."
+                  value={tiktokUsername}
+                  onChange={(e) => setTiktokUsername(e.target.value)}
+                  data-testid="input-tiktok-username"
+                  className="flex-1"
+                />
+                <Button onClick={handleGetTikTokProfile} disabled={loading.tiktok} data-testid="button-get-tiktok-profile">
+                  {loading.tiktok ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Load Profile'}
+                </Button>
+              </div>
+
+              {tiktokData && (
+                <Tabs value={tiktokTab} onValueChange={setTiktokTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="profile" className="gap-1" data-testid="tab-tiktok-profile">
+                      <Video className="h-3 w-3" />
+                      Profile
+                    </TabsTrigger>
+                    <TabsTrigger value="followers" className="gap-1" data-testid="tab-tiktok-followers">
+                      <Users className="h-3 w-3" />
+                      Followers
+                    </TabsTrigger>
+                    <TabsTrigger value="stats" className="gap-1" data-testid="tab-tiktok-stats">
+                      <BarChart3 className="h-3 w-3" />
+                      Stats
+                    </TabsTrigger>
+                    <TabsTrigger value="comments" className="gap-1" data-testid="tab-tiktok-comments">
+                      <MessageCircle className="h-3 w-3" />
+                      Comments
+                    </TabsTrigger>
+                  </TabsList>
+
+                  {/* Profile Tab */}
+                  <TabsContent value="profile" className="space-y-4" data-testid="content-tiktok-profile">
+                    <div className="flex items-start gap-4 p-4 bg-secondary/30 rounded-lg">
+                      <Avatar className="h-20 w-20">
+                        <AvatarImage src={tiktokData.avatar} alt={tiktokData.username} />
+                        <AvatarFallback>{tiktokData.displayName?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold">@{tiktokData.username}</h3>
+                        <p className="text-sm text-muted-foreground mb-2">{tiktokData.displayName}</p>
+                        <p className="text-sm mb-3">{tiktokData.bio}</p>
+                        <div className="grid grid-cols-4 gap-4 text-center">
+                          <div>
+                            <div className="font-bold text-lg">{tiktokData.followers?.toLocaleString()}</div>
+                            <div className="text-xs text-muted-foreground">Followers</div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-lg">{tiktokData.following?.toLocaleString()}</div>
+                            <div className="text-xs text-muted-foreground">Following</div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-lg">{tiktokData.likes?.toLocaleString()}</div>
+                            <div className="text-xs text-muted-foreground">Likes</div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-lg">{tiktokData.videos}</div>
+                            <div className="text-xs text-muted-foreground">Videos</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={handleGetTikTokFollowers} disabled={loading.tiktokFollowers} size="sm" variant="outline" className="flex-1" data-testid="button-load-followers">
+                        {loading.tiktokFollowers ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Load Followers'}
+                      </Button>
+                      <Button onClick={handleGetTikTokStats} disabled={loading.tiktokStats} size="sm" variant="outline" className="flex-1" data-testid="button-load-stats">
+                        {loading.tiktokStats ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Load Stats'}
+                      </Button>
+                      <Button onClick={handleGetTikTokComments} disabled={loading.tiktokComments} size="sm" variant="outline" className="flex-1" data-testid="button-load-comments">
+                        {loading.tiktokComments ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Load Comments'}
+                      </Button>
+                    </div>
+                  </TabsContent>
+
+                  {/* Followers Tab */}
+                  <TabsContent value="followers" className="space-y-3" data-testid="content-tiktok-followers">
+                    {tiktokData.followers?.length > 0 ? (
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {tiktokData.followers.map((follower: any, i: number) => (
+                          <div key={i} className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={follower.avatar} alt={follower.username} />
+                              <AvatarFallback>{follower.displayName?.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1">
+                              <div className="font-semibold text-sm">@{follower.username}</div>
+                              <div className="text-xs text-muted-foreground">{follower.displayName}</div>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {follower.followerCount?.toLocaleString()} followers
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-center py-8">Click "Load Followers" to view follower list</p>
+                    )}
+                  </TabsContent>
+
+                  {/* Stats Tab */}
+                  <TabsContent value="stats" className="space-y-3" data-testid="content-tiktok-stats">
+                    {tiktokData.stats ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.totalVideos}</div>
+                          <div className="text-sm text-muted-foreground">Total Videos</div>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.totalViews?.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Total Views</div>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.totalLikes?.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Total Likes</div>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.totalComments?.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Total Comments</div>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.totalShares?.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Total Shares</div>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <div className="text-2xl font-bold">{tiktokData.stats.averageViews?.toLocaleString()}</div>
+                          <div className="text-sm text-muted-foreground">Avg Views/Video</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-center py-8">Click "Load Stats" to view video statistics</p>
+                    )}
+                  </TabsContent>
+
+                  {/* Comments Tab */}
+                  <TabsContent value="comments" className="space-y-3" data-testid="content-tiktok-comments">
+                    {tiktokData.comments?.length > 0 ? (
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {tiktokData.comments.map((comment: any, i: number) => (
+                          <div key={i} className="p-3 bg-secondary/30 rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="font-semibold text-sm">@{comment.username}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(comment.timestamp).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-sm mb-2">{comment.text}</p>
+                            <div className="flex gap-4 text-xs text-muted-foreground">
+                              <span>{comment.likes} likes</span>
+                              <span>{comment.replies} replies</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-center py-8">Click "Load Comments" to view recent comments</p>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              )}
+
+              {!tiktokData && (
+                <div className="p-8 text-center text-muted-foreground bg-secondary/20 rounded-lg">
+                  <Video className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>Enter a TikTok username and click "Load Profile" to view demo data</p>
+                  <p className="text-xs mt-2">Demo mode shows sample data. Real API requires TikTok developer credentials.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
