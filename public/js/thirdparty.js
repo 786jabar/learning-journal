@@ -257,10 +257,35 @@ export const GitHubAPI = {
   }
 };
 
-// ===== 4. TIKTOK API (Unofficial API - Demo Mode) =====
+// ===== 4. TIKTOK API (Demo Mode) =====
+/**
+ * TikTok API Integration
+ * 
+ * IMPORTANT: TikTok's official API requires OAuth authentication and developer credentials.
+ * This implementation runs in demo mode with sample data.
+ * 
+ * To use the real TikTok API:
+ * 1. Register at https://developers.tiktok.com/
+ * 2. Create a new app in the TikTok Developer Portal
+ * 3. Obtain your Client Key and Client Secret
+ * 4. Implement OAuth 2.0 flow for user authorization
+ * 5. Use the authorized access tokens to call TikTok endpoints
+ * 
+ * Available TikTok API Endpoints (with credentials):
+ * - User Info: /v2/user/info/
+ * - User Videos: /v2/video/list/
+ * - Video Comments: /v2/comment/list/
+ * - Video Analytics: /v2/video/query/
+ * 
+ * API Documentation: https://developers.tiktok.com/doc/
+ * Rate Limits: Varies by endpoint (typically 100-1000 requests/day for free tier)
+ * 
+ * Alternative: Use third-party services like RapidAPI's TikTok endpoints
+ * which handle authentication and provide simpler REST APIs.
+ */
 export const TikTokAPI = {
-  // Note: TikTok's official API requires OAuth and developer credentials
-  // This uses an unofficial approach with demo data
+  // Note: Currently running in demo mode
+  // Replace with real API calls once you have TikTok developer credentials
   
   // Get user profile with demo data
   getUserProfile: async function(username) {
