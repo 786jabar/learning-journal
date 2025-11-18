@@ -292,18 +292,19 @@ export const TikTokAPI = {
     try {
       console.log(`[TIKTOK] Fetching TikTok user: ${username}...`);
       
-      // Generate deterministic color from username
+      // Generate deterministic avatar style from username
+      const colors = ['set1', 'set2', 'set3', 'set4'];
       const hashCode = username.split('').reduce((acc, char) => {
         return char.charCodeAt(0) + ((acc << 5) - acc);
       }, 0);
-      const hue = Math.abs(hashCode % 360);
+      const colorSet = colors[Math.abs(hashCode) % colors.length];
       
       // Demo mode: Return mock data structure
       // In production, you would use RapidAPI TikTok endpoint or similar service
       const demoData = {
         username: username,
         displayName: username.charAt(0).toUpperCase() + username.slice(1),
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}&backgroundColor=${hue}`,
+        avatar: `https://robohash.org/${username}?set=${colorSet}&size=200x200`,
         bio: `TikTok creator @${username} | Demo account showcasing API capabilities`,
         followers: Math.floor(Math.random() * 100000) + 1000,
         following: Math.floor(Math.random() * 5000) + 100,
@@ -336,13 +337,14 @@ export const TikTokAPI = {
       console.log(`[TIKTOK] Fetching followers for: ${username}...`);
       
       // Demo mode: Generate mock followers
+      const colors = ['set1', 'set2', 'set3', 'set4'];
       const followers = Array.from({ length: limit }, (_, i) => {
         const followerUsername = `user${Math.floor(Math.random() * 10000)}`;
-        const hue = (i * 36) % 360;
+        const colorSet = colors[i % colors.length];
         return {
           username: followerUsername,
           displayName: `TikTok User ${i + 1}`,
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${followerUsername}&backgroundColor=${hue}`,
+          avatar: `https://robohash.org/${followerUsername}?set=${colorSet}&size=100x100`,
           isFollowing: Math.random() > 0.5,
           followerCount: Math.floor(Math.random() * 50000)
         };
