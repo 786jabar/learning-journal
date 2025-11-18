@@ -381,17 +381,18 @@ export default function Lab4DemoPage() {
     }
     setLoading(prev => ({ ...prev, tiktok: true }));
     try {
-      // Generate deterministic color from username
+      // Generate deterministic color from username for Robohash
+      const colors = ['set1', 'set2', 'set3', 'set4'];
       const hashCode = tiktokUsername.split('').reduce((acc, char) => {
         return char.charCodeAt(0) + ((acc << 5) - acc);
       }, 0);
-      const hue = Math.abs(hashCode % 360);
+      const colorSet = colors[Math.abs(hashCode) % colors.length];
       
       // Demo mode: Generate sample data
       const profileData = {
         username: tiktokUsername,
         displayName: tiktokUsername.charAt(0).toUpperCase() + tiktokUsername.slice(1),
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${tiktokUsername}&backgroundColor=${hue}`,
+        avatar: `https://robohash.org/${tiktokUsername}?set=${colorSet}&size=200x200`,
         bio: `TikTok creator @${tiktokUsername} | Demo account showcasing API capabilities`,
         followers: Math.floor(Math.random() * 100000) + 1000,
         following: Math.floor(Math.random() * 5000) + 100,
@@ -422,13 +423,14 @@ export default function Lab4DemoPage() {
     setLoading(prev => ({ ...prev, tiktokFollowers: true }));
     try {
       // Demo mode: Generate mock followers
+      const colors = ['set1', 'set2', 'set3', 'set4'];
       const followers = Array.from({ length: 10 }, (_, i) => {
         const followerUsername = `user${Math.floor(Math.random() * 10000)}`;
-        const hue = (i * 36) % 360;
+        const colorSet = colors[i % colors.length];
         return {
           username: followerUsername,
           displayName: `TikTok User ${i + 1}`,
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${followerUsername}&backgroundColor=${hue}`,
+          avatar: `https://robohash.org/${followerUsername}?set=${colorSet}&size=100x100`,
           isFollowing: Math.random() > 0.5,
           followerCount: Math.floor(Math.random() * 50000)
         };
