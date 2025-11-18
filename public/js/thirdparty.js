@@ -337,10 +337,15 @@ export const TikTokAPI = {
       console.log(`[TIKTOK] Fetching followers for: ${username}...`);
       
       // Demo mode: Generate mock followers
-      const colors = ['set1', 'set2', 'set3', 'set4'];
       const followers = Array.from({ length: limit }, (_, i) => {
         const followerUsername = `user${Math.floor(Math.random() * 10000)}`;
-        const colorSet = colors[i % colors.length];
+        // Generate deterministic color set from username
+        const colors = ['set1', 'set2', 'set3', 'set4'];
+        const hashCode = followerUsername.split('').reduce((acc, char) => {
+          return char.charCodeAt(0) + ((acc << 5) - acc);
+        }, 0);
+        const colorSet = colors[Math.abs(hashCode) % colors.length];
+        
         return {
           username: followerUsername,
           displayName: `TikTok User ${i + 1}`,
