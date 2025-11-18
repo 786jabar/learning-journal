@@ -4,6 +4,7 @@ import { CheckCircle2, Code2 } from "lucide-react";
 
 export default function Lab3Report() {
   const handlePrint = () => {
+    alert('IMPORTANT: In the print dialog that opens, click "More settings" and turn OFF "Headers and footers" to remove the URL from your PDF!');
     window.print();
   };
 
@@ -18,6 +19,28 @@ export default function Lab3Report() {
         >
           📄 Print to PDF
         </button>
+      </div>
+
+      {/* Instructions Box - Hidden when printing */}
+      <div className="print:hidden max-w-4xl mx-auto p-8 mb-4">
+        <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-yellow-900 mb-3 flex items-center gap-2">
+            ⚠️ IMPORTANT: Remove URL from PDF
+          </h3>
+          <div className="space-y-3 text-gray-800">
+            <p className="font-semibold">Follow these steps to get a clean PDF with NO URL:</p>
+            <ol className="list-decimal list-inside space-y-2 ml-4">
+              <li><strong>Click "Print to PDF" button</strong> above</li>
+              <li><strong>In the print dialog, click "More settings"</strong> (or "Options" depending on browser)</li>
+              <li><strong>Turn OFF "Headers and footers"</strong> checkbox</li>
+              <li><strong>Make sure "Background graphics" is ON</strong> (to keep colors)</li>
+              <li><strong>Click "Save" or "Print"</strong></li>
+            </ol>
+            <div className="mt-4 p-3 bg-green-100 border border-green-400 rounded">
+              <p className="text-green-900 font-semibold">✅ Result: Your PDF will have NO URL, NO date, completely professional!</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-4xl mx-auto p-8">
@@ -880,6 +903,17 @@ if (navContainer) {
           
           body {
             background: white !important;
+          }
+        }
+        
+        /* Instructions for removing headers/footers */
+        .print-instructions {
+          display: none;
+        }
+        
+        @media print {
+          .print-instructions {
+            display: none !important;
           }
         }
       `}</style>
