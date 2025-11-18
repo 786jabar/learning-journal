@@ -292,13 +292,19 @@ export const TikTokAPI = {
     try {
       console.log(`[TIKTOK] Fetching TikTok user: ${username}...`);
       
+      // Generate deterministic color from username
+      const hashCode = username.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+      }, 0);
+      const hue = Math.abs(hashCode % 360);
+      
       // Demo mode: Return mock data structure
       // In production, you would use RapidAPI TikTok endpoint or similar service
       const demoData = {
         username: username,
         displayName: username.charAt(0).toUpperCase() + username.slice(1),
-        avatar: `https://ui-avatars.com/api/?name=${username}&size=200&background=random`,
-        bio: `TikTok creator @${username}`,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}&backgroundColor=${hue}`,
+        bio: `TikTok creator @${username} | Demo account showcasing API capabilities`,
         followers: Math.floor(Math.random() * 100000) + 1000,
         following: Math.floor(Math.random() * 5000) + 100,
         likes: Math.floor(Math.random() * 1000000) + 10000,
@@ -313,7 +319,7 @@ export const TikTokAPI = {
         success: true,
         demo: true,
         data: demoData,
-        message: 'Demo mode: Showing sample data. To use real TikTok API, register at developers.tiktok.com'
+        message: 'Demo mode: Profile data only. Video playback requires TikTok business developer credentials.'
       };
     } catch (error) {
       console.error('[ERROR] TikTok API error:', error);
@@ -330,13 +336,17 @@ export const TikTokAPI = {
       console.log(`[TIKTOK] Fetching followers for: ${username}...`);
       
       // Demo mode: Generate mock followers
-      const followers = Array.from({ length: limit }, (_, i) => ({
-        username: `user${Math.floor(Math.random() * 10000)}`,
-        displayName: `TikTok User ${i + 1}`,
-        avatar: `https://ui-avatars.com/api/?name=User${i + 1}&size=100&background=random`,
-        isFollowing: Math.random() > 0.5,
-        followerCount: Math.floor(Math.random() * 50000)
-      }));
+      const followers = Array.from({ length: limit }, (_, i) => {
+        const followerUsername = `user${Math.floor(Math.random() * 10000)}`;
+        const hue = (i * 36) % 360;
+        return {
+          username: followerUsername,
+          displayName: `TikTok User ${i + 1}`,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${followerUsername}&backgroundColor=${hue}`,
+          isFollowing: Math.random() > 0.5,
+          followerCount: Math.floor(Math.random() * 50000)
+        };
+      });
       
       console.log(`[OK] Retrieved ${followers.length} followers (demo mode)`);
       

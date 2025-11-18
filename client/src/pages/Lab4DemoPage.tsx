@@ -381,12 +381,18 @@ export default function Lab4DemoPage() {
     }
     setLoading(prev => ({ ...prev, tiktok: true }));
     try {
+      // Generate deterministic color from username
+      const hashCode = tiktokUsername.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+      }, 0);
+      const hue = Math.abs(hashCode % 360);
+      
       // Demo mode: Generate sample data
       const profileData = {
         username: tiktokUsername,
         displayName: tiktokUsername.charAt(0).toUpperCase() + tiktokUsername.slice(1),
-        avatar: `https://ui-avatars.com/api/?name=${tiktokUsername}&size=200&background=random`,
-        bio: `TikTok creator @${tiktokUsername}`,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${tiktokUsername}&backgroundColor=${hue}`,
+        bio: `TikTok creator @${tiktokUsername} | Demo account showcasing API capabilities`,
         followers: Math.floor(Math.random() * 100000) + 1000,
         following: Math.floor(Math.random() * 5000) + 100,
         likes: Math.floor(Math.random() * 1000000) + 10000,
@@ -399,7 +405,7 @@ export default function Lab4DemoPage() {
       setTiktokTab('profile');
       toast({ 
         title: "Demo Mode", 
-        description: "Showing sample data. Real API requires TikTok developer credentials." 
+        description: "Profile data only - Video playback requires TikTok business credentials" 
       });
     } catch (error) {
       toast({ title: "Error", description: "Failed to load profile", variant: "destructive" });
@@ -416,13 +422,17 @@ export default function Lab4DemoPage() {
     setLoading(prev => ({ ...prev, tiktokFollowers: true }));
     try {
       // Demo mode: Generate mock followers
-      const followers = Array.from({ length: 10 }, (_, i) => ({
-        username: `user${Math.floor(Math.random() * 10000)}`,
-        displayName: `TikTok User ${i + 1}`,
-        avatar: `https://ui-avatars.com/api/?name=User${i + 1}&size=100&background=random`,
-        isFollowing: Math.random() > 0.5,
-        followerCount: Math.floor(Math.random() * 50000)
-      }));
+      const followers = Array.from({ length: 10 }, (_, i) => {
+        const followerUsername = `user${Math.floor(Math.random() * 10000)}`;
+        const hue = (i * 36) % 360;
+        return {
+          username: followerUsername,
+          displayName: `TikTok User ${i + 1}`,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${followerUsername}&backgroundColor=${hue}`,
+          isFollowing: Math.random() > 0.5,
+          followerCount: Math.floor(Math.random() * 50000)
+        };
+      });
       
       setTiktokData((prev: any) => ({ ...prev, followers }));
       setTiktokTab('followers');
@@ -849,7 +859,7 @@ export default function Lab4DemoPage() {
                 TikTok API (Demo Mode)
               </CardTitle>
               <CardDescription>
-                View profile, followers, likes, comments, and stats (Demo data - Real API requires TikTok developer credentials)
+                View profile info, follower lists, and video statistics with demo data. Note: Video playback is NOT available as it requires TikTok business developer credentials and OAuth authentication.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
