@@ -102,6 +102,11 @@
             transition: all 0.3s ease;
         }
         
+        .demo-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
         
         .demo-card h3 {
             color: #667eea;
@@ -156,7 +161,14 @@
             margin-bottom: 1rem;
         }
         
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
         
+        button:active {
+            transform: translateY(0);
+        }
         
         input[type="text"],
         textarea {
@@ -287,16 +299,16 @@
                         </ol>
                     </div>
                     
-                    <select id="theme-select" data-testid="select-theme" style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 1rem; font-size: 1rem;">
+                    <select id="theme-select" style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 1rem; font-size: 1rem;">
                         <option value="light">Light Mode</option>
                         <option value="dark">Dark Mode</option>
                         <option value="auto">Auto (System)</option>
                     </select>
                     
-                    <button onclick="saveTheme()" data-testid="button-save-theme">Save Theme to LocalStorage</button>
-                    <button onclick="loadTheme()" data-testid="button-load-theme" style="background: #6b7280;">Load Saved Theme</button>
+                    <button onclick="saveTheme()">Save Theme to LocalStorage</button>
+                    <button onclick="loadTheme()" style="background: #6b7280;">Load Saved Theme</button>
                     
-                    <div id="localStorage-output" data-testid="output-localstorage" class="output empty">Result will appear here...</div>
+                    <div id="localStorage-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- SessionStorage -->
@@ -313,11 +325,11 @@
                         </ol>
                     </div>
                     
-                    <input type="text" id="session-input" data-testid="input-session-name" placeholder="Enter your name..." />
-                    <button onclick="saveSession()" data-testid="button-save-session">Save to SessionStorage</button>
-                    <button onclick="loadSession()" data-testid="button-load-session" style="background: #6b7280;">Load from Session</button>
+                    <input type="text" id="session-input" placeholder="Enter your name..." />
+                    <button onclick="saveSession()">Save to SessionStorage</button>
+                    <button onclick="loadSession()" style="background: #6b7280;">Load from Session</button>
                     
-                    <div id="sessionStorage-output" data-testid="output-sessionstorage" class="output empty">Result will appear here...</div>
+                    <div id="sessionStorage-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- IndexedDB -->
@@ -335,12 +347,12 @@
                         </ol>
                     </div>
                     
-                    <input type="text" id="note-title" data-testid="input-note-title" placeholder="Note title..." />
-                    <textarea id="note-content" data-testid="textarea-note-content" placeholder="Note content..." rows="3"></textarea>
-                    <button onclick="saveNote()" data-testid="button-save-note">Save Note to IndexedDB</button>
-                    <button onclick="loadNotes()" data-testid="button-load-notes" style="background: #6b7280;">Load All Notes</button>
+                    <input type="text" id="note-title" placeholder="Note title..." />
+                    <textarea id="note-content" placeholder="Note content..." rows="3"></textarea>
+                    <button onclick="saveNote()">Save Note to IndexedDB</button>
+                    <button onclick="loadNotes()" style="background: #6b7280;">Load All Notes</button>
                     
-                    <div id="indexedDB-output" data-testid="output-indexeddb" class="output empty">Result will appear here...</div>
+                    <div id="indexedDB-output" class="output empty">Result will appear here...</div>
                 </div>
             </div>
         </section>
@@ -367,10 +379,10 @@
                         </ol>
                     </div>
                     
-                    <textarea id="clipboard-input" data-testid="textarea-clipboard-text" placeholder="Enter text to copy..." rows="3"></textarea>
-                    <button onclick="copyText()" data-testid="button-copy-text">Copy to Clipboard</button>
+                    <textarea id="clipboard-input" placeholder="Enter text to copy..." rows="3"></textarea>
+                    <button onclick="copyText()">Copy to Clipboard</button>
                     
-                    <div id="clipboard-output" data-testid="output-clipboard" class="output empty">Result will appear here...</div>
+                    <div id="clipboard-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- Notifications API -->
@@ -388,10 +400,10 @@
                         </ol>
                     </div>
                     
-                    <button onclick="requestNotificationPermission()" data-testid="button-request-notification">Request Permission</button>
-                    <button onclick="showNotification()" data-testid="button-send-notification" style="background: #10b981;">Send Test Notification</button>
+                    <button onclick="requestNotificationPermission()">Request Permission</button>
+                    <button onclick="showNotification()" style="background: #10b981;">Send Test Notification</button>
                     
-                    <div id="notification-output" data-testid="output-notification" class="output empty">Result will appear here...</div>
+                    <div id="notification-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- Geolocation API -->
@@ -408,9 +420,9 @@
                         </ol>
                     </div>
                     
-                    <button onclick="getLocation()" data-testid="button-get-location">Get My Location</button>
+                    <button onclick="getLocation()">Get My Location</button>
                     
-                    <div id="location-output" data-testid="output-location" class="output empty">Result will appear here...</div>
+                    <div id="location-output" class="output empty">Result will appear here...</div>
                 </div>
             </div>
         </section>
@@ -437,9 +449,9 @@
                         </ol>
                     </div>
                     
-                    <button onclick="getWeather()" data-testid="button-get-weather">Get Weather for My Location</button>
+                    <button onclick="getWeather()">Get Weather for My Location</button>
                     
-                    <div id="weather-output" data-testid="output-weather" class="output empty">Result will appear here...</div>
+                    <div id="weather-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- Quotes API -->
@@ -456,9 +468,9 @@
                         </ol>
                     </div>
                     
-                    <button onclick="getQuote()" data-testid="button-get-quote">Get Random Quote</button>
+                    <button onclick="getQuote()">Get Random Quote</button>
                     
-                    <div id="quote-output" data-testid="output-quote" class="output empty">Result will appear here...</div>
+                    <div id="quote-output" class="output empty">Result will appear here...</div>
                 </div>
 
                 <!-- GitHub API -->
@@ -475,10 +487,10 @@
                         </ol>
                     </div>
                     
-                    <input type="text" id="github-input" data-testid="input-github-username" placeholder="Enter GitHub username..." value="786jabar" />
-                    <button onclick="getGitHubUser()" data-testid="button-get-github-user">Get User Profile</button>
+                    <input type="text" id="github-input" placeholder="Enter GitHub username..." value="786jabar" />
+                    <button onclick="getGitHubUser()">Get User Profile</button>
                     
-                    <div id="github-output" data-testid="output-github" class="output empty">Result will appear here...</div>
+                    <div id="github-output" class="output empty">Result will appear here...</div>
                 </div>
             </div>
         </section>
