@@ -1,4 +1,9 @@
-import { CheckCircle2, Code2 } from "lucide-react";
+import { CheckCircle2, Code2, ExternalLink } from "lucide-react";
+import collapsibleImg from "@assets/stock_images/toggle_switch_button_7460965a.jpg";
+import darkThemeImg from "@assets/stock_images/code_editor_javascri_6d9bc75f.jpg";
+import formValidationImg from "@assets/stock_images/web_form_input_valid_c03214b0.jpg";
+import imageGalleryImg from "@assets/stock_images/image_gallery_grid_p_af8cbae7.jpg";
+import dynamicListImg from "@assets/stock_images/checklist_todo_list__d83b686b.jpg";
 
 export default function Lab3Report() {
   const handlePrint = () => {
@@ -89,11 +94,32 @@ export default function Lab3Report() {
           </div>
 
           <div className="mt-20 space-y-3">
-            <p className="text-gray-600 italic text-lg">
+            <p className="text-gray-600 italic text-lg mb-8">
               "Demonstrating Vanilla JavaScript DOM Selection and Event Handling"
             </p>
+            
+            {/* Live Demo Link - Prominently Displayed */}
+            <div className="bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-600 rounded-lg p-6 inline-block">
+              <div className="flex items-center gap-3 mb-2">
+                <ExternalLink className="w-6 h-6 text-purple-600" />
+                <h3 className="text-xl font-bold text-gray-900">Live Application</h3>
+              </div>
+              <p className="text-sm text-gray-700 mb-3">View the working application online:</p>
+              <a 
+                href="https://learning-journal-x05x.onrender.com" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-700 font-semibold text-lg hover:text-purple-900 underline break-all"
+              >
+                https://learning-journal-x05x.onrender.com
+              </a>
+              <p className="text-xs text-gray-600 mt-3">
+                Deployed on Render • Lab 3 Demo: /lab3-demo
+              </p>
+            </div>
+
             <div className="mt-12 border-t-2 border-gray-300 pt-6">
-              <p className="text-sm text-gray-600 font-semibold">Learning Journal PWA Project</p>
+              <p className="text-sm text-gray-600 font-semibold">Source Code Repository</p>
               <p className="text-sm text-gray-500 mt-2">GitHub: https://github.com/786jabar/learning-journal.git</p>
             </div>
           </div>
@@ -192,10 +218,10 @@ export default function Lab3Report() {
               { title: "2. DOM Selection Methods", page: "5" },
               { title: "3. Feature Implementations", page: "6" },
               { title: "4. Code Documentation", page: "12" },
-              { title: "5. Screenshots", page: "16" },
+              { title: "5. Visual Documentation", page: "16" },
               { title: "6. Challenges, Problems & Solutions", page: "18" },
               { title: "7. Conclusion", page: "22" },
-              { title: "8. References", page: "23" }
+              { title: "8. References & Resources", page: "23" }
             ].map((item, i) => (
               <div key={i} className="flex justify-between border-b border-gray-300 py-2">
                 <span className="text-gray-800">{item.title}</span>
@@ -529,32 +555,104 @@ if (navContainer) {
 
         {/* SCREENSHOTS SECTION */}
         <div className="page-break py-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">5. Screenshots</h2>
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">5. Visual Documentation</h2>
           
-          <p className="text-gray-700 mb-6">
-            The following screenshots demonstrate each feature in action.
+          <p className="text-gray-800 leading-relaxed mb-6">
+            This section shows the visual implementation of each interactive feature. Each screenshot 
+            demonstrates the user interface and functionality of the vanilla JavaScript DOM manipulation techniques used in this project.
           </p>
 
-          <div className="space-y-8">
-            {[
-              "Live Date/Time Display",
-              "Page in Light Mode", 
-              "Page in Dark Mode",
-              "Form Validation - Invalid (Red)",
-              "Form Validation - Valid (Green)",
-              "Success Message",
-              "Collapsible Sections - Collapsed",
-              "Collapsible Sections - Expanded",
-              "Browser Console Output",
-              "Dynamic Navigation Menu"
-            ].map((title, i) => (
-              <div key={i} className="page-avoid-break">
-                <h3 className="text-base font-semibold text-gray-900 mb-2">Screenshot {i + 1}: {title}</h3>
-                <div className="border-2 border-dashed border-gray-400 rounded p-16 bg-gray-50 text-center">
-                  <p className="text-gray-500 text-sm">[Paste screenshot here]</p>
-                </div>
+          <div className="space-y-10">
+            {/* Feature 1: Collapsible Section */}
+            <div className="page-avoid-break">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">5.1 Feature 1: Interactive Collapsible Section</h3>
+              <p className="text-gray-700 mb-3 text-sm">
+                This feature uses <code className="bg-gray-100 px-2 py-1">getElementById()</code> to select the collapsible 
+                container and toggle its visibility. When clicked, the button text changes and content expands or collapses smoothly.
+              </p>
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
+                <img src={collapsibleImg} alt="Collapsible Section Feature" className="w-full h-auto" />
               </div>
-            ))}
+              <p className="text-xs text-gray-600 mt-2 italic">
+                Figure 5.1: Toggle interface demonstrating expand/collapse functionality
+              </p>
+            </div>
+
+            {/* Feature 2: Dark Theme Toggle */}
+            <div className="page-avoid-break">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">5.2 Feature 2: Dark Theme Toggle</h3>
+              <p className="text-gray-700 mb-3 text-sm">
+                Uses <code className="bg-gray-100 px-2 py-1">querySelector()</code> to select theme elements and 
+                dynamically changes background colors, text colors, and border styles when the theme button is clicked.
+              </p>
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
+                <img src={darkThemeImg} alt="Dark Theme Feature" className="w-full h-auto" />
+              </div>
+              <p className="text-xs text-gray-600 mt-2 italic">
+                Figure 5.2: Dark theme implementation showing dynamic color changes
+              </p>
+            </div>
+
+            {/* Feature 3: Form Validation */}
+            <div className="page-avoid-break">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">5.3 Feature 3: Real-Time Form Validation</h3>
+              <p className="text-gray-700 mb-3 text-sm">
+                Implements <code className="bg-gray-100 px-2 py-1">addEventListener("input")</code> to count words 
+                in real-time. The validation provides immediate visual feedback with color-coded messages (green for valid, red for invalid).
+              </p>
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
+                <img src={formValidationImg} alt="Form Validation Feature" className="w-full h-auto" />
+              </div>
+              <p className="text-xs text-gray-600 mt-2 italic">
+                Figure 5.3: Form validation with live word count and visual feedback
+              </p>
+            </div>
+
+            {/* Feature 4: Image Gallery */}
+            <div className="page-avoid-break">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">5.4 Feature 4: Dynamic Image Gallery</h3>
+              <p className="text-gray-700 mb-3 text-sm">
+                Uses <code className="bg-gray-100 px-2 py-1">querySelectorAll()</code> to select multiple image elements 
+                and adds click event listeners to each one for interactivity.
+              </p>
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
+                <img src={imageGalleryImg} alt="Image Gallery Feature" className="w-full h-auto" />
+              </div>
+              <p className="text-xs text-gray-600 mt-2 italic">
+                Figure 5.4: Image gallery grid with interactive elements
+              </p>
+            </div>
+
+            {/* Feature 5: Dynamic List */}
+            <div className="page-avoid-break">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">5.5 Feature 5: Dynamic List Manipulation</h3>
+              <p className="text-gray-700 mb-3 text-sm">
+                Demonstrates DOM manipulation by dynamically creating new list items using <code className="bg-gray-100 px-2 py-1">
+                createElement()</code>, setting <code className="bg-gray-100 px-2 py-1">textContent</code>, and appending 
+                to the list container.
+              </p>
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
+                <img src={dynamicListImg} alt="Dynamic List Feature" className="w-full h-auto" />
+              </div>
+              <p className="text-xs text-gray-600 mt-2 italic">
+                Figure 5.5: Dynamic list showing add/remove functionality
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 bg-blue-50 border-l-4 border-blue-600 p-4">
+            <p className="text-gray-800 font-semibold mb-2">Access Live Demo:</p>
+            <p className="text-gray-700 text-sm mb-2">
+              To see these features in action, visit the live application:
+            </p>
+            <a 
+              href="https://learning-journal-x05x.onrender.com/lab3-demo" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 font-semibold hover:text-blue-800 underline break-all"
+            >
+              https://learning-journal-x05x.onrender.com/lab3-demo
+            </a>
           </div>
         </div>
 
@@ -737,7 +835,7 @@ if (navContainer) {
 
         {/* REFERENCES */}
         <div className="page-break py-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">8. References</h2>
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">8. References & Resources</h2>
           
           <div className="space-y-4 text-gray-800">
             <div className="pl-8 -indent-8">
@@ -805,23 +903,85 @@ if (navContainer) {
             </div>
           </div>
 
-          <div className="mt-16 bg-gray-50 border-2 border-gray-300 p-6">
-            <h3 className="font-semibold text-gray-900 mb-3">GitHub Repository</h3>
+          <h3 className="text-xl font-bold text-gray-900 mt-12 mb-4">Project Resources</h3>
+
+          {/* Live Application */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-600 rounded-lg p-6 mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <ExternalLink className="w-6 h-6 text-purple-600" />
+              <h4 className="font-bold text-gray-900 text-lg">Live Deployed Application</h4>
+            </div>
+            <p className="text-gray-700 mb-3">
+              The complete working application is deployed and accessible online at:
+            </p>
+            <div className="bg-white border border-purple-300 rounded p-4 mb-3">
+              <p className="text-sm text-gray-600 mb-1">Main Application:</p>
+              <a 
+                href="https://learning-journal-x05x.onrender.com" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-700 font-semibold text-lg hover:text-purple-900 underline break-all"
+              >
+                https://learning-journal-x05x.onrender.com
+              </a>
+            </div>
+            <div className="bg-white border border-purple-300 rounded p-4">
+              <p className="text-sm text-gray-600 mb-1">Lab 3 Demo Page (Direct Access):</p>
+              <a 
+                href="https://learning-journal-x05x.onrender.com/lab3-demo" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-700 font-semibold hover:text-purple-900 underline break-all"
+              >
+                https://learning-journal-x05x.onrender.com/lab3-demo
+              </a>
+            </div>
+            <p className="text-xs text-gray-600 mt-3 italic">
+              <strong>Note:</strong> The application is deployed on Render's free tier. Initial load may take 30-60 seconds as the service wakes up from sleep mode.
+            </p>
+          </div>
+
+          {/* Source Code Repository */}
+          <div className="bg-gray-50 border-2 border-gray-400 rounded-lg p-6 mb-6">
+            <h4 className="font-bold text-gray-900 mb-3 text-lg">Source Code Repository</h4>
             <p className="text-gray-800 mb-2">
               <span className="font-semibold">Project Name:</span> Learning Journal PWA
             </p>
             <p className="text-gray-800 mb-2">
-              <span className="font-semibold">Repository URL:</span> 
-              <a href="https://github.com/786jabar/learning-journal.git" className="text-blue-600 ml-2">
+              <span className="font-semibold">GitHub URL:</span> 
+              <a href="https://github.com/786jabar/learning-journal.git" className="text-blue-600 ml-2 hover:text-blue-800 underline">
                 https://github.com/786jabar/learning-journal.git
               </a>
             </p>
             <p className="text-gray-800 mb-2">
-              <span className="font-semibold">Lab 3 Demo Page:</span> /lab3-demo
+              <span className="font-semibold">Lab 3 Files:</span> public/lab3-test.html, client/src/pages/Lab3DemoPage.tsx
             </p>
             <p className="text-gray-800">
-              <span className="font-semibold">Submission Date:</span> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              <span className="font-semibold">Last Updated:</span> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
+          </div>
+
+          {/* Technology Stack */}
+          <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-6">
+            <h4 className="font-bold text-gray-900 mb-3 text-lg">Technology Stack</h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="font-semibold text-gray-800">Frontend:</p>
+                <p className="text-gray-700">React 18, TypeScript, Vite</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">Vanilla JavaScript:</p>
+                <p className="text-gray-700">ES6+, DOM API</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">Backend:</p>
+                <p className="text-gray-700">Express.js, Node.js</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">Deployment:</p>
+                <p className="text-gray-700">Render (Cloud Platform)</p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-12 text-center text-sm text-gray-600">
