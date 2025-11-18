@@ -1,9 +1,8 @@
-import { SignInButton } from "@clerk/clerk-react";
+import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Lightbulb, TrendingUp, Users, Zap, Shield, Cloud, CheckCircle2, Sparkles, ArrowRight, Download, Lock } from "lucide-react";
-import { SiGoogle, SiGithub, SiX, SiApple } from "react-icons/si";
 
 export default function LandingPage() {
   return (
@@ -38,55 +37,23 @@ export default function LandingPage() {
               all while working seamlessly offline with stunning glassmorphism design.
             </p>
 
-            {/* Glass Card for Login Buttons */}
-            <div className="glass-card rounded-3xl p-8 max-w-md w-full space-y-4 mb-12 animate-glow">
-              <p className="text-sm text-foreground/80 mb-6 font-medium" data-testid="text-signin-prompt">
-                Get started in seconds with your account
+            {/* Glass Card for Start Button */}
+            <div className="glass-card rounded-3xl p-8 max-w-md w-full mb-12 animate-glow">
+              <p className="text-sm text-foreground/80 mb-6 font-medium" data-testid="text-getstarted-prompt">
+                Start using the app right now - no account required!
               </p>
               
-              <SignInButton mode="modal">
+              <Link href="/">
                 <Button 
                   size="lg" 
-                  className="w-full text-base gap-3 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border border-gray-300 dark:border-gray-300 hover-elevate"
-                  data-testid="button-login-google"
+                  className="w-full text-base gap-3 gradient-bg text-white hover:opacity-90"
+                  data-testid="button-start-app"
                 >
-                  <SiGoogle className="h-5 w-5" />
-                  Continue with Google
+                  <BookOpen className="h-5 w-5" />
+                  Start Your Learning Journey
+                  <ArrowRight className="h-5 w-5" />
                 </Button>
-              </SignInButton>
-              
-              <SignInButton mode="modal">
-                <Button 
-                  size="lg" 
-                  className="w-full text-base gap-3 bg-[#24292e] dark:bg-[#24292e] text-white border border-[#24292e] hover-elevate"
-                  data-testid="button-login-github"
-                >
-                  <SiGithub className="h-5 w-5" />
-                  Continue with GitHub
-                </Button>
-              </SignInButton>
-              
-              <SignInButton mode="modal">
-                <Button 
-                  size="lg" 
-                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black hover-elevate"
-                  data-testid="button-login-x"
-                >
-                  <SiX className="h-5 w-5" />
-                  Continue with X
-                </Button>
-              </SignInButton>
-              
-              <SignInButton mode="modal">
-                <Button 
-                  size="lg" 
-                  className="w-full text-base gap-3 bg-black dark:bg-black text-white border border-black hover-elevate"
-                  data-testid="button-login-apple"
-                >
-                  <SiApple className="h-5 w-5" />
-                  Continue with Apple
-                </Button>
-              </SignInButton>
+              </Link>
             </div>
 
             {/* Trust Indicators - Glass Pills */}
@@ -157,7 +124,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3">Personal Workspace</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Your own secure, private space with complete data isolation from other users
+                Your own private space on this device with complete data isolation from other devices
               </p>
             </div>
           </div>
@@ -199,9 +166,9 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Private & Secure</h3>
+                  <h3 className="font-bold text-lg mb-2">Private & Device-Specific</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Your data is completely isolated. Each user has their own secure workspace with encrypted sessions.
+                    Your data is completely isolated per device. Each browser has its own private workspace stored locally.
                   </p>
                 </div>
               </div>
@@ -279,21 +246,21 @@ export default function LandingPage() {
               Start Your <span className="gradient-text">Learning Journal</span> Today
             </h2>
             <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
-              Join learners who are documenting their journey and tracking their progress. 
-              Get started in seconds with your preferred account.
+              Start documenting your learning journey and tracking your progress.
+              No account or sign-up required!
             </p>
-            <SignInButton mode="modal">
+            <Link href="/">
               <Button 
                 size="lg" 
                 className="gap-2 gradient-bg text-white hover:opacity-90 transition-opacity text-lg px-8 py-6"
                 data-testid="button-cta-getstarted"
               >
-                Get Started Free
+                Start Using App Now
                 <ArrowRight className="h-5 w-5" />
               </Button>
-            </SignInButton>
+            </Link>
             <p className="text-sm text-muted-foreground mt-6">
-              No credit card required • Works offline • Export anytime
+              Free forever • Works offline • Export anytime • No sign-up needed
             </p>
           </div>
         </div>

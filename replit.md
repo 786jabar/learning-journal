@@ -14,7 +14,7 @@ Preferred communication style: Simple, everyday language.
 
 **Core Framework**: React 18 with TypeScript, bundled via Vite for fast development and optimized production builds.
 
-**Routing**: Wouter provides lightweight client-side routing with authentication-aware route protection. Unauthenticated users see only the landing page; authenticated users access the full application.
+**Routing**: Wouter provides lightweight client-side routing. All routes are publicly accessible without authentication. A landing page is available to introduce new users to the app's features.
 
 **State Management**: TanStack Query (React Query) manages server state with intelligent caching, automatic refetching, and optimistic updates. Local state uses React hooks.
 
@@ -30,19 +30,19 @@ Preferred communication style: Simple, everyday language.
 
 **Database ORM**: Drizzle ORM provides type-safe database operations with PostgreSQL (Neon serverless driver for HTTP-based connections without WebSocket requirements).
 
-**API Design**: RESTful endpoints under `/api/*` for journals, projects, user profiles, and authentication. All protected routes require valid authentication tokens.
+**API Design**: RESTful endpoints under `/api/*` for journals, projects, and user profiles. All routes are publicly accessible. Data isolation is maintained through device-specific IDs sent via X-Device-ID headers.
 
 **Development Mode**: Vite dev server runs alongside Express with HMR support. Production mode serves compiled static assets from Express.
 
 ### Authentication & Authorization
 
-**Provider**: Clerk handles all authentication flows (sign-up, sign-in, session management) with support for multiple OAuth providers (Google, GitHub, X/Twitter, Apple).
+**Public Access Model**: The application now operates without traditional user authentication. Instead of requiring sign-in, each browser/device receives a unique identifier for data isolation.
 
-**Session Management**: Clerk manages sessions via HTTP-only cookies. Express middleware validates requests and extracts user identity.
+**Device-Based Isolation**: When a user first accesses the app, a unique device ID is generated using nanoid() and stored in the browser's localStorage. This ID persists across sessions and serves as the identity for all data operations.
 
-**User Sync**: Upon authentication, Clerk user data syncs to the local PostgreSQL database, creating user records that link to journal entries and projects.
+**Header-Based Identity**: The frontend sends the device ID via an "X-Device-ID" custom header with every API request. The backend extracts this ID and uses it to isolate data per device.
 
-**Route Protection**: Frontend checks authentication status before rendering protected pages. Backend middleware validates all API requests except public endpoints.
+**Data Scope**: All journals, projects, and user data are scoped to the device ID. Each browser maintains its own isolated workspace, preventing data sharing between different devices while requiring no authentication flow.
 
 ### Data Storage & Synchronization
 
@@ -65,9 +65,6 @@ Preferred communication style: Simple, everyday language.
 **Network Awareness**: UI indicators show online/offline status and sync progress. Optimistic updates provide immediate feedback.
 
 ## External Dependencies
-
-### Authentication Service
-- **Clerk** (`@clerk/clerk-react`, `@clerk/express`): SaaS authentication platform managing user identity, sessions, and OAuth integrations
 
 ### Database & ORM
 - **PostgreSQL**: Relational database (deployed via Neon, Supabase, or Railway)
