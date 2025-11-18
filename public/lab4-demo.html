@@ -3,63 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 4: API Integration Demo - Vanilla JavaScript</title>
+    <title>Lab 4: API Demonstrations | Professional Showcase</title>
+    <meta name="description" content="Comprehensive API demonstration showcasing Storage, Browser, and Third-Party APIs using vanilla JavaScript. Student: Md Jawar Safi (#2315024)">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
+        /* Reset & Base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-            line-height: 1.6;
-            color: #1f2937;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem 1rem;
+        :root {
+            --bg-primary: #0f1729;
+            --bg-secondary: #1a2332;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            --gradient-blue: linear-gradient(135deg, #6366F1 0%, #D946EF 100%);
+            --accent-purple: #8B5CF6;
+            --accent-pink: #EC4899;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
         }
         
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+        }
+        
+        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            padding: 3rem 1.5rem;
+            position: relative;
+            z-index: 1;
         }
         
-        header {
+        /* Hero Section */
+        .hero {
             text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 3px solid #f3f4f6;
+            margin-bottom: 4rem;
+            padding: 3rem 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-purple);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
         }
         
-        .subtitle {
-            color: #6b7280;
-            font-size: 1.1rem;
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
         }
         
         .badge {
             display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 100px;
             font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-purple);
             margin-top: 1rem;
         }
         
+        /* Section Headers */
         .section {
             margin-bottom: 4rem;
         }
@@ -67,66 +116,93 @@
         .section-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
             margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e5e7eb;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .section-header h2 {
-            color: #1f2937;
-            font-size: 1.875rem;
-            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .section-badge {
-            background: #f3f4f6;
-            color: #374151;
             padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 8px;
             font-size: 0.875rem;
-            font-weight: 600;
+            color: var(--text-secondary);
         }
         
+        /* Grid */
         .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
         }
         
+        /* Glass Cards */
         .demo-card {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 2rem;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
         
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .demo-card:hover::before {
+            opacity: 1;
+        }
         
         .demo-card h3 {
-            color: #667eea;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 0.75rem;
+            color: var(--text-primary);
         }
         
         .description {
-            color: #6b7280;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             margin-bottom: 1.5rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .instructions {
-            background: #fff;
-            border-left: 4px solid #667eea;
+            background: rgba(139, 92, 246, 0.05);
+            border-left: 3px solid var(--accent-purple);
             padding: 1rem;
             margin-bottom: 1.5rem;
-            border-radius: 4px;
+            border-radius: 8px;
         }
         
         .instructions h4 {
-            color: #667eea;
             font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-purple);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -134,141 +210,176 @@
         
         .instructions ol {
             margin-left: 1.25rem;
-            color: #4b5563;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
         
         .instructions li {
             margin-bottom: 0.25rem;
         }
         
+        /* Form Controls */
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-family: inherit;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Buttons */
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 0.875rem 1.5rem;
+            background: var(--gradient-purple);
             border: none;
-            padding: 0.875rem 1.75rem;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 12px;
+            color: white;
             font-weight: 600;
+            font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            width: 100%;
-            margin-bottom: 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
         
-        
-        
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 0.875rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            font-family: inherit;
-            transition: border-color 0.2s ease;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
         }
         
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
+        button:active {
+            transform: translateY(0);
         }
         
+        button.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            box-shadow: none;
+        }
+        
+        button.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Output Display */
         .output {
-            background: #1f2937;
-            color: #f9fafb;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             padding: 1.25rem;
-            border-radius: 10px;
-            min-height: 80px;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
             line-height: 1.6;
             white-space: pre-wrap;
             word-break: break-word;
+            min-height: 120px;
+            color: var(--text-secondary);
         }
         
         .output.empty {
-            color: #9ca3af;
             font-style: italic;
+            color: rgba(148, 163, 184, 0.5);
         }
         
         .success {
-            color: #10b981;
+            color: var(--success);
             font-weight: 600;
         }
         
         .error {
-            color: #ef4444;
+            color: var(--error);
             font-weight: 600;
         }
         
         .info {
-            color: #3b82f6;
+            color: var(--info);
             font-weight: 600;
         }
         
         .warning {
-            color: #f59e0b;
+            color: var(--warning);
             font-weight: 600;
         }
         
-        .status-list {
-            background: #fff;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
         
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #f3f4f6;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
-        .status-item:last-child {
-            border-bottom: none;
-        }
-        
-        .status-label {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-        
-        .status-value {
-            font-weight: 600;
-            color: #1f2937;
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
+            .hero-title {
+                font-size: 2.5rem;
             }
             
             .demo-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
+    <div class="animated-bg"></div>
+    
     <div class="container">
-        <header>
-            <h1>Lab 4: API Integration Demonstration</h1>
-            <p class="subtitle">Vanilla JavaScript - Storage, Browser & Third-Party APIs</p>
-            <span class="badge">Student: Md Jawar Safi (#2315024)</span>
+        <!-- Hero -->
+        <header class="hero">
+            <h1 class="hero-title">Lab 4: API Demonstrations</h1>
+            <p class="hero-subtitle">Comprehensive API Integration Showcase</p>
+            <p class="hero-subtitle">Storage APIs • Browser APIs • Third-Party APIs</p>
+            <span class="badge">Student: Md Jawar Safi (#2315024) | FGCT6021 Mobile Application Development</span>
         </header>
 
-        <!-- STORAGE APIs -->
+        <!-- Storage APIs -->
         <section class="section">
             <div class="section-header">
-                <h2>1. Storage APIs</h2>
+                <h2>Storage APIs</h2>
                 <span class="section-badge">LocalStorage • SessionStorage • IndexedDB</span>
             </div>
             
@@ -287,14 +398,14 @@
                         </ol>
                     </div>
                     
-                    <select id="theme-select" data-testid="select-theme" style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 1rem; font-size: 1rem;">
+                    <select id="theme-select" data-testid="select-theme">
                         <option value="light">Light Mode</option>
                         <option value="dark">Dark Mode</option>
                         <option value="auto">Auto (System)</option>
                     </select>
                     
-                    <button onclick="saveTheme()" data-testid="button-save-theme">Save Theme to LocalStorage</button>
-                    <button onclick="loadTheme()" data-testid="button-load-theme" style="background: #6b7280;">Load Saved Theme</button>
+                    <button onclick="saveTheme()" data-testid="button-save-theme">Save Theme</button>
+                    <button class="secondary" onclick="loadTheme()" data-testid="button-load-theme">Load Theme</button>
                     
                     <div id="localStorage-output" data-testid="output-localstorage" class="output empty">Result will appear here...</div>
                 </div>
@@ -314,8 +425,8 @@
                     </div>
                     
                     <input type="text" id="session-input" data-testid="input-session-name" placeholder="Enter your name..." />
-                    <button onclick="saveSession()" data-testid="button-save-session">Save to SessionStorage</button>
-                    <button onclick="loadSession()" data-testid="button-load-session" style="background: #6b7280;">Load from Session</button>
+                    <button onclick="saveSession()" data-testid="button-save-session">Save to Session</button>
+                    <button class="secondary" onclick="loadSession()" data-testid="button-load-session">Load Session</button>
                     
                     <div id="sessionStorage-output" data-testid="output-sessionstorage" class="output empty">Result will appear here...</div>
                 </div>
@@ -336,24 +447,24 @@
                     </div>
                     
                     <input type="text" id="note-title" data-testid="input-note-title" placeholder="Note title..." />
-                    <textarea id="note-content" data-testid="textarea-note-content" placeholder="Note content..." rows="3"></textarea>
-                    <button onclick="saveNote()" data-testid="button-save-note">Save Note to IndexedDB</button>
-                    <button onclick="loadNotes()" data-testid="button-load-notes" style="background: #6b7280;">Load All Notes</button>
+                    <textarea id="note-content" data-testid="textarea-note-content" placeholder="Note content..."></textarea>
+                    <button onclick="saveNote()" data-testid="button-save-note">Save Note</button>
+                    <button class="secondary" onclick="loadNotes()" data-testid="button-load-notes">Load All Notes</button>
                     
                     <div id="indexedDB-output" data-testid="output-indexeddb" class="output empty">Result will appear here...</div>
                 </div>
             </div>
         </section>
 
-        <!-- BROWSER APIs -->
+        <!-- Browser APIs -->
         <section class="section">
             <div class="section-header">
-                <h2>2. Browser APIs</h2>
+                <h2>Browser APIs</h2>
                 <span class="section-badge">Clipboard • Notifications • Geolocation</span>
             </div>
             
             <div class="demo-grid">
-                <!-- Clipboard API -->
+                <!-- Clipboard -->
                 <div class="demo-card">
                     <h3>Clipboard API Demo</h3>
                     <p class="description">Copy text to clipboard without user manually selecting. Modern replacement for document.execCommand.</p>
@@ -361,50 +472,50 @@
                     <div class="instructions">
                         <h4>How to Use:</h4>
                         <ol>
-                            <li>Type or paste text in the box below</li>
+                            <li>Type or paste text in the box</li>
                             <li>Click "Copy to Clipboard"</li>
                             <li>Try pasting (Ctrl+V) anywhere to verify</li>
                         </ol>
                     </div>
                     
-                    <textarea id="clipboard-input" data-testid="textarea-clipboard-text" placeholder="Enter text to copy..." rows="3"></textarea>
+                    <textarea id="clipboard-input" data-testid="textarea-clipboard-text" placeholder="Enter text to copy..."></textarea>
                     <button onclick="copyText()" data-testid="button-copy-text">Copy to Clipboard</button>
                     
                     <div id="clipboard-output" data-testid="output-clipboard" class="output empty">Result will appear here...</div>
                 </div>
 
-                <!-- Notifications API -->
+                <!-- Notifications -->
                 <div class="demo-card">
                     <h3>Notifications API Demo</h3>
-                    <p class="description">Send desktop notifications to users even when page is not in focus.</p>
+                    <p class="description">Send desktop notifications to the user. Requires permission from the user.</p>
                     
                     <div class="instructions">
                         <h4>How to Use:</h4>
                         <ol>
                             <li>Click "Request Permission" first</li>
-                            <li>Allow notifications when browser asks</li>
-                            <li>Click "Send Notification" to test</li>
-                            <li>You'll see a desktop notification!</li>
+                            <li>Allow notifications when prompted</li>
+                            <li>Click "Send Test Notification"</li>
+                            <li>Check your desktop for the notification</li>
                         </ol>
                     </div>
                     
                     <button onclick="requestNotificationPermission()" data-testid="button-request-notification">Request Permission</button>
-                    <button onclick="showNotification()" data-testid="button-send-notification" style="background: #10b981;">Send Test Notification</button>
+                    <button class="secondary" onclick="showNotification()" data-testid="button-send-notification">Send Test Notification</button>
                     
                     <div id="notification-output" data-testid="output-notification" class="output empty">Result will appear here...</div>
                 </div>
 
-                <!-- Geolocation API -->
+                <!-- Geolocation -->
                 <div class="demo-card">
                     <h3>Geolocation API Demo</h3>
-                    <p class="description">Get user's geographic coordinates with permission. Useful for location-based features.</p>
+                    <p class="description">Get user's current geographic location using GPS, WiFi, or IP geolocation.</p>
                     
                     <div class="instructions">
                         <h4>How to Use:</h4>
                         <ol>
                             <li>Click "Get My Location"</li>
                             <li>Allow location access when prompted</li>
-                            <li>View your coordinates and accuracy</li>
+                            <li>View your coordinates and area name</li>
                         </ol>
                     </div>
                     
@@ -415,44 +526,44 @@
             </div>
         </section>
 
-        <!-- THIRD-PARTY APIs -->
+        <!-- Third-Party APIs -->
         <section class="section">
             <div class="section-header">
-                <h2>3. Third-Party APIs</h2>
+                <h2>Third-Party APIs</h2>
                 <span class="section-badge">Weather • Quotes • GitHub</span>
             </div>
             
             <div class="demo-grid">
-                <!-- Weather API -->
+                <!-- Weather -->
                 <div class="demo-card">
                     <h3>Weather API Demo</h3>
-                    <p class="description">Fetch real-time weather data using Open-Meteo API (free, no API key required).</p>
+                    <p class="description">Fetch real-time weather data using the Open-Meteo API (free, no API key required).</p>
                     
                     <div class="instructions">
                         <h4>How to Use:</h4>
                         <ol>
-                            <li>Click "Get Weather" below</li>
-                            <li>Allow location access</li>
-                            <li>View current weather conditions</li>
+                            <li>Click "Get Weather"</li>
+                            <li>Allow location access (required for weather)</li>
+                            <li>View current weather for your location</li>
                         </ol>
                     </div>
                     
-                    <button onclick="getWeather()" data-testid="button-get-weather">Get Weather for My Location</button>
+                    <button onclick="getWeather()" data-testid="button-get-weather">Get Weather</button>
                     
                     <div id="weather-output" data-testid="output-weather" class="output empty">Result will appear here...</div>
                 </div>
 
-                <!-- Quotes API -->
+                <!-- Quotes -->
                 <div class="demo-card">
                     <h3>Quotes API Demo</h3>
-                    <p class="description">Fetch random inspirational quotes from Quotable.io API (free, no API key required).</p>
+                    <p class="description">Fetch random inspirational quotes from the Quotable API.</p>
                     
                     <div class="instructions">
                         <h4>How to Use:</h4>
                         <ol>
                             <li>Click "Get Random Quote"</li>
-                            <li>View a random inspirational quote</li>
-                            <li>Click again for a new quote</li>
+                            <li>View the quote and author</li>
+                            <li>Click again for a new quote!</li>
                         </ol>
                     </div>
                     
@@ -461,7 +572,7 @@
                     <div id="quote-output" data-testid="output-quote" class="output empty">Result will appear here...</div>
                 </div>
 
-                <!-- GitHub API -->
+                <!-- GitHub -->
                 <div class="demo-card">
                     <h3>GitHub API Demo</h3>
                     <p class="description">Fetch public GitHub user profiles using the GitHub REST API (no authentication needed for public data).</p>
@@ -483,6 +594,12 @@
             </div>
         </section>
     </div>
+    
+    <footer class="footer">
+        <p>Lab 4: API Integration Demonstrations</p>
+        <p>Student: Md Jawar Safi (#2315024) | FGCT6021 Mobile Application Development</p>
+        <p>Vanilla JavaScript ES6 Modules | Storage, Browser & Third-Party APIs</p>
+    </footer>
 
     <script type="module">
         import { LocalStorageDemo, SessionStorageDemo, IndexedDBDemo } from './js/storage.js';
@@ -684,7 +801,19 @@
                 const position = await GeolocationAPI.getCurrentPosition();
                 const formatted = GeolocationAPI.formatCoordinates(position.latitude, position.longitude);
                 
-                outputEl.innerHTML = `<span class="success">[OK] Location Found!</span>\n\nLatitude: ${position.latitude}\nLongitude: ${position.longitude}\nAccuracy: ±${position.accuracy.toFixed(0)} meters\n\nFormatted: ${formatted}\n\nYou can use these coordinates with mapping services or the Weather API below!`;
+                // Get area name using reverse geocoding
+                outputEl.innerHTML = `<span class="info">[INFO] Getting area name...</span>\n\nFetching location details...`;
+                const geocode = await GeolocationAPI.reverseGeocode(position.latitude, position.longitude);
+                
+                let locationInfo = `<span class="success">[OK] Location Found!</span>\n\n`;
+                
+                if (geocode.success) {
+                    locationInfo += `Area: ${geocode.name}\n\n`;
+                }
+                
+                locationInfo += `Latitude: ${position.latitude}\nLongitude: ${position.longitude}\nAccuracy: ±${position.accuracy.toFixed(0)} meters\n\nFormatted: ${formatted}\n\nYou can use these coordinates with mapping services or the Weather API below!`;
+                
+                outputEl.innerHTML = locationInfo;
             } catch (error) {
                 outputEl.innerHTML = `<span class="error">[ERROR] ${error.message}</span>\n\nCommon issues:\n• Location services disabled\n• Permission denied\n• Timeout (took too long)\n\nEnable location in your browser settings and try again.`;
             }
@@ -715,15 +844,14 @@
         window.getQuote = async function() {
             const outputEl = document.getElementById('quote-output');
             outputEl.className = 'output';
-            outputEl.innerHTML = `<span class="info">[INFO] Fetching inspirational quote...</span>\n\nConnecting to Quotable.io API...`;
+            outputEl.innerHTML = `<span class="info">[INFO] Fetching quote...</span>\n\nConnecting to Quotable API...`;
             
             const result = await QuotesAPI.getRandomQuote();
             
             if (result.success) {
-                const q = result.data;
-                outputEl.innerHTML = `<span class="success">[OK] Quote Received!</span>\n\n"${q.content}"\n\n— ${q.author}\n\nTags: ${q.tags.join(', ')}\n\nClick "Get Random Quote" again for a new quote!`;
+                outputEl.innerHTML = `<span class="success">[OK] Quote Received!</span>\n\n"${result.data.quote}"\n\n— ${result.data.author}\n\nTags: ${result.data.tags.join(', ')}\n\nClick "Get Random Quote" again for another inspiring quote!`;
             } else {
-                outputEl.innerHTML = `<span class="error">[ERROR] Failed to fetch quote</span>\n\n${result.error || 'Unknown error'}\n\nThe Quotable API might be temporarily unavailable. Try again in a moment.`;
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>\n\nThe Quotable API might be temporarily unavailable. Please try again in a moment.`;
             }
         };
 
@@ -739,22 +867,17 @@
             }
             
             outputEl.className = 'output';
-            outputEl.innerHTML = `<span class="info">[INFO] Fetching @${username}'s profile...</span>\n\nConnecting to GitHub API...`;
+            outputEl.innerHTML = `<span class="info">[INFO] Fetching GitHub user...</span>\n\nLoading profile for: ${username}`;
             
-            const result = await GitHubAPI.getUser(username);
+            const result = await GitHubAPI.getUserProfile(username);
             
             if (result.success) {
                 const u = result.data;
-                outputEl.innerHTML = `<span class="success">[OK] Profile Loaded!</span>\n\nUsername: @${u.username}\nName: ${u.name || 'Not set'}\nBio: ${u.bio || 'No bio'}\n\nFollowers: ${u.followers}\nPublic Repos: ${u.repos}\nLocation: ${u.location || 'Not specified'}\n\nProfile URL: ${u.url}`;
+                outputEl.innerHTML = `<span class="success">[OK] GitHub Profile Loaded!</span>\n\nUsername: ${u.login}\nName: ${u.name || 'Not provided'}\nBio: ${u.bio || 'No bio available'}\n\nFollowers: ${u.followers}\nFollowing: ${u.following}\nPublic Repos: ${u.public_repos}\nLocation: ${u.location || 'Not specified'}\n\nProfile: ${u.html_url}\n\nData fetched from GitHub REST API`;
             } else {
-                outputEl.innerHTML = `<span class="error">[ERROR] User not found</span>\n\nUsername "${username}" doesn't exist on GitHub.\n\nPlease check the spelling and try again.`;
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>\n\nPossible reasons:\n• User not found\n• API rate limit exceeded\n• Network issue\n\nPlease verify the username and try again.`;
             }
         };
-
-        // Auto-load theme on page load
-        window.addEventListener('load', () => {
-            loadTheme();
-        });
     </script>
 </body>
 </html>
