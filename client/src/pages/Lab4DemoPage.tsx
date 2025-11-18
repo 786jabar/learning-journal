@@ -952,7 +952,12 @@ export default function Lab4DemoPage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground text-center py-8">Click "Load Followers" to view follower list</p>
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">Click "Load Followers" to view follower list</p>
+                        <Button onClick={handleGetTikTokFollowers} disabled={loading.tiktokFollowers} data-testid="button-load-followers">
+                          {loading.tiktokFollowers ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Load Followers'}
+                        </Button>
+                      </div>
                     )}
                   </TabsContent>
 
@@ -986,7 +991,12 @@ export default function Lab4DemoPage() {
                         </div>
                       </div>
                     ) : (
-                      <p className="text-muted-foreground text-center py-8">Click "Load Stats" to view video statistics</p>
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">Click "Load Stats" to view video statistics</p>
+                        <Button onClick={handleGetTikTokStats} disabled={loading.tiktokStats} data-testid="button-load-stats">
+                          {loading.tiktokStats ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Load Stats'}
+                        </Button>
+                      </div>
                     )}
                   </TabsContent>
 
@@ -1011,7 +1021,12 @@ export default function Lab4DemoPage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground text-center py-8">Click "Load Comments" to view recent comments</p>
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">Click "Load Comments" to view recent comments</p>
+                        <Button onClick={handleGetTikTokComments} disabled={loading.tiktokComments} data-testid="button-load-comments">
+                          {loading.tiktokComments ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Load Comments'}
+                        </Button>
+                      </div>
                     )}
                   </TabsContent>
                 </Tabs>
