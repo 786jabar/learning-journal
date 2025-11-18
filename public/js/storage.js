@@ -6,6 +6,30 @@ console.log("[STORAGE] Storage API Module Loaded");
 
 // ===== 1. LOCAL STORAGE =====
 export const LocalStorageDemo = {
+  // Generic save method for HTML compatibility
+  saveItem: async function(key, value) {
+    try {
+      localStorage.setItem(`lab4-${key}`, value);
+      console.log(`[OK] '${key}' saved to localStorage: ${value}`);
+      return { success: true, message: 'Saved successfully' };
+    } catch (error) {
+      console.error('[ERROR] LocalStorage save failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
+  // Generic get method for HTML compatibility
+  getItem: async function(key) {
+    try {
+      const value = localStorage.getItem(`lab4-${key}`);
+      console.log(`[READ] Retrieved '${key}':`, value);
+      return { success: true, data: value };
+    } catch (error) {
+      console.error('[ERROR] LocalStorage get failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
   // Save theme preference
   saveTheme: function(theme) {
     localStorage.setItem('lab4-theme', theme);
@@ -44,6 +68,30 @@ export const LocalStorageDemo = {
 
 // ===== 2. SESSION STORAGE =====
 export const SessionStorageDemo = {
+  // Generic save method for HTML compatibility
+  saveItem: async function(key, value) {
+    try {
+      sessionStorage.setItem(`lab4-${key}`, value);
+      console.log(`[OK] Session data '${key}' saved`);
+      return { success: true, message: 'Saved successfully' };
+    } catch (error) {
+      console.error('[ERROR] SessionStorage save failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
+  // Generic get method for HTML compatibility
+  getItem: async function(key) {
+    try {
+      const value = sessionStorage.getItem(`lab4-${key}`);
+      console.log(`[READ] Retrieved session '${key}':`, value);
+      return { success: true, data: value };
+    } catch (error) {
+      console.error('[ERROR] SessionStorage get failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
   // Save temporary session data
   saveSessionData: function(key, value) {
     sessionStorage.setItem(`lab4-${key}`, JSON.stringify(value));
@@ -94,8 +142,8 @@ export const IndexedDBDemo = {
         
         // Create object stores
         if (!db.objectStoreNames.contains('notes')) {
-          const notesStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
-          notesStore.createIndex('date', 'date', { unique: false });
+          const notesStore = db.createObjectStore('notes', { keyPath: 'id' });
+          notesStore.createIndex('createdAt', 'createdAt', { unique: false });
           console.log('[OK] Created "notes" object store');
         }
         
@@ -107,7 +155,56 @@ export const IndexedDBDemo = {
     });
   },
   
-  // Add a note
+  // Save a note (for HTML compatibility)
+  saveNote: async function(note) {
+    try {
+      const transaction = this.db.transaction(['notes'], 'readwrite');
+      const store = transaction.objectStore('notes');
+      
+      const request = store.put(note);
+      
+      return new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+          console.log('[OK] Note saved to IndexedDB:', note);
+          resolve({ success: true, data: note });
+        };
+        
+        request.onerror = () => {
+          console.error('[ERROR] Failed to save note');
+          reject({ success: false, message: request.error.message });
+        };
+      });
+    } catch (error) {
+      console.error('[ERROR] IndexedDB save failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
+  // Get all notes (for HTML compatibility)
+  getAllNotes: async function() {
+    try {
+      const transaction = this.db.transaction(['notes'], 'readonly');
+      const store = transaction.objectStore('notes');
+      const request = store.getAll();
+      
+      return new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+          console.log(`[READ] Retrieved ${request.result.length} notes from IndexedDB`);
+          resolve({ success: true, data: request.result });
+        };
+        
+        request.onerror = () => {
+          console.error('[ERROR] Failed to get notes');
+          reject({ success: false, message: request.error.message });
+        };
+      });
+    } catch (error) {
+      console.error('[ERROR] IndexedDB get failed:', error);
+      return { success: false, message: error.message };
+    }
+  },
+  
+  // Add a note (original method)
   addNote: function(noteText) {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(['notes'], 'readwrite');
@@ -127,25 +224,6 @@ export const IndexedDBDemo = {
       
       request.onerror = () => {
         console.error('[ERROR] Failed to add note');
-        reject(request.error);
-      };
-    });
-  },
-  
-  // Get all notes
-  getAllNotes: function() {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(['notes'], 'readonly');
-      const store = transaction.objectStore('notes');
-      const request = store.getAll();
-      
-      request.onsuccess = () => {
-        console.log(`[READ] Retrieved ${request.result.length} notes from IndexedDB`);
-        resolve(request.result);
-      };
-      
-      request.onerror = () => {
-        console.error('[ERROR] Failed to get notes');
         reject(request.error);
       };
     });

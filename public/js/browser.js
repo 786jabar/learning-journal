@@ -205,6 +205,61 @@ export const GeolocationAPI = {
     const latDir = lat >= 0 ? 'N' : 'S';
     const lngDir = lng >= 0 ? 'E' : 'W';
     return `${Math.abs(lat).toFixed(6)}° ${latDir}, ${Math.abs(lng).toFixed(6)}° ${lngDir}`;
+  },
+  
+  // Reverse geocoding - convert coordinates to address
+  reverseGeocode: async function(lat, lng) {
+    try {
+      // Use Nominatim OpenStreetMap API (free, no API key required)
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`;
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'LearningJournal-Lab4-Student2315024'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Reverse geocoding failed');
+      }
+      
+      const data = await response.json();
+      console.log('[GEOCODE] Reverse geocoding result:', data);
+      
+      // Extract meaningful location information
+      const address = data.address || {};
+      const locationParts = [];
+      
+      // Build location string from available data
+      if (address.city || address.town || address.village) {
+        locationParts.push(address.city || address.town || address.village);
+      }
+      if (address.state || address.region) {
+        locationParts.push(address.state || address.region);
+      }
+      if (address.country) {
+        locationParts.push(address.country);
+      }
+      
+      const locationName = locationParts.length > 0 
+        ? locationParts.join(', ')
+        : data.display_name || 'Location';
+      
+      return {
+        success: true,
+        name: locationName,
+        displayName: data.display_name,
+        address: address
+      };
+      
+    } catch (error) {
+      console.error('[ERROR] Reverse geocoding failed:', error);
+      return {
+        success: false,
+        name: 'Unknown location',
+        error: error.message
+      };
+    }
   }
 };
 
