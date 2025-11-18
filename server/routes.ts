@@ -1,48 +1,21 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated, clerkClient } from "./clerkAuth";
 import { insertJournalEntrySchema, insertProjectSchema, insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
+// Default guest user ID - everyone uses the same ID (public access)
+const GUEST_USER_ID = "guest-user";
+
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication middleware
-  await setupAuth(app);
+  // No authentication - all routes are public
 
-  // Auth route to get current user
-  // Syncs Clerk user data to our database
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      
-      // Fetch user from Clerk
-      const clerkUser = await clerkClient.users.getUser(userId);
-      
-      // Sync user to our database
-      await storage.upsertUser({
-        id: userId,
-        email: clerkUser.emailAddresses[0]?.emailAddress || "",
-        firstName: clerkUser.firstName || "",
-        lastName: clerkUser.lastName || "",
-        profileImageUrl: clerkUser.imageUrl || "",
-      });
-      
-      // Return user from our database
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
-  // Journal Entry Routes (all protected)
+  // Journal Entry Routes (all public)
   
-  // GET /api/journals - Get all journal entries for current user
-  app.get("/api/journals", isAuthenticated, async (req: any, res) => {
+  // GET /api/journals - Get all journal entries
+  app.get("/api/journals", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const journals = await storage.getAllJournals(userId);
+      const journals = await storage.getAllJournals(GUEST_USER_ID);
       res.json(journals);
     } catch (error) {
       console.error("Error fetching journals:", error);
@@ -51,10 +24,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GET /api/journals/:id - Get single journal entry
-  app.get("/api/journals/:id", isAuthenticated, async (req: any, res) => {
+  app.get("/api/journals/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const journal = await storage.getJournal(req.params.id, userId);
+      const journal = await storage.getJournal(req.params.id, GUEST_USER_ID);
       if (!journal) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -66,9 +38,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POST /api/journals - Create new journal entry
-  app.post("/api/journals", isAuthenticated, async (req: any, res) => {
+  app.post("/api/journals", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       // Accept client-provided ID, createdAt, updatedAt for offline-first sync
       const data = {
         ...req.body,
@@ -85,7 +56,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         date: data.date,
       });
       
-      const journal = await storage.createJournal(data, userId);
+      const journal = await storage.createJournal(data, GUEST_USER_ID);
       res.status(201).json(journal);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -97,9 +68,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // PUT /api/journals/:id - Update journal entry
-  app.put("/api/journals/:id", isAuthenticated, async (req: any, res) => {
+  app.put("/api/journals/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       // Extract only the fields we need for validation, ignore id/createdAt/updatedAt
       const data = {
         title: req.body.title,
@@ -111,7 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the extracted fields
       insertJournalEntrySchema.parse(data);
       
-      const journal = await storage.updateJournal(req.params.id, data, userId);
+      const journal = await storage.updateJournal(req.params.id, data, GUEST_USER_ID);
       if (!journal) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -126,10 +96,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DELETE /api/journals/:id - Delete journal entry
-  app.delete("/api/journals/:id", isAuthenticated, async (req: any, res) => {
+  app.delete("/api/journals/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const success = await storage.deleteJournal(req.params.id, userId);
+      const success = await storage.deleteJournal(req.params.id, GUEST_USER_ID);
       if (!success) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -140,13 +109,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Project Routes (all protected)
+  // Project Routes (all public)
   
-  // GET /api/projects - Get all projects for current user
-  app.get("/api/projects", isAuthenticated, async (req: any, res) => {
+  // GET /api/projects - Get all projects
+  app.get("/api/projects", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const projects = await storage.getAllProjects(userId);
+      const projects = await storage.getAllProjects(GUEST_USER_ID);
       res.json(projects);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -155,10 +123,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GET /api/projects/:id - Get single project
-  app.get("/api/projects/:id", isAuthenticated, async (req: any, res) => {
+  app.get("/api/projects/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const project = await storage.getProject(req.params.id, userId);
+      const project = await storage.getProject(req.params.id, GUEST_USER_ID);
       if (!project) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -170,9 +137,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POST /api/projects - Create new project
-  app.post("/api/projects", isAuthenticated, async (req: any, res) => {
+  app.post("/api/projects", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       // Accept client-provided ID, createdAt, updatedAt for offline-first sync
       const data = {
         ...req.body,
@@ -187,7 +153,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         techStack: data.techStack,
       });
       
-      const project = await storage.createProject(data, userId);
+      const project = await storage.createProject(data, GUEST_USER_ID);
       res.status(201).json(project);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -199,9 +165,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // PUT /api/projects/:id - Update project
-  app.put("/api/projects/:id", isAuthenticated, async (req: any, res) => {
+  app.put("/api/projects/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       // Extract only the fields we need for validation, ignore id/createdAt/updatedAt
       const data = {
         name: req.body.name,
@@ -212,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the extracted fields
       insertProjectSchema.parse(data);
       
-      const project = await storage.updateProject(req.params.id, data, userId);
+      const project = await storage.updateProject(req.params.id, data, GUEST_USER_ID);
       if (!project) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -227,10 +192,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DELETE /api/projects/:id - Delete project
-  app.delete("/api/projects/:id", isAuthenticated, async (req: any, res) => {
+  app.delete("/api/projects/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const success = await storage.deleteProject(req.params.id, userId);
+      const success = await storage.deleteProject(req.params.id, GUEST_USER_ID);
       if (!success) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -241,13 +205,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User Profile Routes (all protected)
+  // User Profile Routes (all public)
   
   // GET /api/profile - Get user profile
-  app.get("/api/profile", isAuthenticated, async (req: any, res) => {
+  app.get("/api/profile", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const profile = await storage.getProfile(userId);
+      const profile = await storage.getProfile(GUEST_USER_ID);
       res.json(profile || null);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -256,11 +219,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POST /api/profile - Create or update user profile
-  app.post("/api/profile", isAuthenticated, async (req: any, res) => {
+  app.post("/api/profile", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       insertUserProfileSchema.parse(req.body);
-      const profile = await storage.createOrUpdateProfile(req.body, userId);
+      const profile = await storage.createOrUpdateProfile(req.body, GUEST_USER_ID);
       res.status(200).json(profile);
     } catch (error) {
       if (error instanceof z.ZodError) {
