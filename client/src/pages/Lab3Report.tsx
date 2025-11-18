@@ -70,7 +70,8 @@ export default function Lab3Report() {
               { title: "3. Feature Implementations", page: "5" },
               { title: "4. Code Documentation", page: "10" },
               { title: "5. Screenshots", page: "14" },
-              { title: "6. Conclusion", page: "16" }
+              { title: "6. Challenges, Problems & Solutions", page: "16" },
+              { title: "7. Conclusion", page: "19" }
             ].map((item, i) => (
               <div key={i} className="flex justify-between border-b border-gray-300 py-2">
                 <span className="text-gray-800">{item.title}</span>
@@ -433,9 +434,127 @@ if (navContainer) {
           </div>
         </div>
 
+        {/* CHALLENGES AND LEARNING */}
+        <div className="page-break py-12">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">6. Challenges, Problems & Solutions</h2>
+          
+          <p className="text-gray-800 leading-relaxed mb-6">
+            Working on this lab was definitely a learning experience. I ran into several problems that really 
+            tested my understanding of JavaScript and how it works with modern frameworks. Here's what I struggled 
+            with and how I managed to fix things.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">6.1 The React vs Vanilla JavaScript Problem</h3>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            Honestly, this was the biggest headache. I thought I could just use <code className="bg-gray-100 px-2 py-1">addEventListener()</code> 
+            like we learned in class, but my event listeners kept disappearing or not working at all. I'd click 
+            buttons and nothing would happen. At first I thought my JavaScript code was wrong, so I spent like 
+            an hour checking for typos and syntax errors.
+          </p>
+          <p className="text-gray-800 leading-relaxed mb-4">
+            After lots of console.log debugging and googling, I finally figured out that React was re-rendering 
+            my components and basically wiping out my vanilla JavaScript event listeners. That was frustrating 
+            because the assignment said to use vanilla JavaScript, but I was building inside a React app.
+          </p>
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+            <p className="font-semibold text-blue-900 mb-2">Solution:</p>
+            <p className="text-gray-800">
+              I switched to using onclick attributes in the HTML that call global JavaScript functions. Instead 
+              of trying to attach listeners with addEventListener(), I created functions like 
+              <code className="bg-gray-100 px-2 py-1 mx-1">window.toggleCollapsible()</code> and called them 
+              directly from the HTML. This way React couldn't mess with them. It worked perfectly after that.
+            </p>
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">6.2 The Form Validation Timing Issue</h3>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            Getting the word count to update in real-time was trickier than I expected. My first attempt only 
+            counted words when you submitted the form, which wasn't very useful. I needed it to show the count 
+            as you typed, but I wasn't sure which event to use.
+          </p>
+          <p className="text-gray-800 leading-relaxed mb-4">
+            I tried using "change" event first, but that only fired after you clicked away from the textarea. 
+            That's when I remembered the "input" event from class - it fires every time the content changes, 
+            even while you're typing. That was exactly what I needed.
+          </p>
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+            <p className="font-semibold text-green-900 mb-2">Solution:</p>
+            <p className="text-gray-800">
+              Used <code className="bg-gray-100 px-2 py-1">addEventListener("input", ...)</code> instead of 
+              "change". This gave me real-time updates. I also had to figure out how to count words properly 
+              - I used <code className="bg-gray-100 px-2 py-1">split(/\\s+/)</code> to split on any whitespace 
+              and then filter out empty strings. Took a few tries to get it right.
+            </p>
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">6.3 Styling the Dark Theme Properly</h3>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            Making the dark theme look good was harder than I thought. When I first implemented it, some text 
+            became invisible because I forgot to change the text color along with the background. I also had 
+            issues with some elements not changing at all.
+          </p>
+          <p className="text-gray-800 leading-relaxed mb-4">
+            The problem was that I was only using <code className="bg-gray-100 px-2 py-1">classList.toggle()</code> 
+            for the main container, but child elements had their own colors set. I needed to think about inheritance 
+            and make sure the color changes cascaded down properly.
+          </p>
+          <div className="bg-purple-50 border-l-4 border-purple-500 p-4 mb-4">
+            <p className="font-semibold text-purple-900 mb-2">Solution:</p>
+            <p className="text-gray-800">
+              I added specific style changes for both background AND text color when toggling. I used 
+              <code className="bg-gray-100 px-2 py-1 mx-1">element.style.backgroundColor</code> and 
+              <code className="bg-gray-100 px-2 py-1 mx-1">element.style.color</code> together to make 
+              sure everything was readable. I also tested it multiple times to make sure all text was visible.
+            </p>
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">6.4 Understanding querySelector vs getElementById</h3>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            I was confused about when to use which method. At first I was just using getElementById() for 
+            everything, but then I needed to select elements by class name and getElementById() doesn't work 
+            for that. I tried using it anyway and wasted like 30 minutes wondering why my code wasn't working.
+          </p>
+          <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-4">
+            <p className="font-semibold text-orange-900 mb-2">Solution:</p>
+            <p className="text-gray-800">
+              I finally understood that getElementById() is only for IDs (makes sense from the name!), while 
+              querySelector() can use any CSS selector - IDs, classes, attributes, whatever. So now I use 
+              getElementById() when I have a unique ID, and querySelector() when I need to select by class 
+              or other attributes. QuerySelectorAll() is great when I need to select multiple elements at once.
+            </p>
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">6.5 Debugging with Browser Console</h3>
+          <p className="text-gray-800 leading-relaxed mb-4">
+            One skill I really improved during this lab is using the browser developer tools. Before, I barely 
+            used them. Now I know how to check the console for errors, use console.log() to track what's 
+            happening, and inspect elements to see their properties. When my collapsible sections weren't working, 
+            I used console.log() to check if my functions were even being called. That's how I found out React 
+            was removing my event listeners.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">What I Actually Learned</h3>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            This lab taught me way more than just how to use getElementById() and querySelector(). I learned:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-gray-800 ml-4 mb-4">
+            <li>How to debug JavaScript problems systematically instead of just guessing</li>
+            <li>Why vanilla JavaScript and frameworks sometimes don't play well together</li>
+            <li>The importance of testing features as you build them, not all at the end</li>
+            <li>How to read error messages and actually understand what they mean</li>
+            <li>That there's usually more than one way to solve a problem in JavaScript</li>
+          </ul>
+
+          <p className="text-gray-800 leading-relaxed">
+            The biggest thing though? I learned to be patient and persistent. When something doesn't work, 
+            instead of giving up, I learned to break it down, test small pieces, use console.log(), and 
+            keep trying different approaches. That's probably more valuable than memorizing syntax.
+          </p>
+        </div>
+
         {/* CONCLUSION */}
         <div className="page-break py-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">6. Conclusion</h2>
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">7. Conclusion</h2>
           
           <p className="text-gray-800 leading-relaxed mb-4">
             This Lab 3 demonstration successfully implements five interactive features using vanilla JavaScript 
@@ -493,7 +612,7 @@ if (navContainer) {
 
           <div className="mt-12 text-center text-sm text-gray-600">
             <p className="font-semibold">— End of Report —</p>
-            <p className="mt-2">Total Pages: 16</p>
+            <p className="mt-2">Total Pages: Approximately 20</p>
           </div>
         </div>
 
