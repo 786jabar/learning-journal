@@ -188,9 +188,9 @@ export const GitHubAPI = {
   baseURL: 'https://api.github.com',
   
   // Get user profile
-  getUser: async function(username) {
+  getUserProfile: async function(username) {
     try {
-      console.log(`[USER] Fetching GitHub user: ${username}...`);
+      console.log(`[GITHUB] Fetching GitHub user: ${username}...`);
       const response = await fetch(`${this.baseURL}/users/${username}`);
       
       if (!response.ok) {
@@ -204,13 +204,14 @@ export const GitHubAPI = {
         success: true,
         data: {
           name: data.name,
-          username: data.login,
-          avatar: data.avatar_url,
+          login: data.login,
+          avatar_url: data.avatar_url,
           bio: data.bio,
           followers: data.followers,
           following: data.following,
-          repos: data.public_repos,
-          url: data.html_url
+          public_repos: data.public_repos,
+          location: data.location,
+          html_url: data.html_url
         }
       };
     } catch (error) {
@@ -225,7 +226,7 @@ export const GitHubAPI = {
   // Get user repositories
   getRepos: async function(username) {
     try {
-      console.log(`[STORAGE] Fetching repos for: ${username}...`);
+      console.log(`[GITHUB] Fetching repos for: ${username}...`);
       const response = await fetch(`${this.baseURL}/users/${username}/repos?sort=updated&per_page=10`);
       
       if (!response.ok) {
@@ -253,5 +254,177 @@ export const GitHubAPI = {
         error: error.message
       };
     }
+  }
+};
+
+// ===== 4. TIKTOK API (Unofficial API - Demo Mode) =====
+export const TikTokAPI = {
+  // Note: TikTok's official API requires OAuth and developer credentials
+  // This uses an unofficial approach with demo data
+  
+  // Get user profile with demo data
+  getUserProfile: async function(username) {
+    try {
+      console.log(`[TIKTOK] Fetching TikTok user: ${username}...`);
+      
+      // Demo mode: Return mock data structure
+      // In production, you would use RapidAPI TikTok endpoint or similar service
+      const demoData = {
+        username: username,
+        displayName: username.charAt(0).toUpperCase() + username.slice(1),
+        avatar: `https://ui-avatars.com/api/?name=${username}&size=200&background=random`,
+        bio: `TikTok creator @${username}`,
+        followers: Math.floor(Math.random() * 100000) + 1000,
+        following: Math.floor(Math.random() * 5000) + 100,
+        likes: Math.floor(Math.random() * 1000000) + 10000,
+        videos: Math.floor(Math.random() * 500) + 10,
+        verified: false,
+        profileUrl: `https://www.tiktok.com/@${username}`
+      };
+      
+      console.log('[OK] TikTok profile data (demo mode):', demoData);
+      
+      return {
+        success: true,
+        demo: true,
+        data: demoData,
+        message: 'Demo mode: Showing sample data. To use real TikTok API, register at developers.tiktok.com'
+      };
+    } catch (error) {
+      console.error('[ERROR] TikTok API error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  },
+  
+  // Get user's recent followers (demo data)
+  getFollowers: async function(username, limit = 10) {
+    try {
+      console.log(`[TIKTOK] Fetching followers for: ${username}...`);
+      
+      // Demo mode: Generate mock followers
+      const followers = Array.from({ length: limit }, (_, i) => ({
+        username: `user${Math.floor(Math.random() * 10000)}`,
+        displayName: `TikTok User ${i + 1}`,
+        avatar: `https://ui-avatars.com/api/?name=User${i + 1}&size=100&background=random`,
+        isFollowing: Math.random() > 0.5,
+        followerCount: Math.floor(Math.random() * 50000)
+      }));
+      
+      console.log(`[OK] Retrieved ${followers.length} followers (demo mode)`);
+      
+      return {
+        success: true,
+        demo: true,
+        data: followers,
+        message: 'Demo mode: Showing sample follower data'
+      };
+    } catch (error) {
+      console.error('[ERROR] TikTok followers error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  },
+  
+  // Get user's video stats (demo data)
+  getVideoStats: async function(username) {
+    try {
+      console.log(`[TIKTOK] Fetching video stats for: ${username}...`);
+      
+      // Demo mode: Generate mock video stats
+      const stats = {
+        totalVideos: Math.floor(Math.random() * 500) + 10,
+        totalViews: Math.floor(Math.random() * 10000000) + 100000,
+        totalLikes: Math.floor(Math.random() * 1000000) + 10000,
+        totalComments: Math.floor(Math.random() * 100000) + 1000,
+        totalShares: Math.floor(Math.random() * 50000) + 500,
+        averageViews: 0,
+        averageLikes: 0
+      };
+      
+      stats.averageViews = Math.floor(stats.totalViews / stats.totalVideos);
+      stats.averageLikes = Math.floor(stats.totalLikes / stats.totalVideos);
+      
+      console.log('[OK] Video stats retrieved (demo mode):', stats);
+      
+      return {
+        success: true,
+        demo: true,
+        data: stats,
+        message: 'Demo mode: Showing sample video statistics'
+      };
+    } catch (error) {
+      console.error('[ERROR] TikTok video stats error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  },
+  
+  // Get recent comments on user's videos (demo data)
+  getRecentComments: async function(username, limit = 10) {
+    try {
+      console.log(`[TIKTOK] Fetching recent comments for: ${username}...`);
+      
+      const sampleComments = [
+        'This is amazing!',
+        'Love your content!',
+        'Keep it up!',
+        'So creative!',
+        'Best video ever!',
+        'You inspire me!',
+        'Can\'t stop watching!',
+        'Absolutely stunning!',
+        'This made my day!',
+        'More please!'
+      ];
+      
+      // Demo mode: Generate mock comments
+      const comments = Array.from({ length: limit }, (_, i) => ({
+        id: `comment_${Date.now()}_${i}`,
+        username: `commenter${Math.floor(Math.random() * 10000)}`,
+        text: sampleComments[Math.floor(Math.random() * sampleComments.length)],
+        likes: Math.floor(Math.random() * 1000),
+        timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        replies: Math.floor(Math.random() * 20)
+      }));
+      
+      console.log(`[OK] Retrieved ${comments.length} comments (demo mode)`);
+      
+      return {
+        success: true,
+        demo: true,
+        data: comments,
+        message: 'Demo mode: Showing sample comments'
+      };
+    } catch (error) {
+      console.error('[ERROR] TikTok comments error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  },
+  
+  // Format profile for display
+  formatProfile: function(profile) {
+    return `
+Username: @${profile.username}
+Display Name: ${profile.displayName}
+Bio: ${profile.bio}
+
+Followers: ${profile.followers.toLocaleString()}
+Following: ${profile.following.toLocaleString()}
+Total Likes: ${profile.likes.toLocaleString()}
+Videos: ${profile.videos}
+${profile.verified ? '✓ Verified Account' : ''}
+
+Profile: ${profile.profileUrl}
+    `.trim();
   }
 };
