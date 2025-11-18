@@ -1,4 +1,4 @@
-import { CheckCircle2, Code2, ExternalLink } from "lucide-react";
+import { CheckCircle2, Code2, ExternalLink, AlertTriangle, Globe, Database } from "lucide-react";
 import collapsibleImg from "@assets/stock_images/toggle_switch_button_7460965a.jpg";
 import darkThemeImg from "@assets/stock_images/code_editor_javascri_6d9bc75f.jpg";
 import formValidationImg from "@assets/stock_images/web_form_input_valid_c03214b0.jpg";
@@ -220,8 +220,9 @@ export default function Lab3Report() {
               { title: "4. Code Documentation", page: "12" },
               { title: "5. Visual Documentation", page: "16" },
               { title: "6. Challenges, Problems & Solutions", page: "18" },
-              { title: "7. Conclusion", page: "22" },
-              { title: "8. References & Resources", page: "23" }
+              { title: "7. Journal Questions & Reflections", page: "20" },
+              { title: "8. Conclusion", page: "22" },
+              { title: "9. References & Resources", page: "23" }
             ].map((item, i) => (
               <div key={i} className="flex justify-between border-b border-gray-300 py-2">
                 <span className="text-gray-800">{item.title}</span>
@@ -809,9 +810,336 @@ if (navContainer) {
           </p>
         </div>
 
+        {/* 7. JOURNAL QUESTIONS & REFLECTIONS */}
+        <div className="page-break py-12">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">7. Journal Questions & Reflections</h2>
+          
+          <p className="text-gray-800 leading-relaxed mb-6">
+            This section answers the weekly journal reflection questions, demonstrating my understanding of DOM manipulation 
+            techniques, implementation challenges, and testing methodologies used throughout Lab 3.
+          </p>
+
+          {/* Question 1 */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-purple-700 mb-4 flex items-start gap-2">
+              <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">1</span>
+              <span>Which DOM selection methods did you use, and why did you choose them?</span>
+            </h3>
+            
+            <div className="bg-purple-50 border-l-4 border-purple-600 p-5 mb-4">
+              <h4 className="font-semibold text-gray-900 mb-3">DOM Selection Methods Used:</h4>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-start gap-3 mb-2">
+                    <CheckCircle2 className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-gray-900">getElementById()</h5>
+                      <p className="text-gray-700 text-sm mt-1">
+                        <span className="font-semibold">Why I chose it:</span> Used for selecting unique elements with specific IDs. 
+                        This is the fastest DOM selection method and perfect when I know exactly which element I need. For example, 
+                        I used it to select the theme toggle button, quote display area, and progress tracking container.
+                      </p>
+                      <div className="mt-2 bg-gray-100 p-2 rounded">
+                        <code className="text-xs text-gray-800">const quoteDisplay = document.getElementById('quote-display');</code>
+                      </div>
+                      <p className="text-gray-600 text-sm mt-2">
+                        <span className="font-semibold">Best for:</span> Single, unique elements where performance matters
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-start gap-3 mb-2">
+                    <CheckCircle2 className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-gray-900">querySelector()</h5>
+                      <p className="text-gray-700 text-sm mt-1">
+                        <span className="font-semibold">Why I chose it:</span> Used when I needed to select elements by CSS selectors 
+                        like classes or complex selectors. More flexible than getElementById() and perfect for selecting the first 
+                        matching element. I used it for form inputs, validation message containers, and dynamically created elements.
+                      </p>
+                      <div className="mt-2 bg-gray-100 p-2 rounded">
+                        <code className="text-xs text-gray-800">const emailInput = document.querySelector('.email-input');</code>
+                      </div>
+                      <p className="text-gray-600 text-sm mt-2">
+                        <span className="font-semibold">Best for:</span> Flexible selection using CSS selectors, first matching element
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-purple-200">
+                  <div className="flex items-start gap-3 mb-2">
+                    <CheckCircle2 className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-gray-900">querySelectorAll()</h5>
+                      <p className="text-gray-700 text-sm mt-1">
+                        <span className="font-semibold">Why I chose it:</span> Essential when I needed to select multiple elements 
+                        at once. Used it for collapsible sections (all FAQ items), form fields that needed validation, and when 
+                        applying the same event listener to multiple elements. Returns a NodeList that I could loop through.
+                      </p>
+                      <div className="mt-2 bg-gray-100 p-2 rounded">
+                        <code className="text-xs text-gray-800">const collapsibles = document.querySelectorAll('.collapsible');</code>
+                      </div>
+                      <p className="text-gray-600 text-sm mt-2">
+                        <span className="font-semibold">Best for:</span> Selecting multiple elements to loop through or batch process
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border-l-4 border-blue-600 p-5">
+              <h5 className="font-semibold text-gray-900 mb-2">My Selection Strategy:</h5>
+              <p className="text-gray-700 text-sm mb-3">
+                I chose different methods based on what I needed to accomplish:
+              </p>
+              <ul className="space-y-2 text-gray-700 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="font-semibold min-w-[140px]">Single unique element:</span>
+                  <span>getElementById() - fastest and most direct</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-semibold min-w-[140px]">Single by class/selector:</span>
+                  <span>querySelector() - flexible and powerful</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-semibold min-w-[140px]">Multiple elements:</span>
+                  <span>querySelectorAll() - batch operations</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Question 2 */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-purple-700 mb-4 flex items-start gap-2">
+              <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">2</span>
+              <span>What was the most challenging part about linking JavaScript with your HTML?</span>
+            </h3>
+            
+            <div className="bg-red-50 border-2 border-red-300 rounded-lg p-5 mb-4">
+              <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                The Biggest Challenge: React and Vanilla JavaScript Conflict
+              </h4>
+              <p className="text-gray-800 leading-relaxed mb-3">
+                The most difficult part wasn't just linking JavaScript to HTML - it was making vanilla JavaScript work 
+                <span className="font-semibold"> inside a React application</span>. React expects to control the DOM completely, 
+                but vanilla JavaScript also wants to control it. This created conflicts that took me hours to figure out.
+              </p>
+
+              <div className="bg-white rounded p-4 mb-4">
+                <h5 className="font-semibold text-gray-900 mb-2">Specific Problems I Faced:</h5>
+                <ol className="list-decimal pl-5 space-y-2 text-gray-700 text-sm">
+                  <li>
+                    <span className="font-semibold">Event Listeners Disappearing:</span> When I attached event listeners 
+                    with addEventListener(), React would sometimes re-render the component and remove my listeners. I'd click 
+                    a button and nothing would happen because the listener was gone.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Timing Issues:</span> My JavaScript code would run before the HTML elements 
+                    actually existed on the page. I'd try to select an element with getElementById() and get null because 
+                    React hadn't rendered it yet.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Elements Not Found:</span> Even when elements were on the page, sometimes 
+                    my querySelector() calls would return null. This happened because React was still processing updates.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="bg-green-50 border-l-4 border-green-600 p-4">
+                <h5 className="font-semibold text-green-900 mb-2">How I Solved It:</h5>
+                <ul className="space-y-2 text-gray-700 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <span className="font-semibold">Waited for page load:</span> Used window.addEventListener('DOMContentLoaded') 
+                      and setTimeout() to make sure elements existed before trying to select them
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <span className="font-semibold">Checked for null:</span> Always verified elements existed before adding 
+                      listeners: if (element) then add listener
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <span className="font-semibold">Re-attached listeners:</span> In some cases, I had to re-run my JavaScript 
+                      code after React updates to make sure listeners stayed attached
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <span className="font-semibold">Used console.log() debugging:</span> Added lots of console.log() statements 
+                      to check when my code was running and whether elements were found
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-amber-50 border-l-4 border-amber-500 p-4">
+              <h5 className="font-semibold text-amber-900 mb-2">Other Challenges:</h5>
+              <ul className="space-y-2 text-gray-700 text-sm">
+                <li>
+                  <span className="font-semibold">• Form validation timing:</span> Had to validate input as users typed 
+                  (real-time) which required careful event listener setup on every input field
+                </li>
+                <li>
+                  <span className="font-semibold">• Multiple listeners on same element:</span> Sometimes I accidentally 
+                  added the same listener twice, causing functions to run multiple times per click
+                </li>
+                <li>
+                  <span className="font-semibold">• Browser compatibility:</span> Some methods worked differently across 
+                  browsers, needed to test in Chrome, Firefox, and Safari
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Question 3 */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-purple-700 mb-4 flex items-start gap-2">
+              <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">3</span>
+              <span>How did you test and debug your JavaScript code?</span>
+            </h3>
+            
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-400 rounded-lg p-5">
+              <h4 className="font-semibold text-gray-900 mb-4">My Testing & Debugging Process:</h4>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <Code2 className="w-5 h-5" />
+                    1. Console.log() Debugging
+                  </h5>
+                  <p className="text-gray-700 text-sm mb-2">
+                    My most-used debugging tool! I added console.log() statements everywhere to see what was happening:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700 text-sm">
+                    <li>console.log('Element found:', element) - Check if elements were selected correctly</li>
+                    <li>console.log('Button clicked!') - Verify event listeners were working</li>
+                    <li>console.log('Form data:', formData) - See what data I was collecting</li>
+                    <li>console.log('Validation result:', isValid) - Debug validation logic</li>
+                  </ul>
+                  <p className="text-gray-600 text-sm mt-2 italic">
+                    This helped me trace exactly where things were breaking and what values variables held at different points.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <Globe className="w-5 h-5" />
+                    2. Browser Developer Tools
+                  </h5>
+                  <p className="text-gray-700 text-sm mb-2">
+                    Chrome DevTools was essential for debugging:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700 text-sm">
+                    <li><span className="font-semibold">Console tab:</span> View all my console.log() output and JavaScript errors</li>
+                    <li><span className="font-semibold">Elements tab:</span> Inspect the HTML to see if elements had correct IDs and classes</li>
+                    <li><span className="font-semibold">Sources tab:</span> Set breakpoints to pause code and step through line by line</li>
+                    <li><span className="font-semibold">Network tab:</span> Not used much for this lab, but checked it occasionally</li>
+                  </ul>
+                  <p className="text-gray-600 text-sm mt-2 italic">
+                    The Elements tab was especially helpful - I could click on elements and see their properties, IDs, and classes 
+                    to make sure I was selecting the right ones.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5" />
+                    3. Feature-by-Feature Testing
+                  </h5>
+                  <p className="text-gray-700 text-sm mb-2">
+                    Instead of building everything then testing, I tested each feature as I built it:
+                  </p>
+                  <ol className="list-decimal pl-5 space-y-2 text-gray-700 text-sm">
+                    <li>
+                      <span className="font-semibold">Theme Toggle:</span> Built just the toggle, tested it worked, then moved on
+                    </li>
+                    <li>
+                      <span className="font-semibold">Quote Generator:</span> Made sure quotes displayed before adding styling
+                    </li>
+                    <li>
+                      <span className="font-semibold">Progress Tracker:</span> Tested percentage calculations manually with different values
+                    </li>
+                    <li>
+                      <span className="font-semibold">Form Validation:</span> Tested each validation rule separately (email format, password length, etc.)
+                    </li>
+                    <li>
+                      <span className="font-semibold">Collapsible Sections:</span> Started with one section, then expanded to multiple
+                    </li>
+                  </ol>
+                  <p className="text-gray-600 text-sm mt-2 italic">
+                    This incremental approach meant when something broke, I knew exactly what caused it.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    4. Error Message Reading
+                  </h5>
+                  <p className="text-gray-700 text-sm mb-2">
+                    I learned to actually READ error messages instead of panicking:
+                  </p>
+                  <div className="bg-gray-100 p-3 rounded mb-2">
+                    <p className="text-xs text-red-600 font-mono">
+                      Uncaught TypeError: Cannot read property 'addEventListener' of null
+                    </p>
+                  </div>
+                  <p className="text-gray-700 text-sm">
+                    This error meant I was trying to add a listener to an element that didn't exist (null). 
+                    Once I understood what errors meant, debugging became much easier.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <h5 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <Database className="w-5 h-5" />
+                    5. Manual User Testing
+                  </h5>
+                  <p className="text-gray-700 text-sm mb-2">
+                    I tested like a real user would:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700 text-sm">
+                    <li>Clicked every button multiple times to make sure nothing broke</li>
+                    <li>Typed invalid data in forms to test validation</li>
+                    <li>Tried edge cases like empty inputs or very long text</li>
+                    <li>Refreshed the page to see if everything still worked</li>
+                    <li>Opened and closed collapsible sections rapidly</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-50 border-l-4 border-green-600 p-5 mt-4">
+              <h5 className="font-semibold text-green-900 mb-2">What I Learned About Debugging:</h5>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                Debugging is actually problem-solving, not just fixing errors. The systematic approach - console.log() 
+                everything, inspect the DOM, test incrementally, read error messages carefully - turned what seemed like 
+                impossible bugs into solvable puzzles. The most important lesson: when code doesn't work, don't randomly 
+                change things hoping it'll fix itself. Instead, understand WHAT is actually happening, then figure out WHY, 
+                then fix it properly.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* CONCLUSION */}
         <div className="page-break py-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">7. Conclusion</h2>
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">8. Conclusion</h2>
           
           <p className="text-gray-800 leading-relaxed mb-4">
             This Lab 3 demonstration successfully implements five interactive features using vanilla JavaScript 
@@ -870,7 +1198,7 @@ if (navContainer) {
 
         {/* REFERENCES */}
         <div className="page-break py-12">
-          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">8. References & Resources</h2>
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">9. References & Resources</h2>
           
           <div className="space-y-4 text-gray-800">
             <div className="pl-8 -indent-8">
