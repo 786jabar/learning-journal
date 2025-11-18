@@ -591,6 +591,33 @@
                     
                     <div id="github-output" data-testid="output-github" class="output empty">Result will appear here...</div>
                 </div>
+
+                <div class="demo-card">
+                    <h3>TikTok API Demo (Demo Mode)</h3>
+                    <p class="description">View TikTok profile data, followers, video stats, and comments. Note: Real TikTok API requires OAuth authentication and developer credentials - demo mode shows sample data.</p>
+                    
+                    <div class="instructions">
+                        <h4>How to Use:</h4>
+                        <ol>
+                            <li>Enter any TikTok username</li>
+                            <li>Click "Load Profile" to view sample profile data</li>
+                            <li>Explore followers, stats, and comments tabs</li>
+                            <li>Demo mode generates realistic sample data</li>
+                        </ol>
+                    </div>
+                    
+                    <input type="text" id="tiktok-input" data-testid="input-tiktok-username" placeholder="Enter TikTok username..." value="charlidamelio" />
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <button onclick="getTikTokProfile()" data-testid="button-get-tiktok-profile" style="flex: 1;">Load Profile</button>
+                        <button onclick="getTikTokFollowers()" data-testid="button-get-tiktok-followers" style="flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Load Followers</button>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <button onclick="getTikTokStats()" data-testid="button-get-tiktok-stats" style="flex: 1; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Load Stats</button>
+                        <button onclick="getTikTokComments()" data-testid="button-get-tiktok-comments" style="flex: 1; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Load Comments</button>
+                    </div>
+                    
+                    <div id="tiktok-output" data-testid="output-tiktok" class="output empty">Result will appear here...</div>
+                </div>
             </div>
         </section>
     </div>
@@ -604,7 +631,7 @@
     <script type="module">
         import { LocalStorageDemo, SessionStorageDemo, IndexedDBDemo } from './js/storage.js';
         import { ClipboardAPI, NotificationsAPI, GeolocationAPI } from './js/browser.js';
-        import { WeatherAPI, QuotesAPI, GitHubAPI } from './js/thirdparty.js';
+        import { WeatherAPI, QuotesAPI, GitHubAPI, TikTokAPI } from './js/thirdparty.js';
 
         // Initialize IndexedDB
         await IndexedDBDemo.init();
@@ -876,6 +903,129 @@
                 outputEl.innerHTML = `<span class="success">[OK] GitHub Profile Loaded!</span>\n\nUsername: ${u.login}\nName: ${u.name || 'Not provided'}\nBio: ${u.bio || 'No bio available'}\n\nFollowers: ${u.followers}\nFollowing: ${u.following}\nPublic Repos: ${u.public_repos}\nLocation: ${u.location || 'Not specified'}\n\nProfile: ${u.html_url}\n\nData fetched from GitHub REST API`;
             } else {
                 outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>\n\nPossible reasons:\n• User not found\n• API rate limit exceeded\n• Network issue\n\nPlease verify the username and try again.`;
+            }
+        };
+
+        // === TIKTOK FUNCTIONS ===
+        window.getTikTokProfile = async function() {
+            const username = document.getElementById('tiktok-input').value.trim();
+            const outputEl = document.getElementById('tiktok-output');
+            
+            if (!username) {
+                outputEl.className = 'output';
+                outputEl.innerHTML = `<span class="warning">[WARNING] Please enter a TikTok username!</span>`;
+                return;
+            }
+            
+            outputEl.className = 'output';
+            outputEl.innerHTML = `<span class="info">[INFO] Loading TikTok profile...</span>\n\nFetching profile for: @${username}`;
+            
+            const result = await TikTokAPI.getUserProfile(username);
+            
+            if (result.success) {
+                const p = result.data;
+                const demoLabel = result.demo ? '[DEMO MODE]' : '';
+                outputEl.innerHTML = `<span class="success">[OK] TikTok Profile Loaded! ${demoLabel}</span>\n\nUsername: @${p.username}\nDisplay Name: ${p.displayName}\nBio: ${p.bio}\n\n📊 STATS:\nFollowers: ${p.followers.toLocaleString()}\nFollowing: ${p.following.toLocaleString()}\nLikes: ${p.likes.toLocaleString()}\nVideos: ${p.videos}\nVerified: ${p.verified ? 'Yes' : 'No'}\n\nProfile: ${p.profileUrl}\n\n${result.demo ? 'Note: Demo mode - Real API requires TikTok developer credentials' : 'Data fetched from TikTok API'}`;
+            } else {
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>`;
+            }
+        };
+
+        window.getTikTokFollowers = async function() {
+            const username = document.getElementById('tiktok-input').value.trim();
+            const outputEl = document.getElementById('tiktok-output');
+            
+            if (!username) {
+                outputEl.className = 'output';
+                outputEl.innerHTML = `<span class="warning">[WARNING] Please enter a TikTok username!</span>`;
+                return;
+            }
+            
+            outputEl.className = 'output';
+            outputEl.innerHTML = `<span class="info">[INFO] Loading followers...</span>`;
+            
+            const result = await TikTokAPI.getFollowers(username, 10);
+            
+            if (result.success) {
+                const demoLabel = result.demo ? '[DEMO MODE]' : '';
+                let output = `<span class="success">[OK] Followers Loaded! ${demoLabel}</span>\n\n`;
+                output += `Top ${result.data.length} followers for @${username}:\n\n`;
+                
+                result.data.forEach((follower, i) => {
+                    output += `${i + 1}. @${follower.username}\n`;
+                    output += `   Display: ${follower.displayName}\n`;
+                    output += `   Followers: ${follower.followerCount.toLocaleString()}\n`;
+                    output += `   Following back: ${follower.isFollowing ? 'Yes' : 'No'}\n\n`;
+                });
+                
+                if (result.demo) {
+                    output += '\nNote: Demo mode - Real API requires TikTok developer credentials';
+                }
+                
+                outputEl.innerHTML = output;
+            } else {
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>`;
+            }
+        };
+
+        window.getTikTokStats = async function() {
+            const username = document.getElementById('tiktok-input').value.trim();
+            const outputEl = document.getElementById('tiktok-output');
+            
+            if (!username) {
+                outputEl.className = 'output';
+                outputEl.innerHTML = `<span class="warning">[WARNING] Please enter a TikTok username!</span>`;
+                return;
+            }
+            
+            outputEl.className = 'output';
+            outputEl.innerHTML = `<span class="info">[INFO] Loading video statistics...</span>`;
+            
+            const result = await TikTokAPI.getVideoStats(username);
+            
+            if (result.success) {
+                const s = result.data;
+                const demoLabel = result.demo ? '[DEMO MODE]' : '';
+                outputEl.innerHTML = `<span class="success">[OK] Video Stats Loaded! ${demoLabel}</span>\n\n📊 VIDEO STATISTICS for @${username}:\n\nTotal Videos: ${s.totalVideos}\nTotal Views: ${s.totalViews.toLocaleString()}\nTotal Likes: ${s.totalLikes.toLocaleString()}\nTotal Comments: ${s.totalComments.toLocaleString()}\nTotal Shares: ${s.totalShares.toLocaleString()}\n\n📈 AVERAGES:\nAvg Views per Video: ${s.averageViews.toLocaleString()}\nAvg Likes per Video: ${s.averageLikes.toLocaleString()}\n\n${result.demo ? 'Note: Demo mode - Real API requires TikTok developer credentials' : 'Data calculated from TikTok API'}`;
+            } else {
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>`;
+            }
+        };
+
+        window.getTikTokComments = async function() {
+            const username = document.getElementById('tiktok-input').value.trim();
+            const outputEl = document.getElementById('tiktok-output');
+            
+            if (!username) {
+                outputEl.className = 'output';
+                outputEl.innerHTML = `<span class="warning">[WARNING] Please enter a TikTok username!</span>`;
+                return;
+            }
+            
+            outputEl.className = 'output';
+            outputEl.innerHTML = `<span class="info">[INFO] Loading recent comments...</span>`;
+            
+            const result = await TikTokAPI.getRecentComments(username, 10);
+            
+            if (result.success) {
+                const demoLabel = result.demo ? '[DEMO MODE]' : '';
+                let output = `<span class="success">[OK] Recent Comments Loaded! ${demoLabel}</span>\n\n`;
+                output += `Latest ${result.data.length} comments on @${username}'s videos:\n\n`;
+                
+                result.data.forEach((comment, i) => {
+                    const date = new Date(comment.timestamp);
+                    output += `${i + 1}. @${comment.username} (${date.toLocaleDateString()})\n`;
+                    output += `   "${comment.text}"\n`;
+                    output += `   ❤️ ${comment.likes} likes | 💬 ${comment.replies} replies\n\n`;
+                });
+                
+                if (result.demo) {
+                    output += '\nNote: Demo mode - Real API requires TikTok developer credentials';
+                }
+                
+                outputEl.innerHTML = output;
+            } else {
+                outputEl.innerHTML = `<span class="error">[ERROR] ${result.error}</span>`;
             }
         };
     </script>
