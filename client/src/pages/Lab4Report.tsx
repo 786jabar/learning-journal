@@ -255,9 +255,10 @@ export default function Lab4Report() {
               { title: "5. Code Implementation Details", page: "16" },
               { title: "6. Technical Architecture", page: "18" },
               { title: "7. Challenges & Solutions", page: "19" },
-              { title: "8. Testing & Validation", page: "21" },
-              { title: "9. Conclusion", page: "22" },
-              { title: "10. References & Resources", page: "23" }
+              { title: "8. Journal Questions & Reflections", page: "20" },
+              { title: "9. Testing & Validation", page: "22" },
+              { title: "10. Conclusion", page: "23" },
+              { title: "11. References & Resources", page: "24" }
             ].map((item, i) => (
               <div key={i} className="flex justify-between border-b border-gray-200 pb-1">
                 <span className="text-gray-800">{item.title}</span>
@@ -1234,9 +1235,380 @@ async function getTechNews() {
           </div>
         </div>
 
-        {/* 9. CONCLUSION */}
+        {/* 8. JOURNAL QUESTIONS & REFLECTIONS */}
         <div className="page-break py-12">
-          <h2 className="text-3xl font-bold text-gray-900 border-b-4 border-emerald-600 pb-3 mb-6">9. Conclusion</h2>
+          <h2 className="text-3xl font-bold text-gray-900 border-b-4 border-emerald-600 pb-3 mb-6">8. Journal Questions & Reflections</h2>
+          
+          <p className="text-gray-800 leading-relaxed mb-6">
+            This section provides detailed answers to the weekly journal reflection questions, demonstrating understanding 
+            of API selection, implementation methodology, problem-solving approaches, and practical application benefits.
+          </p>
+
+          {/* Question 1 */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-emerald-700 mb-4 flex items-start gap-2">
+              <span className="bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg">1</span>
+              <span>Which Storage, Browser, and Third-Party APIs did you choose, and why?</span>
+            </h3>
+            
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-emerald-600 p-5 mb-4">
+              <h4 className="font-semibold text-gray-900 mb-3">Storage APIs Selection:</h4>
+              <ul className="space-y-3 text-gray-800">
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">IndexedDB:</span> Chosen for complex data storage (journal entries and projects) 
+                    because it handles large datasets, supports structured queries, and enables full offline functionality. Perfect 
+                    for the Learning Journal PWA where users need persistent, searchable data even without internet connectivity.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">LocalStorage:</span> Selected for storing the unique device ID that identifies 
+                    each user's browser. This simple key-value storage persists across sessions and is perfect for small, permanent 
+                    data like user preferences and device identifiers.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">SessionStorage:</span> Implemented for temporary form state preservation. When users 
+                    fill out journal entry forms, their data is saved in SessionStorage so they don't lose progress if they navigate 
+                    away or refresh accidentally. Data clears when the session ends, which is appropriate for draft content.
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border-l-4 border-teal-600 p-5 mb-4">
+              <h4 className="font-semibold text-gray-900 mb-3">Browser APIs Selection:</h4>
+              <ul className="space-y-3 text-gray-800">
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-teal-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">Geolocation API:</span> Chosen to automatically tag journal entries with location 
+                    context. This enriches entries by capturing where learning happened, providing valuable context for reflection. 
+                    Particularly useful for students who study in different locations or travel.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-teal-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">Notifications API:</span> Selected to send reminders for journal writing. Helps 
+                    users maintain consistent learning reflection habits by prompting them at scheduled times. Critical for building 
+                    regular journaling practice without requiring the app to be open.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-teal-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">Clipboard API:</span> Implemented for easy sharing of journal entries and project 
+                    details. Users can quickly copy formatted text for posting on forums, sharing with peers, or submitting assignments. 
+                    Improves workflow efficiency significantly.
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border-l-4 border-cyan-600 p-5">
+              <h4 className="font-semibold text-gray-900 mb-3">Third-Party APIs Selection:</h4>
+              <ul className="space-y-3 text-gray-800">
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">WeatherAPI:</span> Chosen to provide ambient context for journal entries. Weather 
+                    conditions can influence mood, productivity, and learning effectiveness. This data enriches reflection by connecting 
+                    environmental factors to learning outcomes.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">GitHub API:</span> Selected to display repository statistics for coding projects. 
+                    Students can see commit history, code activity, and contribution graphs directly in their learning journal, making 
+                    it easy to track coding progress and reference projects during reflection.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">NewsAPI:</span> Implemented to fetch technology news and trends. Helps students stay 
+                    current with industry developments and discover new learning topics. News articles can inspire journal entries about 
+                    emerging technologies and personal learning goals.
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold">TikTok API:</span> Chosen to demonstrate OAuth 2.0 integration patterns and social 
+                    media API structure. While implemented in demo mode for academic purposes, it showcases understanding of modern 
+                    authentication flows and video platform APIs relevant to content creation and social learning.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Question 2 */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-emerald-700 mb-4 flex items-start gap-2">
+              <span className="bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg">2</span>
+              <span>How did you integrate each API with DOM manipulation?</span>
+            </h3>
+            
+            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-5 mb-4">
+              <p className="text-gray-800 leading-relaxed mb-4">
+                The project uses a <span className="font-semibold">dual implementation approach</span> to satisfy both academic 
+                requirements and modern development best practices:
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-white border-2 border-purple-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-purple-900 mb-2">Vanilla JavaScript Implementation</h5>
+                  <p className="text-gray-700 text-sm mb-3">
+                    Located at <code className="bg-purple-100 px-2 py-1 rounded text-sm">/lab4-demo</code> route, demonstrating 
+                    direct DOM manipulation for Lab 4 requirements.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <code className="text-xs">document.getElementById()</code> to select target elements
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <code className="text-xs">element.innerHTML</code> to update content dynamically
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <code className="text-xs">addEventListener()</code> for user interactions
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <code className="text-xs">createElement()</code> to build UI elements programmatically
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-blue-900 mb-2">React Component Implementation</h5>
+                  <p className="text-gray-700 text-sm mb-3">
+                    Integrated throughout the main Learning Journal PWA, using modern React patterns for production-ready features.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      React state hooks (<code className="text-xs">useState</code>) manage API data
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      Effect hooks (<code className="text-xs">useEffect</code>) trigger API calls
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      JSX templates render API responses declaratively
+                    </li>
+                    <li className="flex items-start">
+                      <Code2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      TanStack Query manages caching and synchronization
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-emerald-50 border-l-4 border-emerald-600 p-5">
+              <h5 className="font-semibold text-gray-900 mb-3">Example DOM Integration Pattern:</h5>
+              <p className="text-gray-700 text-sm mb-3">
+                For the <span className="font-semibold">Geolocation API</span> in vanilla JavaScript:
+              </p>
+              <ol className="list-decimal pl-6 space-y-2 text-gray-700 text-sm">
+                <li>User clicks "Get Location" button (DOM event listener)</li>
+                <li>JavaScript calls <code className="bg-gray-200 px-1 rounded">navigator.geolocation.getCurrentPosition()</code></li>
+                <li>Success callback receives coordinates (latitude, longitude)</li>
+                <li>DOM manipulation updates display: <code className="bg-gray-200 px-1 rounded">document.getElementById('location-display').innerHTML = coords</code></li>
+                <li>Additional API call fetches address from coordinates</li>
+                <li>DOM updates again with formatted address</li>
+              </ol>
+              <p className="text-gray-700 text-sm mt-3">
+                This same pattern applies to all APIs: <span className="font-semibold">Event → API Call → Response → DOM Update</span>. 
+                The React implementation abstracts this into state management and component re-rendering.
+              </p>
+            </div>
+          </div>
+
+          {/* Question 3 */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-emerald-700 mb-4 flex items-start gap-2">
+              <span className="bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg">3</span>
+              <span>What challenges did you encounter, and how did you solve them?</span>
+            </h3>
+            
+            <div className="bg-amber-50 border-2 border-amber-400 rounded-lg p-5">
+              <p className="text-gray-800 leading-relaxed mb-4">
+                Section 7 "Challenges & Solutions" provides comprehensive details on six major challenges encountered during 
+                implementation. Here's a summary:
+              </p>
+              
+              <div className="space-y-3">
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 1: API Rate Limiting</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Implemented SessionStorage caching and exponential backoff 
+                    retry logic to reduce API calls by 90%.
+                  </p>
+                </div>
+
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 2: CORS and API Security</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Used public CORS-enabled endpoints for demo; documented 
+                    backend proxy strategy for production security.
+                  </p>
+                </div>
+
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 3: Browser Permission Handling</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Added clear permission explanations and graceful fallbacks, 
+                    increasing grant rate from 30% to 70%.
+                  </p>
+                </div>
+
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 4: IndexedDB Complexity</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Used localforage library to wrap IndexedDB with Promise-based 
+                    API, reducing code from ~100 to ~20 lines.
+                  </p>
+                </div>
+
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 5: Network Reliability</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Comprehensive error handling with specific messages, loading 
+                    states, and retry mechanisms for all API calls.
+                  </p>
+                </div>
+
+                <div className="bg-white border-l-4 border-red-500 p-3 rounded">
+                  <p className="font-semibold text-gray-900 mb-1">Challenge 6: TikTok OAuth Requirements</p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Solution:</span> Created demo mode with mock data showing UI/UX patterns 
+                    while documenting full OAuth flow for educational purposes.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-gray-700 text-sm mt-4 italic">
+                See Section 7 for detailed explanations of each challenge including problem statement, impact analysis, 
+                implementation steps, and measurable results.
+              </p>
+            </div>
+          </div>
+
+          {/* Question 4 */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-emerald-700 mb-4 flex items-start gap-2">
+              <span className="bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg">4</span>
+              <span>In what ways do these APIs improve your Learning Journal PWA?</span>
+            </h3>
+            
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-lg p-5">
+                <h5 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                  <Database className="w-5 h-5" />
+                  Storage APIs: Enhanced Data Persistence & Offline Capability
+                </h5>
+                <ul className="space-y-2 text-gray-800 text-sm">
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">IndexedDB</span> enables full offline functionality—users can create, edit, 
+                    and view journal entries without internet, then sync when reconnected</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">LocalStorage</span> provides persistent device identification, eliminating 
+                    the need for user accounts while maintaining data privacy and isolation</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">SessionStorage</span> prevents data loss during form filling—students never 
+                    lose work if they accidentally navigate away or refresh the page</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-50 to-teal-50 border-2 border-blue-500 rounded-lg p-5">
+                <h5 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                  <Globe className="w-5 h-5" />
+                  Browser APIs: Native-Like User Experience
+                </h5>
+                <ul className="space-y-2 text-gray-800 text-sm">
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">Geolocation</span> automatically captures location context for entries, 
+                    enriching reflections with "where" learning happened (libraries, classrooms, cafes, etc.)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">Notifications</span> help build consistent journaling habits by reminding 
+                    students at scheduled times, even when the app isn't open—crucial for maintaining learning discipline</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">Clipboard</span> streamlines sharing workflow—one click copies formatted 
+                    entries for posting on discussion boards, sharing with instructors, or submitting assignments</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-500 rounded-lg p-5">
+                <h5 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                  <Cloud className="w-5 h-5" />
+                  Third-Party APIs: Rich Contextual Data & Learning Insights
+                </h5>
+                <ul className="space-y-2 text-gray-800 text-sm">
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">WeatherAPI</span> adds environmental context to entries, helping students 
+                    correlate productivity patterns with weather conditions and optimize study environments</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">GitHub API</span> integrates coding activity directly into journal—students 
+                    see commit history, repository stats, and code contributions alongside written reflections</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">NewsAPI</span> surfaces relevant tech news and trends, inspiring new learning 
+                    topics and helping students stay current with industry developments</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-4 h-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><span className="font-semibold">TikTok API</span> demonstrates modern authentication patterns and social 
+                    platform integration, preparing students for real-world API work with OAuth 2.0 flows</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-600 rounded-lg p-5">
+                <h5 className="font-semibold text-yellow-900 mb-3">Overall Impact: Transforming a Simple Journal into an Intelligent Learning Platform</h5>
+                <p className="text-gray-800 text-sm leading-relaxed">
+                  These 10 APIs collectively transform the Learning Journal from a basic note-taking tool into a comprehensive 
+                  learning platform that works offline, provides contextual enrichment, maintains user privacy, sends timely reminders, 
+                  integrates with coding workflows, and stays connected to industry trends. The result is a PWA that genuinely supports 
+                  effective learning reflection and growth tracking—making it a practical tool students actually want to use, not just 
+                  an academic exercise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 10. CONCLUSION */}
+        <div className="page-break py-12">
+          <h2 className="text-3xl font-bold text-gray-900 border-b-4 border-emerald-600 pb-3 mb-6">10. Conclusion</h2>
           
           <p className="text-gray-800 leading-relaxed mb-4">
             This Lab 4 project successfully demonstrates comprehensive understanding and practical implementation of modern web APIs 
@@ -1316,9 +1688,9 @@ async function getTechNews() {
           </p>
         </div>
 
-        {/* 10. REFERENCES */}
+        {/* 11. REFERENCES */}
         <div className="page-break py-12">
-          <h2 className="text-3xl font-bold text-gray-900 border-b-4 border-emerald-600 pb-3 mb-6">10. References & Resources</h2>
+          <h2 className="text-3xl font-bold text-gray-900 border-b-4 border-emerald-600 pb-3 mb-6">11. References & Resources</h2>
           
           <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Official Documentation</h3>
           <div className="space-y-2 mb-6">
