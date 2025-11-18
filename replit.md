@@ -2,11 +2,18 @@
 
 ## Overview
 
-Learning Journal is a Progressive Web App (PWA) built with React, TypeScript, and Vite that allows users to track their learning journey through journal entries and project management. The application features offline-first functionality, real-time data synchronization, and a modern glassmorphism design aesthetic. Users can create and manage journal entries with markdown support, organize projects with tech stacks, visualize their progress with analytics charts, and export their data in multiple formats.
+Learning Journal is a Progressive Web App (PWA) built with React, TypeScript, and Vite that allows users to track their learning journey through journal entries and project management. The application features offline-first functionality, real-time data synchronization, modern glassmorphism design, and comprehensive API integration demonstrating Storage APIs, Browser APIs, and Third-Party APIs. Users can create and manage journal entries with markdown support, organize projects with tech stacks, visualize their progress with analytics charts, export their data in multiple formats, and leverage browser capabilities like clipboard, notifications, and geolocation.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Academic Integration
+
+**Course**: FGCT6021 Mobile Application Development  
+**Student**: Md Jawar Safi (#2315024)  
+**Lab 3**: Vanilla JavaScript DOM Manipulation (Completed)  
+**Lab 4**: API Integration - Storage, Browser & Third-Party APIs (Completed)
 
 ## System Architecture
 

@@ -17,6 +17,8 @@ import AnalyticsPage from "@/pages/AnalyticsPage";
 import LandingPage from "@/pages/LandingPage";
 import Lab3DemoPage from "@/pages/Lab3DemoPage";
 import Lab3Report from "@/pages/Lab3Report";
+import Lab4DemoPage from "@/pages/Lab4DemoPage";
+import Lab4Report from "@/pages/Lab4Report";
 
 function Router() {
   // All routes are now public - no authentication required
@@ -29,6 +31,8 @@ function Router() {
       <Route path="/analytics" component={AnalyticsPage} />
       <Route path="/lab3-demo" component={Lab3DemoPage} />
       <Route path="/lab3-report" component={Lab3Report} />
+      <Route path="/lab4-demo" component={Lab4DemoPage} />
+      <Route path="/lab4-report" component={Lab4Report} />
       <Route path="/about" component={AboutPage} />
       <Route component={NotFound} />
     </Switch>

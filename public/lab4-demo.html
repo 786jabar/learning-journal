@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4: API Demonstrations - Vanilla JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .demo-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-card h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .output {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 6px;
+            min-height: 60px;
+            font-size: 0.9rem;
+        }
+        
+        .success {
+            color: #22c55e;
+            font-weight: 600;
+        }
+        
+        .error {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        .info {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+        
+        .summary h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .summary-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-item ul {
+            list-style: none;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .summary-item li:before {
+            content: "[OK] ";
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lab 4: API Demonstrations</h1>
+        <p class="subtitle">Student: Md Jawar Safi (#2315024) | FGCT6021 Mobile Application Development</p>
+        
+        <!-- APIs Section -->
+        <section class="section">
+            <h2>Storage APIs</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>1. LocalStorage</h3>
+                    <p>Persistent storage that survives browser restarts</p>
+                    <select id="theme-select">
+                        <option value="light">Light Light</option>
+                        <option value="dark">Dark Dark</option>
+                        <option value="auto">Auto Auto</option>
+                    </select>
+                    <button onclick="saveTheme()">Save Theme</button>
+                    <button onclick="getTheme()" style="margin-top: 0.5rem;">Get Theme</button>
+                    <div id="theme-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>2. SessionStorage</h3>
+                    <p>Temporary storage cleared when tab closes</p>
+                    <input type="text" id="session-input" placeholder="Enter temporary note...">
+                    <button onclick="saveSession()">Save Temporarily</button>
+                    <button onclick="getSession()" style="margin-top: 0.5rem;">Get Temporary Data</button>
+                    <div id="session-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>3. IndexedDB</h3>
+                    <p>Store complex data and large datasets</p>
+                    <textarea id="note-input" placeholder="Enter a note..." rows="3"></textarea>
+                    <button onclick="addNote()">Add Note</button>
+                    <button onclick="getAllNotes()" style="margin-top: 0.5rem;">Show All Notes</button>
+                    <div id="indexeddb-output" class="output"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Browser APIs Section -->
+        <section class="section">
+            <h2>Browser Browser APIs</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>1. Clipboard API</h3>
+                    <p>Copy text to clipboard</p>
+                    <textarea id="text-to-copy" placeholder="Enter text to copy..." rows="3"></textarea>
+                    <button onclick="copyText()"> Copy to Clipboard</button>
+                    <div id="clipboard-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>2. Notifications API</h3>
+                    <p>Show browser notifications</p>
+                    <button onclick="showNotification()"> Send Notification</button>
+                    <div id="notification-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>3. Geolocation API</h3>
+                    <p>Get your current location</p>
+                    <button onclick="getLocation()"> Get Location</button>
+                    <div id="location-output" class="output"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Third-Party APIs Section -->
+        <section class="section">
+            <h2>API Third-Party APIs</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>1. Weather API</h3>
+                    <p>Get current weather (Open-Meteo)</p>
+                    <button onclick="getWeather()"> Get Weather</button>
+                    <div id="weather-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>2. Quotes API</h3>
+                    <p>Random inspirational quotes</p>
+                    <button onclick="getQuote()"> Get Quote</button>
+                    <div id="quote-output" class="output"></div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3>3. GitHub API</h3>
+                    <p>Search GitHub users</p>
+                    <input type="text" id="github-input" placeholder="Enter username...">
+                    <button onclick="getGitHubUser()"> Get Profile</button>
+                    <div id="github-output" class="output"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Summary -->
+        <section class="summary">
+            <h2>[OK] Lab 4 Requirements Completed</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <h3>Storage APIs</h3>
+                    <ul>
+                        <li>LocalStorage</li>
+                        <li>SessionStorage</li>
+                        <li>IndexedDB</li>
+                    </ul>
+                </div>
+                <div class="summary-item">
+                    <h3>Browser Browser APIs</h3>
+                    <ul>
+                        <li>Clipboard API</li>
+                        <li>Notifications API</li>
+                        <li>Geolocation API</li>
+                    </ul>
+                </div>
+                <div class="summary-item">
+                    <h3>API Third-Party APIs</h3>
+                    <ul>
+                        <li>Weather API</li>
+                        <li>Quotes API</li>
+                        <li>GitHub API</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Load the vanilla JavaScript modules -->
+    <script type="module">
+        import { LocalStorageDemo, SessionStorageDemo, IndexedDBDemo } from './js/storage.js';
+        import { ClipboardAPI, NotificationsAPI, GeolocationAPI } from './js/browser.js';
+        import { WeatherAPI, QuotesAPI, GitHubAPI } from './js/thirdparty.js';
+        
+        // Initialize IndexedDB
+        IndexedDBDemo.init().then(() => {
+            console.log('[OK] IndexedDB initialized');
+        }).catch(err => {
+            console.error('[X] IndexedDB init failed:', err);
+        });
+        
+        // Make functions globally available for onclick handlers
+        window.saveTheme = function() {
+            const theme = document.getElementById('theme-select').value;
+            LocalStorageDemo.saveTheme(theme);
+            document.getElementById('theme-output').innerHTML = `<span class="success">[OK] Theme '${theme}' saved!</span>`;
+        };
+        
+        window.getTheme = function() {
+            const theme = LocalStorageDemo.getTheme();
+            document.getElementById('theme-output').innerHTML = `<span class="info">Current theme: ${theme}</span>`;
+        };
+        
+        window.saveSession = function() {
+            const value = document.getElementById('session-input').value;
+            SessionStorageDemo.saveSessionData('temp-note', value);
+            document.getElementById('session-output').innerHTML = `<span class="success">[OK] Saved temporarily: ${value}</span>`;
+        };
+        
+        window.getSession = function() {
+            const value = SessionStorageDemo.getSessionData('temp-note') || 'Not set';
+            document.getElementById('session-output').innerHTML = `<span class="info">Temporary data: ${value}</span>`;
+        };
+        
+        window.addNote = async function() {
+            const note = document.getElementById('note-input').value;
+            if (!note) {
+                document.getElementById('indexeddb-output').innerHTML = `<span class="error">[!] Please enter a note</span>`;
+                return;
+            }
+            try {
+                await IndexedDBDemo.addNote(note);
+                document.getElementById('indexeddb-output').innerHTML = `<span class="success">[OK] Note added to IndexedDB!</span>`;
+                document.getElementById('note-input').value = '';
+            } catch (err) {
+                document.getElementById('indexeddb-output').innerHTML = `<span class="error">[X] Error: ${err.message}</span>`;
+            }
+        };
+        
+        window.getAllNotes = async function() {
+            try {
+                const notes = await IndexedDBDemo.getAllNotes();
+                if (notes.length === 0) {
+                    document.getElementById('indexeddb-output').innerHTML = `<span class="info">No notes yet. Add one above!</span>`;
+                } else {
+                    const notesList = notes.map((note, i) => 
+                        `${i + 1}. ${note.text} (${new Date(note.date).toLocaleDateString()})`
+                    ).join('<br>');
+                    document.getElementById('indexeddb-output').innerHTML = `<span class="success">[OK] Found ${notes.length} notes:</span><br>${notesList}`;
+                }
+            } catch (err) {
+                document.getElementById('indexeddb-output').innerHTML = `<span class="error">[X] Error: ${err.message}</span>`;
+            }
+        };
+        
+        window.copyText = async function() {
+            const text = document.getElementById('text-to-copy').value;
+            const result = await ClipboardAPI.copyText(text);
+            const outputEl = document.getElementById('clipboard-output');
+            if (result.success) {
+                outputEl.innerHTML = `<span class="success">${result.message}</span>`;
+            } else {
+                outputEl.innerHTML = `<span class="error">${result.message}</span>`;
+            }
+        };
+        
+        window.showNotification = async function() {
+            const permission = await NotificationsAPI.requestPermission();
+            if (permission === 'granted') {
+                NotificationsAPI.showSuccess('This is a test notification from Lab 4!');
+                document.getElementById('notification-output').innerHTML = `<span class="success">[OK] Notification sent!</span>`;
+            } else {
+                document.getElementById('notification-output').innerHTML = `<span class="error">[X] Permission denied</span>`;
+            }
+        };
+        
+        window.getLocation = async function() {
+            const outputEl = document.getElementById('location-output');
+            outputEl.innerHTML = `<span class="info"> Getting your location...</span>`;
+            
+            try {
+                const position = await GeolocationAPI.getCurrentPosition();
+                const formatted = GeolocationAPI.formatCoordinates(position.latitude, position.longitude);
+                outputEl.innerHTML = `
+                    <span class="success">[OK] Location found!</span><br>
+                     ${formatted}<br>
+                    <small>Accuracy: ±${position.accuracy.toFixed(0)}m</small>
+                `;
+            } catch (err) {
+                outputEl.innerHTML = `<span class="error">[X] Error: ${err.message}</span>`;
+            }
+        };
+        
+        window.getWeather = async function() {
+            const outputEl = document.getElementById('weather-output');
+            outputEl.innerHTML = `<span class="info"> Fetching weather...</span>`;
+            
+            try {
+                const position = await GeolocationAPI.getCurrentPosition();
+                const result = await WeatherAPI.getWeatherByCoords(position.latitude, position.longitude);
+                
+                if (result.success) {
+                    const w = result.data;
+                    outputEl.innerHTML = `
+                        <span class="success">[OK] Weather loaded!</span><br>
+                        ${w.description}<br>
+                         ${w.temperature}°C<br>
+                        Wind: Wind: ${w.windspeed} km/h
+                    `;
+                } else {
+                    outputEl.innerHTML = `<span class="error">[X] ${result.error}</span>`;
+                }
+            } catch (err) {
+                outputEl.innerHTML = `<span class="error">[X] Need location permission</span>`;
+            }
+        };
+        
+        window.getQuote = async function() {
+            const outputEl = document.getElementById('quote-output');
+            outputEl.innerHTML = `<span class="info"> Fetching quote...</span>`;
+            
+            const result = await QuotesAPI.getRandomQuote();
+            if (result.success) {
+                outputEl.innerHTML = `
+                    <span class="success">[OK] Quote loaded!</span><br>
+                    <em>"${result.data.content}"</em><br>
+                    <small>— ${result.data.author}</small>
+                `;
+            } else {
+                outputEl.innerHTML = `<span class="error">[X] Failed to fetch quote</span>`;
+            }
+        };
+        
+        window.getGitHubUser = async function() {
+            const username = document.getElementById('github-input').value.trim();
+            const outputEl = document.getElementById('github-output');
+            
+            if (!username) {
+                outputEl.innerHTML = `<span class="error">[!] Please enter a username</span>`;
+                return;
+            }
+            
+            outputEl.innerHTML = `<span class="info"> Fetching ${username}'s profile...</span>`;
+            
+            const result = await GitHubAPI.getUser(username);
+            if (result.success) {
+                const u = result.data;
+                outputEl.innerHTML = `
+                    <span class="success">[OK] Profile loaded!</span><br>
+                    <strong>${u.name || u.username}</strong> (@${u.username})<br>
+                    ${u.bio || 'No bio'}<br>
+                    <small> ${u.followers} followers • ${u.repos} repos</small>
+                `;
+            } else {
+                outputEl.innerHTML = `<span class="error">[X] User not found</span>`;
+            }
+        };
+        
+        console.log('[OK] Lab 4 vanilla JavaScript modules loaded successfully!');
+    </script>
+</body>
+</html>
