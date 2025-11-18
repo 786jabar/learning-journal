@@ -236,18 +236,40 @@ export default function Lab3Report() {
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">1. Introduction</h2>
           
           <p className="text-gray-800 leading-relaxed mb-4">
-            This report demonstrates the implementation of vanilla JavaScript DOM manipulation techniques 
-            as required for Lab 3 of FGCT6021 Mobile Application Development. The project showcases 
-            five interactive features built using pure JavaScript methods for DOM selection and manipulation.
+            This report presents my work on Lab 3 for FGCT6021 Mobile Application Development, where I built five 
+            interactive features using vanilla JavaScript. The goal was to demonstrate understanding of DOM (Document Object Model) 
+            manipulation - basically how to make web pages interactive without relying on frameworks to do the work for me.
+          </p>
+
+          <p className="text-gray-800 leading-relaxed mb-4">
+            Instead of just using React's built-in features (which I'm already familiar with from the main project), 
+            this lab challenged me to go back to basics and use pure JavaScript to:
+          </p>
+          <ul className="list-disc list-inside space-y-1 text-gray-800 ml-4 mb-4">
+            <li>Find and select HTML elements on the page</li>
+            <li>Listen for user actions like clicks and typing</li>
+            <li>Change what users see in real-time</li>
+            <li>Validate what users type into forms as they type it</li>
+            <li>Create new content dynamically without reloading the page</li>
+          </ul>
+
+          <p className="text-gray-800 leading-relaxed mb-4">
+            The interesting part? I had to implement these features <em>inside</em> a React application while using 
+            vanilla JavaScript. This created some unique challenges that I'll discuss later in the report.
           </p>
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">1.1 Project Objectives</h3>
-          <ul className="list-disc list-inside space-y-1 text-gray-800 ml-4">
-            <li>Demonstrate proficiency with vanilla JavaScript DOM manipulation</li>
-            <li>Implement getElementById(), querySelector(), and querySelectorAll() methods</li>
-            <li>Create interactive features using event listeners</li>
-            <li>Dynamically update page content and styling</li>
-            <li>Validate user input in real-time</li>
+          <p className="text-gray-800 leading-relaxed mb-3">
+            The main objectives I needed to accomplish were:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-gray-800 ml-4">
+            <li>Show that I can use <code className="bg-gray-100 px-2 py-1">getElementById()</code>, 
+                <code className="bg-gray-100 px-2 py-1 ml-1">querySelector()</code>, and 
+                <code className="bg-gray-100 px-2 py-1 ml-1">querySelectorAll()</code> correctly</li>
+            <li>Create interactive features that respond to user actions using event listeners</li>
+            <li>Update page content and styling dynamically based on user interaction</li>
+            <li>Implement real-time form validation that gives immediate feedback</li>
+            <li>Generate new HTML content programmatically using JavaScript</li>
           </ul>
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">1.2 Technologies Used</h3>
@@ -757,20 +779,33 @@ if (navContainer) {
 
           <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">What I Actually Learned</h3>
           <p className="text-gray-800 leading-relaxed mb-3">
-            This lab taught me way more than just how to use getElementById() and querySelector(). I learned:
+            Looking back, this lab taught me way more than just how to use getElementById() and querySelector(). 
+            The real learning came from solving problems I'd never faced before:
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-800 ml-4 mb-4">
-            <li>How to debug JavaScript problems systematically instead of just guessing</li>
-            <li>Why vanilla JavaScript and frameworks sometimes don't play well together</li>
-            <li>The importance of testing features as you build them, not all at the end</li>
-            <li>How to read error messages and actually understand what they mean</li>
-            <li>That there's usually more than one way to solve a problem in JavaScript</li>
+            <li>How to debug JavaScript problems systematically instead of just randomly trying things and hoping they work</li>
+            <li>Why vanilla JavaScript and modern frameworks like React sometimes conflict, and how to work around it</li>
+            <li>The importance of testing each feature as I build it - waiting until the end just makes everything harder</li>
+            <li>How to actually read error messages in the console instead of ignoring them (they're more helpful than I thought!)</li>
+            <li>That there's usually multiple ways to solve the same problem in JavaScript - sometimes the "wrong" way actually works better</li>
+          </ul>
+
+          <p className="text-gray-800 leading-relaxed mb-3">
+            The biggest lesson though? Learning to be patient and persistent. Programming isn't about knowing everything - 
+            it's about problem-solving. When my code didn't work (which was often!), I learned to:
+          </p>
+          <ul className="list-disc list-inside space-y-1 text-gray-800 ml-4 mb-4">
+            <li>Break the problem into smaller pieces</li>
+            <li>Test each piece individually with console.log()</li>
+            <li>Search for similar problems online</li>
+            <li>Try different approaches instead of giving up</li>
+            <li>Ask myself "what exactly is happening?" instead of "why isn't this working?"</li>
           </ul>
 
           <p className="text-gray-800 leading-relaxed">
-            The biggest thing though? I learned to be patient and persistent. When something doesn't work, 
-            instead of giving up, I learned to break it down, test small pieces, use console.log(), and 
-            keep trying different approaches. That's probably more valuable than memorizing syntax.
+            These problem-solving skills are probably more valuable than any specific JavaScript syntax I memorized. 
+            I feel more confident now that when I face new challenges in future projects, I have the tools and mindset 
+            to figure them out.
           </p>
         </div>
 
