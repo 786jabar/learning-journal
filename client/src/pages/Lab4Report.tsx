@@ -1,4 +1,4 @@
-import { CheckCircle2, Database, Globe, Code2, ExternalLink, Laptop, Server } from "lucide-react";
+import { CheckCircle2, Database, Globe, Code2, ExternalLink, Laptop, Server, Printer, AlertTriangle } from "lucide-react";
 
 export default function Lab4Report() {
   const handlePrint = () => {
@@ -12,18 +12,22 @@ export default function Lab4Report() {
       <div className="print:hidden fixed top-4 right-4 z-50">
         <button
           onClick={handlePrint}
-          className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-teal-700 shadow-lg"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-teal-700 shadow-lg"
           data-testid="button-print-pdf"
         >
-          📄 Print to PDF
+          <Printer className="w-5 h-5" />
+          Print to PDF
         </button>
       </div>
 
       {/* Instructions */}
       <div className="print:hidden max-w-4xl mx-auto p-6 mt-4">
         <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
-          <p className="font-bold text-amber-900">⚠️ To remove URL from PDF:</p>
-          <p className="text-sm text-amber-700">Click "Print to PDF" → Click "More settings" → Turn OFF "Headers and footers"</p>
+          <div className="flex items-start gap-2 mb-2">
+            <AlertTriangle className="w-5 h-5 text-amber-900 flex-shrink-0 mt-0.5" />
+            <p className="font-bold text-amber-900">To remove URL from PDF:</p>
+          </div>
+          <p className="text-sm text-amber-700 ml-7">Click "Print to PDF" → Click "More settings" → Turn OFF "Headers and footers"</p>
         </div>
       </div>
 
@@ -168,19 +172,23 @@ export default function Lab4Report() {
             margin: 1in;
             size: letter;
           }
+          body {
+            counter-reset: page;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
           .page-break {
             page-break-after: always;
             page-break-inside: avoid;
+          }
+          .page-number::after {
+            content: counter(page);
           }
           .print\\:hidden {
             display: none !important;
           }
           .print\\:block {
             display: block !important;
-          }
-          body {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
           }
         }
       `}</style>
