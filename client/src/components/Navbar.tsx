@@ -1,6 +1,5 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/clerk-react";
 import { useTheme } from "@/lib/theme-provider";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { Moon, Sun, BookOpen, Wifi, WifiOff, RefreshCw } from "lucide-react";
@@ -84,18 +83,6 @@ export function Navbar() {
               )}
               <span className="sr-only">Toggle theme</span>
             </Button>
-
-            {/* Clerk User Button (includes profile & sign out) */}
-            <div data-testid="clerk-user-button">
-              <UserButton 
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: "h-9 w-9",
-                  }
-                }}
-              />
-            </div>
           </div>
         </div>
 
