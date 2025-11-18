@@ -30,34 +30,155 @@ export default function Lab3Report() {
       {/* Report Content */}
       <div className="max-w-5xl mx-auto px-12 py-8 print:px-0">
         
+        {/* PAGE HEADER - Appears on every page except cover */}
+        <div className="print:block hidden print:fixed print:top-0 print:left-0 print:right-0 print:px-12 print:pt-4 print:pb-2 print:bg-white print:border-b-2 print:border-gray-300 print:z-50">
+          <div className="flex justify-between items-center text-xs text-gray-600">
+            <div>
+              <span className="font-semibold">Md Jawar Safi (2315024)</span>
+            </div>
+            <div>
+              <span className="font-semibold">FGCT6021 Lab 3</span>
+            </div>
+            <div>
+              <span>Page <span className="page-number"></span></span>
+            </div>
+          </div>
+        </div>
+        
         {/* COVER PAGE */}
-        <div className="page-break text-center py-32">
-          <div className="border-b-4 border-gray-800 pb-6 mb-6">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Lab 3: JavaScript & DOM Manipulation
-            </h1>
-            <p className="text-xl text-gray-600">FGCT6021 Mobile Application Development</p>
+        <div className="page-break text-center py-24">
+          <div className="mb-16">
+            <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+              <Code2 className="w-16 h-16 text-white" />
+            </div>
+            <div className="border-4 border-gray-800 p-8 inline-block">
+              <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                Lab 3 Report
+              </h1>
+              <div className="h-1 w-64 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto mb-4"></div>
+              <h2 className="text-3xl font-semibold text-gray-700 mb-2">
+                JavaScript & DOM Manipulation
+              </h2>
+              <p className="text-xl text-gray-600 font-medium">FGCT6021 Mobile Application Development</p>
+            </div>
           </div>
           
-          <div className="my-16 space-y-4 text-lg">
-            <p className="text-gray-700">Demonstrating Vanilla JavaScript DOM Selection and Event Handling</p>
-          </div>
-
-          <div className="my-20 space-y-3 text-left inline-block">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-              <span className="font-semibold text-gray-700">Name:</span>
-              <span className="border-b border-gray-400">_______________________________</span>
-              <span className="font-semibold text-gray-700">Student ID:</span>
-              <span className="border-b border-gray-400">_______________________________</span>
-              <span className="font-semibold text-gray-700">Date:</span>
-              <span className="text-gray-700">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          <div className="my-16 bg-gray-50 border-2 border-gray-300 p-8 inline-block text-left">
+            <div className="space-y-4 text-lg">
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Submitted By:</span>
+                <span className="text-gray-900 font-semibold">Md Jawar Safi</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Student Number:</span>
+                <span className="text-gray-900 font-semibold">2315024</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Course:</span>
+                <span className="text-gray-900">FGCT6021 Mobile App Development</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Assignment:</span>
+                <span className="text-gray-900">Lab 3 - Vanilla JavaScript DOM</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Date Submitted:</span>
+                <span className="text-gray-900">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
             </div>
           </div>
 
-          <div className="mt-32">
-            <p className="text-sm text-gray-500">Learning Journal PWA Project</p>
-            <p className="text-sm text-gray-500">GitHub Repository: https://github.com/786jabar/learning-journal.git</p>
+          <div className="mt-20 space-y-3">
+            <p className="text-gray-600 italic text-lg">
+              "Demonstrating Vanilla JavaScript DOM Selection and Event Handling"
+            </p>
+            <div className="mt-12 border-t-2 border-gray-300 pt-6">
+              <p className="text-sm text-gray-600 font-semibold">Learning Journal PWA Project</p>
+              <p className="text-sm text-gray-500 mt-2">GitHub: https://github.com/786jabar/learning-journal.git</p>
+            </div>
           </div>
+        </div>
+
+        {/* DECLARATION */}
+        <div className="page-break py-12">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">Declaration of Originality</h2>
+          
+          <div className="bg-gray-50 border-2 border-gray-300 p-8 my-8">
+            <p className="text-gray-800 leading-relaxed mb-6">
+              I hereby declare that this assignment submission is my own work and that, to the best of my knowledge and belief, 
+              it contains no material previously published or written by another person nor material which to a substantial extent 
+              has been accepted for the award of any other degree or diploma of the university or other institute of higher learning, 
+              except where due acknowledgment has been made in the text.
+            </p>
+            
+            <div className="space-y-4 mt-8">
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Student Name:</span>
+                <span className="text-gray-900 font-semibold">Md Jawar Safi</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Student Number:</span>
+                <span className="text-gray-900 font-semibold">2315024</span>
+              </div>
+              <div className="flex items-start">
+                <span className="font-bold text-gray-700 w-40">Date:</span>
+                <span className="text-gray-900">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+              <div className="flex items-start mt-8">
+                <span className="font-bold text-gray-700 w-40">Signature:</span>
+                <span className="text-gray-900 font-cursive text-xl">Md Jawar Safi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* EXECUTIVE SUMMARY */}
+        <div className="page-break py-12">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">Executive Summary</h2>
+          
+          <p className="text-gray-800 leading-relaxed mb-4">
+            This report presents a comprehensive implementation of vanilla JavaScript DOM manipulation techniques developed 
+            as part of Lab 3 for FGCT6021 Mobile Application Development. The project demonstrates five distinct interactive 
+            features that showcase mastery of fundamental JavaScript DOM concepts.
+          </p>
+
+          <div className="bg-blue-50 border-l-4 border-blue-600 p-6 my-6">
+            <h3 className="font-semibold text-blue-900 mb-3">Key Achievements:</h3>
+            <ul className="space-y-2 text-gray-800">
+              <li className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Successfully implemented 5 interactive features using vanilla JavaScript</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Demonstrated proficiency with getElementById(), querySelector(), and querySelectorAll()</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Implemented real-time form validation with visual feedback</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Created dynamic theme toggling and interactive UI elements</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Successfully integrated vanilla JavaScript within a React application framework</span>
+              </li>
+            </ul>
+          </div>
+
+          <p className="text-gray-800 leading-relaxed mb-4">
+            The implementation overcame several technical challenges, including integrating vanilla JavaScript 
+            event listeners within a React environment, implementing real-time input validation, and ensuring 
+            cross-browser compatibility. Each feature was thoroughly tested and documented.
+          </p>
+
+          <p className="text-gray-800 leading-relaxed">
+            This project not only fulfills the technical requirements of Lab 3 but also demonstrates practical 
+            problem-solving skills, debugging proficiency, and a comprehensive understanding of DOM manipulation 
+            fundamentals essential for modern web development.
+          </p>
         </div>
 
         {/* TABLE OF CONTENTS */}
@@ -65,13 +186,16 @@ export default function Lab3Report() {
           <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">Table of Contents</h2>
           <div className="space-y-2">
             {[
-              { title: "1. Introduction", page: "3" },
-              { title: "2. DOM Selection Methods", page: "4" },
-              { title: "3. Feature Implementations", page: "5" },
-              { title: "4. Code Documentation", page: "10" },
-              { title: "5. Screenshots", page: "14" },
-              { title: "6. Challenges, Problems & Solutions", page: "16" },
-              { title: "7. Conclusion", page: "19" }
+              { title: "Declaration of Originality", page: "2" },
+              { title: "Executive Summary", page: "3" },
+              { title: "1. Introduction", page: "4" },
+              { title: "2. DOM Selection Methods", page: "5" },
+              { title: "3. Feature Implementations", page: "6" },
+              { title: "4. Code Documentation", page: "12" },
+              { title: "5. Screenshots", page: "16" },
+              { title: "6. Challenges, Problems & Solutions", page: "18" },
+              { title: "7. Conclusion", page: "22" },
+              { title: "8. References", page: "23" }
             ].map((item, i) => (
               <div key={i} className="flex justify-between border-b border-gray-300 py-2">
                 <span className="text-gray-800">{item.title}</span>
@@ -609,10 +733,107 @@ if (navContainer) {
               techniques as required for FGCT6021 Lab 3.
             </p>
           </div>
+        </div>
+
+        {/* REFERENCES */}
+        <div className="page-break py-12">
+          <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-gray-800 pb-2 mb-6">8. References</h2>
+          
+          <div className="space-y-4 text-gray-800">
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [1] Mozilla Developer Network (MDN). (2024). <em>Document Object Model (DOM)</em>. 
+                Available at: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [2] Mozilla Developer Network (MDN). (2024). <em>Document.getElementById()</em>. 
+                Available at: https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [3] Mozilla Developer Network (MDN). (2024). <em>Document.querySelector()</em>. 
+                Available at: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [4] Mozilla Developer Network (MDN). (2024). <em>EventTarget.addEventListener()</em>. 
+                Available at: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [5] W3Schools. (2024). <em>JavaScript HTML DOM</em>. 
+                Available at: https://www.w3schools.com/js/js_htmldom.asp 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [6] Eloquent JavaScript. (2024). <em>The Document Object Model</em>. 
+                Available at: https://eloquentjavascript.net/14_dom.html 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [7] React Documentation. (2024). <em>Integrating with Other Libraries</em>. 
+                Available at: https://react.dev/learn/escape-hatches 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+
+            <div className="pl-8 -indent-8">
+              <p className="leading-relaxed">
+                [8] JavaScript.info. (2024). <em>Modifying the Document</em>. 
+                Available at: https://javascript.info/modifying-document 
+                [Accessed: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}]
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-16 bg-gray-50 border-2 border-gray-300 p-6">
+            <h3 className="font-semibold text-gray-900 mb-3">GitHub Repository</h3>
+            <p className="text-gray-800 mb-2">
+              <span className="font-semibold">Project Name:</span> Learning Journal PWA
+            </p>
+            <p className="text-gray-800 mb-2">
+              <span className="font-semibold">Repository URL:</span> 
+              <a href="https://github.com/786jabar/learning-journal.git" className="text-blue-600 ml-2">
+                https://github.com/786jabar/learning-journal.git
+              </a>
+            </p>
+            <p className="text-gray-800 mb-2">
+              <span className="font-semibold">Lab 3 Demo Page:</span> /lab3-demo
+            </p>
+            <p className="text-gray-800">
+              <span className="font-semibold">Submission Date:</span> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </div>
 
           <div className="mt-12 text-center text-sm text-gray-600">
-            <p className="font-semibold">— End of Report —</p>
-            <p className="mt-2">Total Pages: Approximately 20</p>
+            <p className="font-semibold text-lg">— End of Report —</p>
+            <p className="mt-4 text-gray-800">
+              <span className="font-semibold">Student:</span> Md Jawar Safi | 
+              <span className="font-semibold ml-2">Student Number:</span> 2315024
+            </p>
+            <p className="mt-2">
+              <span className="font-semibold">Course:</span> FGCT6021 Mobile Application Development
+            </p>
+            <p className="mt-2 text-gray-600">Total Pages: Approximately 24</p>
           </div>
         </div>
 
