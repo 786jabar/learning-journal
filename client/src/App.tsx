@@ -19,29 +19,11 @@ import Lab3DemoPage from "@/pages/Lab3DemoPage";
 import Lab3Report from "@/pages/Lab3Report";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show landing page for ALL routes when not authenticated
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  }
-
-  // Show authenticated routes only when authenticated
+  // All routes are now public - no authentication required
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/landing" component={LandingPage} />
       <Route path="/journal" component={JournalPage} />
       <Route path="/projects" component={ProjectsPage} />
       <Route path="/analytics" component={AnalyticsPage} />
@@ -54,18 +36,16 @@ function Router() {
 }
 
 function AppContent() {
-  const { isAuthenticated, isLoading } = useAuth();
-  
-  // Initialize sync queue to process offline operations when online (only when authenticated)
+  // Initialize sync queue to process offline operations when online
   useSyncQueue();
 
   return (
     <div className="flex flex-col min-h-screen">
-      {isAuthenticated && !isLoading && <Navbar />}
+      <Navbar />
       <main className="flex-1">
         <Router />
       </main>
-      {isAuthenticated && !isLoading && <Footer />}
+      <Footer />
     </div>
   );
 }

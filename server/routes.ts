@@ -1,21 +1,27 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertJournalEntrySchema, insertProjectSchema, insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
-// Default guest user ID - everyone uses the same ID (public access)
-const GUEST_USER_ID = "guest-user";
+// Helper to extract device ID from request headers
+// Each device gets its own unique ID for data isolation
+function getDeviceId(req: Request): string {
+  const deviceId = req.headers["x-device-id"] as string;
+  // Return a default guest ID if header is missing (for backward compatibility)
+  return deviceId || "guest-fallback";
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // No authentication - all routes are public
+  // Data isolation is achieved through device-specific IDs
 
   // Journal Entry Routes (all public)
   
   // GET /api/journals - Get all journal entries
   app.get("/api/journals", async (req: any, res) => {
     try {
-      const journals = await storage.getAllJournals(GUEST_USER_ID);
+      const journals = await storage.getAllJournals(getDeviceId(req));
       res.json(journals);
     } catch (error) {
       console.error("Error fetching journals:", error);
@@ -26,7 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/journals/:id - Get single journal entry
   app.get("/api/journals/:id", async (req: any, res) => {
     try {
-      const journal = await storage.getJournal(req.params.id, GUEST_USER_ID);
+      const journal = await storage.getJournal(req.params.id, getDeviceId(req));
       if (!journal) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -56,7 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         date: data.date,
       });
       
-      const journal = await storage.createJournal(data, GUEST_USER_ID);
+      const journal = await storage.createJournal(data, getDeviceId(req));
       res.status(201).json(journal);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -81,7 +87,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the extracted fields
       insertJournalEntrySchema.parse(data);
       
-      const journal = await storage.updateJournal(req.params.id, data, GUEST_USER_ID);
+      const journal = await storage.updateJournal(req.params.id, data, getDeviceId(req));
       if (!journal) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -98,7 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // DELETE /api/journals/:id - Delete journal entry
   app.delete("/api/journals/:id", async (req: any, res) => {
     try {
-      const success = await storage.deleteJournal(req.params.id, GUEST_USER_ID);
+      const success = await storage.deleteJournal(req.params.id, getDeviceId(req));
       if (!success) {
         return res.status(404).json({ error: "Journal not found" });
       }
@@ -114,7 +120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/projects - Get all projects
   app.get("/api/projects", async (req: any, res) => {
     try {
-      const projects = await storage.getAllProjects(GUEST_USER_ID);
+      const projects = await storage.getAllProjects(getDeviceId(req));
       res.json(projects);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -125,7 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/projects/:id - Get single project
   app.get("/api/projects/:id", async (req: any, res) => {
     try {
-      const project = await storage.getProject(req.params.id, GUEST_USER_ID);
+      const project = await storage.getProject(req.params.id, getDeviceId(req));
       if (!project) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -153,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         techStack: data.techStack,
       });
       
-      const project = await storage.createProject(data, GUEST_USER_ID);
+      const project = await storage.createProject(data, getDeviceId(req));
       res.status(201).json(project);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -177,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the extracted fields
       insertProjectSchema.parse(data);
       
-      const project = await storage.updateProject(req.params.id, data, GUEST_USER_ID);
+      const project = await storage.updateProject(req.params.id, data, getDeviceId(req));
       if (!project) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -194,7 +200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // DELETE /api/projects/:id - Delete project
   app.delete("/api/projects/:id", async (req: any, res) => {
     try {
-      const success = await storage.deleteProject(req.params.id, GUEST_USER_ID);
+      const success = await storage.deleteProject(req.params.id, getDeviceId(req));
       if (!success) {
         return res.status(404).json({ error: "Project not found" });
       }
@@ -210,7 +216,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/profile - Get user profile
   app.get("/api/profile", async (req: any, res) => {
     try {
-      const profile = await storage.getProfile(GUEST_USER_ID);
+      const profile = await storage.getProfile(getDeviceId(req));
       res.json(profile || null);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -222,7 +228,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/profile", async (req: any, res) => {
     try {
       insertUserProfileSchema.parse(req.body);
-      const profile = await storage.createOrUpdateProfile(req.body, GUEST_USER_ID);
+      const profile = await storage.createOrUpdateProfile(req.body, getDeviceId(req));
       res.status(200).json(profile);
     } catch (error) {
       if (error instanceof z.ZodError) {
