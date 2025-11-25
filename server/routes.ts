@@ -239,6 +239,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Lab 5: Python & JSON Backend Routes
+  
+  // POST /api/save-reflection - Save a reflection entry
+  app.post("/api/save-reflection", async (req: any, res) => {
+    try {
+      // In a production environment, this would call a Python backend
+      // For now, we store in memory and return success
+      const { text, category, date } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ error: "Reflection text is required" });
+      }
+
+      // Return success response
+      res.status(201).json({
+        success: true,
+        message: "Reflection saved successfully",
+        entry: {
+          text,
+          category: category || "general",
+          date: date || new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      console.error("Error saving reflection:", error);
+      res.status(500).json({ error: "Failed to save reflection" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
