@@ -13,14 +13,22 @@ Preferred communication style: Simple, everyday language.
 **Course**: FGCT6021 Mobile Application Development  
 **Student**: Md Jawar Safi (#2315024)  
 **Lab 3**: Vanilla JavaScript DOM Manipulation (Completed)  
-**Lab 4**: API Integration - Storage, Browser & Third-Party APIs (Completed)
+**Lab 4**: API Integration - Storage, Browser & Third-Party APIs (Completed)  
+**Lab 5**: Python & JSON Backend Data (Completed)
 
 **Lab 4 Report**: Professional academic report available at `/lab4-report` with unique emerald/teal design, print-to-PDF functionality. Demonstrates 10 working APIs:
 - **Storage APIs**: IndexedDB (journal/project management), LocalStorage (device ID persistence), SessionStorage (form state)
 - **Browser APIs**: Geolocation (location tracking), Notifications (journal reminders), Clipboard (copy functionality)
 - **Third-Party APIs**: WeatherAPI (weather data), GitHub (repository stats), NewsAPI (tech news), TikTok (profile data)
 
-**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation.
+**Lab 5 Report**: Professional academic report available at `/lab5-report` demonstrating Python & JSON integration:
+- **Backend**: Python script (save_entry.py) for creating and updating JSON files
+- **Storage**: JSON file-based data persistence (/backend/reflections.json)
+- **Frontend Integration**: Fetch API to load JSON data and render dynamically in DOM
+- **Extra Features**: Reflection counter, export to JSON/CSV, category organization, refresh functionality
+- **Answers**: Comprehensive responses to 4 journal reflection questions about file-based storage vs browser storage, Python implementation, data display differences, and custom features
+
+**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation. Lab 5 integrates seamlessly with main app.
 
 ## System Architecture
 
