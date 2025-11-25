@@ -14,7 +14,8 @@ Preferred communication style: Simple, everyday language.
 **Student**: Md Jawar Safi (#2315024)  
 **Lab 3**: Vanilla JavaScript DOM Manipulation (Completed)  
 **Lab 4**: API Integration - Storage, Browser & Third-Party APIs (Completed)  
-**Lab 5**: Python & JSON Backend Data (Completed)
+**Lab 5**: Python & JSON Backend Data (Completed)  
+**Lab 6**: Frontend & Backend Integration with Flask (Completed)
 
 **Lab 4 Report**: Professional academic report available at `/lab4-report` with unique emerald/teal design, print-to-PDF functionality. Demonstrates 10 working APIs:
 - **Storage APIs**: IndexedDB (journal/project management), LocalStorage (device ID persistence), SessionStorage (form state)
@@ -28,7 +29,14 @@ Preferred communication style: Simple, everyday language.
 - **Extra Features**: Reflection counter, export to JSON/CSV, category organization, refresh functionality
 - **Answers**: Comprehensive responses to 4 journal reflection questions about file-based storage vs browser storage, Python implementation, data display differences, and custom features
 
-**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation. Lab 5 integrates seamlessly with main app.
+**Lab 6 Report**: Professional academic report available at `/lab6-report` demonstrating Flask backend integration:
+- **Backend**: Flask REST API with GET, POST, PUT, DELETE routes
+- **Frontend-Backend Integration**: Fetch API communicating with Flask endpoints
+- **CRUD Operations**: Complete Create, Read, Update, Delete functionality
+- **Extra Features**: Edit reflections (PUT), delete reflections (DELETE), real-time search/filter, refresh button, statistics dashboard
+- **Answers**: Comprehensive responses to 5 journal questions about frontend-backend connection importance, HTTP methods, Flask vs browser JSON, PythonAnywhere challenges, and custom features
+
+**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation. Lab 5 integrates seamlessly with main app. Lab 6 demonstrates professional CRUD dashboard.
 
 ## System Architecture
 
