@@ -268,6 +268,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Lab 6: Frontend & Backend Integration (Flask-like REST API)
+  // In-memory storage for demo purposes
+  const lab6Reflections: any[] = [
+    {
+      id: 1,
+      name: "Sample User",
+      date: new Date().toLocaleDateString(),
+      reflection: "This is a sample reflection. Try adding more reflections using the form above!"
+    }
+  ];
+  let nextId = 2;
+
+  // GET /api/lab6-reflections - Get all reflections
+  app.get("/api/lab6-reflections", async (req: any, res) => {
+    try {
+      res.json(lab6Reflections);
+    } catch (error) {
+      console.error("Error fetching reflections:", error);
+      res.status(500).json({ error: "Failed to fetch reflections" });
+    }
+  });
+
+  // POST /api/lab6-reflections - Create new reflection
+  app.post("/api/lab6-reflections", async (req: any, res) => {
+    try {
+      const { name, reflection } = req.body;
+
+      if (!name || !reflection) {
+        return res.status(400).json({ error: "Name and reflection are required" });
+      }
+
+      const newReflection = {
+        id: nextId++,
+        name,
+        date: new Date().toLocaleDateString(),
+        reflection
+      };
+
+      lab6Reflections.push(newReflection);
+      res.status(201).json(newReflection);
+    } catch (error) {
+      console.error("Error creating reflection:", error);
+      res.status(500).json({ error: "Failed to create reflection" });
+    }
+  });
+
+  // PUT /api/lab6-reflections/:id - Update reflection
+  app.put("/api/lab6-reflections/:id", async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { name, reflection } = req.body;
+
+      if (!name || !reflection) {
+        return res.status(400).json({ error: "Name and reflection are required" });
+      }
+
+      const reflectionIndex = lab6Reflections.findIndex(r => r.id === id);
+      if (reflectionIndex === -1) {
+        return res.status(404).json({ error: "Reflection not found" });
+      }
+
+      lab6Reflections[reflectionIndex] = {
+        ...lab6Reflections[reflectionIndex],
+        name,
+        reflection
+      };
+
+      res.json(lab6Reflections[reflectionIndex]);
+    } catch (error) {
+      console.error("Error updating reflection:", error);
+      res.status(500).json({ error: "Failed to update reflection" });
+    }
+  });
+
+  // DELETE /api/lab6-reflections/:id - Delete reflection
+  app.delete("/api/lab6-reflections/:id", async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const reflectionIndex = lab6Reflections.findIndex(r => r.id === id);
+
+      if (reflectionIndex === -1) {
+        return res.status(404).json({ error: "Reflection not found" });
+      }
+
+      lab6Reflections.splice(reflectionIndex, 1);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting reflection:", error);
+      res.status(500).json({ error: "Failed to delete reflection" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
