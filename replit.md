@@ -15,7 +15,8 @@ Preferred communication style: Simple, everyday language.
 **Lab 3**: Vanilla JavaScript DOM Manipulation (Completed)  
 **Lab 4**: API Integration - Storage, Browser & Third-Party APIs (Completed)  
 **Lab 5**: Python & JSON Backend Data (Completed)  
-**Lab 6**: Frontend & Backend Integration with Flask (Completed)
+**Lab 6**: Frontend & Backend Integration with Flask (Completed)  
+**Lab 7**: Progressive Web App - Manifest, Service Worker, Offline Support (Completed)
 
 **Lab 4 Report**: Professional academic report available at `/lab4-report` with unique emerald/teal design, print-to-PDF functionality. Demonstrates 10 working APIs:
 - **Storage APIs**: IndexedDB (journal/project management), LocalStorage (device ID persistence), SessionStorage (form state)
@@ -36,7 +37,16 @@ Preferred communication style: Simple, everyday language.
 - **Extra Features**: Edit reflections (PUT), delete reflections (DELETE), real-time search/filter, refresh button, statistics dashboard
 - **Answers**: Comprehensive responses to 5 journal questions about frontend-backend connection importance, HTTP methods, Flask vs browser JSON, PythonAnywhere challenges, and custom features
 
-**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation. Lab 5 integrates seamlessly with main app. Lab 6 demonstrates professional CRUD dashboard.
+**Lab 7 Report**: Progressive Web App implementation with manifest.json for installability, service worker for offline support, and cache storage API integration:
+- **PWA Features**: Installable app on desktop/mobile, offline-first functionality, background sync
+- **Manifest**: Complete app metadata with icons, theme colors, shortcuts
+- **Service Worker**: Caching strategy for static assets and dynamic API responses
+- **Offline Support**: Users can journal without internet; changes sync automatically when online
+- **Extra Feature**: Online/offline status indicator with background sync notifications
+- **Deployment**: Tested on PythonAnywhere (HTTPS required for service workers)
+- **Answers**: Comprehensive responses to 4 PWA journal questions about benefits, offline implementation, extra features, and deployment challenges
+
+**Design Distinction**: Lab 4 report uses emerald/teal color scheme vs Lab 3's purple/blue to provide unique visual identity while maintaining professional presentation. Lab 5 integrates seamlessly with main app. Lab 6 demonstrates professional CRUD dashboard. Lab 7 adds production-ready PWA capabilities.
 
 ## System Architecture
 
