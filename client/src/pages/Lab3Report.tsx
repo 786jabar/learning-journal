@@ -1,9 +1,4 @@
 import { CheckCircle2, Code2, ExternalLink, AlertTriangle, Globe, Database } from "lucide-react";
-import collapsibleImg from "@assets/stock_images/toggle_switch_button_7460965a.jpg";
-import darkThemeImg from "@assets/stock_images/code_editor_javascri_6d9bc75f.jpg";
-import formValidationImg from "@assets/stock_images/web_form_input_valid_c03214b0.jpg";
-import imageGalleryImg from "@assets/stock_images/image_gallery_grid_p_af8cbae7.jpg";
-import dynamicListImg from "@assets/stock_images/checklist_todo_list__d83b686b.jpg";
 
 export default function Lab3Report() {
   const handlePrint = () => {
@@ -593,8 +588,8 @@ if (navContainer) {
                 This feature uses <code className="bg-gray-100 px-2 py-1">getElementById()</code> to select the collapsible 
                 container and toggle its visibility. When clicked, the button text changes and content expands or collapses smoothly.
               </p>
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
-                <img src={collapsibleImg} alt="Collapsible Section Feature" className="w-full h-auto" />
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md bg-gray-100 p-8 text-center">
+                <p className="text-gray-500 italic">[Feature Image: Interactive Collapsible Section]</p>
               </div>
               <p className="text-xs text-gray-600 mt-2 italic">
                 Figure 5.1: Toggle interface demonstrating expand/collapse functionality
@@ -608,8 +603,8 @@ if (navContainer) {
                 Uses <code className="bg-gray-100 px-2 py-1">querySelector()</code> to select theme elements and 
                 dynamically changes background colors, text colors, and border styles when the theme button is clicked.
               </p>
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
-                <img src={darkThemeImg} alt="Dark Theme Feature" className="w-full h-auto" />
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md bg-gray-100 p-8 text-center">
+                <p className="text-gray-500 italic">[Feature Image: Dark Theme Toggle Implementation]</p>
               </div>
               <p className="text-xs text-gray-600 mt-2 italic">
                 Figure 5.2: Dark theme implementation showing dynamic color changes
@@ -623,8 +618,8 @@ if (navContainer) {
                 Implements <code className="bg-gray-100 px-2 py-1">addEventListener("input")</code> to count words 
                 in real-time. The validation provides immediate visual feedback with color-coded messages (green for valid, red for invalid).
               </p>
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
-                <img src={formValidationImg} alt="Form Validation Feature" className="w-full h-auto" />
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md bg-gray-100 p-8 text-center">
+                <p className="text-gray-500 italic">[Feature Image: Real-Time Form Validation]</p>
               </div>
               <p className="text-xs text-gray-600 mt-2 italic">
                 Figure 5.3: Form validation with live word count and visual feedback
@@ -638,8 +633,8 @@ if (navContainer) {
                 Uses <code className="bg-gray-100 px-2 py-1">querySelectorAll()</code> to select multiple image elements 
                 and adds click event listeners to each one for interactivity.
               </p>
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
-                <img src={imageGalleryImg} alt="Image Gallery Feature" className="w-full h-auto" />
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md bg-gray-100 p-8 text-center">
+                <p className="text-gray-500 italic">[Feature Image: Dynamic Image Gallery]</p>
               </div>
               <p className="text-xs text-gray-600 mt-2 italic">
                 Figure 5.4: Image gallery grid with interactive elements
@@ -654,8 +649,8 @@ if (navContainer) {
                 createElement()</code>, setting <code className="bg-gray-100 px-2 py-1">textContent</code>, and appending 
                 to the list container.
               </p>
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md">
-                <img src={dynamicListImg} alt="Dynamic List Feature" className="w-full h-auto" />
+              <div className="border-2 border-gray-300 rounded-lg overflow-hidden shadow-md bg-gray-100 p-8 text-center">
+                <p className="text-gray-500 italic">[Feature Image: Dynamic List Manipulation]</p>
               </div>
               <p className="text-xs text-gray-600 mt-2 italic">
                 Figure 5.5: Dynamic list showing add/remove functionality
