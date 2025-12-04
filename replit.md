@@ -1,17 +1,10 @@
-# Learning Journal PWA - Replit Documentation
+# Learning Journal PWA
 
 ## Overview
 
-The Learning Journal is a Progressive Web App (PWA) designed to help students and learners track their educational journey through journal entries, project documentation, and analytics visualization. Built with React, TypeScript, and a Node.js/Express backend, the application features offline-first functionality, beautiful glassmorphism UI design, and comprehensive data management capabilities.
+A Progressive Web App (PWA) for tracking learning journeys through journal entries and project documentation. The application features offline-first architecture, enabling users to document their learning progress with markdown support, tag-based organization, and visual analytics. Built as a modern web application with glassmorphism design, the app works seamlessly both online and offline, syncing data when connectivity is restored.
 
-The application serves as a comprehensive learning tool that demonstrates modern web development practices including:
-- Full-stack TypeScript development
-- RESTful API design
-- Offline-first architecture with IndexedDB
-- Progressive Web App features (service workers, caching)
-- Real-time data synchronization
-- Rich text editing with Markdown support
-- Data visualization and analytics
+The application serves dual purposes: (1) a functional learning journal for students and self-learners, and (2) a demonstration platform for various web development concepts including DOM manipulation, browser APIs, backend integration with Python/Flask, and progressive web app capabilities.
 
 ## User Preferences
 
@@ -22,127 +15,124 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 
 **Framework & Build System**
-- React 18+ with TypeScript for type-safe component development
-- Vite as the build tool for fast development and optimized production builds
-- Wouter for lightweight client-side routing
-- TanStack Query for server state management and caching
+- React 18 with TypeScript for type-safe component development
+- Vite as the build tool and development server, providing fast HMR (Hot Module Replacement)
+- Wouter for lightweight client-side routing (alternative to React Router)
+- Path aliases configured via TypeScript (`@/`, `@shared/`, `@assets/`) for clean imports
 
-**UI Component System**
-- Shadcn/ui component library built on Radix UI primitives
-- Tailwind CSS for utility-first styling with custom design tokens
-- Glassmorphism design system with custom glass-card components
-- Dark/light theme support via context provider
-- Responsive design optimized for mobile and desktop
+**UI & Styling**
+- Shadcn/ui component library built on Radix UI primitives for accessible, customizable components
+- Tailwind CSS with custom configuration for design tokens and theming
+- Dark/light theme support with system preference detection
+- Glassmorphism design pattern with custom CSS variables for elevated UI elements
+- Custom color system using HSL values for flexible theming
 
-**State Management Strategy**
-- Custom hooks pattern for encapsulating business logic (`useJournals`, `useProjects`, `useProfile`)
-- TanStack Query for server state with automatic background refetching
-- LocalForage (IndexedDB wrapper) for offline-first local storage
-- Device-specific data isolation using unique device IDs stored in localStorage
+**State Management**
+- TanStack Query (React Query) for server state management and caching
+- LocalForage (IndexedDB wrapper) for client-side data persistence
+- Custom hooks pattern for business logic encapsulation
+- Optimistic updates with automatic rollback on errors
 
-**Data Flow Pattern**
-- IndexedDB serves as the primary data source (offline-first)
-- Background sync with backend API when online
-- Optimistic updates for instant UI feedback
-- Sync queue mechanism for offline operations that replay when connectivity returns
+**Offline-First Strategy**
+- IndexedDB as primary data store using LocalForage
+- Sync queue mechanism to track offline changes
+- Automatic background sync when connection restored
+- Device-specific IDs for data isolation (no authentication required)
+
+**Data Flow**
+1. User interactions update IndexedDB immediately (optimistic UI)
+2. Operations queued for sync when offline
+3. Background process syncs with backend when online
+4. Server data merged back into IndexedDB on fetch
 
 ### Backend Architecture
 
 **Server Framework**
-- Express.js with TypeScript for the HTTP server
-- Node.js runtime environment
-- RESTful API design with JSON payloads
+- Express.js with TypeScript for RESTful API endpoints
+- Separation of concerns: routing, storage layer, authentication middleware
 
-**Authentication & Authorization**
-- **No traditional authentication** - public access model
-- Device-based data isolation using `X-Device-ID` header
-- Each browser/device gets a unique ID for data segregation
-- Clerk authentication infrastructure present but not actively used
+**Database & ORM**
+- PostgreSQL as the primary database (via Neon serverless)
+- Drizzle ORM for type-safe database queries and migrations
+- Schema definitions shared between frontend and backend via `shared/schema.ts`
+
+**Data Isolation Strategy**
+- No traditional authentication system
+- Device-based isolation using unique device IDs (`X-Device-ID` header)
+- Each device/browser gets its own data partition
+- Fallback to guest ID for backward compatibility
 
 **API Structure**
-- `/api/journals` - CRUD operations for journal entries
-- `/api/projects` - CRUD operations for projects
-- `/api/profile` - User profile management
-- Custom device ID header (`X-Device-ID`) for all requests
+- RESTful endpoints following standard HTTP methods (GET, POST, PUT, DELETE)
+- Consistent error handling with HTTP status codes
+- JSON request/response format
+- Device ID extracted from headers for all operations
 
-**Data Validation**
-- Zod schemas for runtime type validation
-- Drizzle-Zod integration for automatic schema generation from database models
-- Client and server-side validation using shared schema definitions
+**Session Management**
+- Session table exists for future authentication (currently unused)
+- Connect-pg-simple for PostgreSQL-backed sessions
+- Prepared for Clerk authentication integration (infrastructure present, not active)
 
-### Data Storage Solutions
+### Database Schema
 
-**Database Configuration**
-- Drizzle ORM for type-safe database queries
-- PostgreSQL via Neon serverless driver (configured but not required initially)
-- Schema-first approach with migrations support
+**Core Tables**
 
-**Database Schema**
-- `users` table - User accounts (email, profile info, timestamps)
-- `journal_entries` table - Learning reflections with markdown content, tags, dates
-- `projects` table - Project documentation with tech stack arrays
-- `user_profile` table - Extended profile information (university, program, bio)
-- `sessions` table - Session storage for authentication
+1. **users** - User accounts (prepared for future use)
+   - id, email, firstName, lastName, profileImageUrl, timestamps
 
-**Offline Storage**
-- LocalForage (IndexedDB) for structured offline data storage
-- Separate stores for journals, projects, and sync queue
-- Automatic data persistence and retrieval
-- Conflict-free merging strategy (last-write-wins on sync)
+2. **journal_entries** - Learning journal entries
+   - id (client-generated), userId (device ID), title, content, tags (array), date, timestamps
+   - Client provides IDs for offline-first sync
 
-**Caching Strategy**
-- Service worker caching for static assets
-- Cache-first strategy for offline resilience
-- Network-first with cache fallback for API requests
-- Sync queue stores pending operations during offline periods
+3. **projects** - Learning projects documentation
+   - id (client-generated), userId (device ID), name, description, techStack (array), timestamps
+
+4. **user_profile** - Extended user information
+   - userId, name, studentId, university, program, email, courseDirector, bio, profilePicture
+
+**Key Design Decisions**
+- Client-generated IDs using nanoid for offline capability
+- Device ID as userId for data isolation without authentication
+- Array fields (tags, techStack) for flexible categorization
+- Timestamps managed by both client and server for sync conflict resolution
 
 ### External Dependencies
 
-**Third-Party UI Libraries**
-- `@radix-ui/*` - Accessible, unstyled UI primitives (20+ components)
-- `@uiw/react-md-editor` - Markdown editor with preview
-- `recharts` - Data visualization charts (bar, line, pie charts)
-- `date-fns` - Date manipulation and formatting
-- `lucide-react` - Icon library
+**Database Service**
+- Neon Serverless PostgreSQL - Cloud-hosted PostgreSQL with HTTP interface
+- Environment variable: `DATABASE_URL`
+
+**Future Authentication (Infrastructure Ready)**
+- Clerk - Authentication service (middleware configured but not active)
+- Environment variables: `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
+- Frontend and backend integration present but commented out
+
+**Third-Party APIs (Demonstration Features)**
+- Open-Meteo Weather API - Free weather data (no API key required)
+- Quotable API - Random quotes
+- GitHub API - User profile lookup
+- TikTok RapidAPI - User stats (requires API key in demo)
+
+**Build & Deployment**
+- Vercel - Hosting platform (configuration in vercel.json)
+- ESBuild - Server-side bundling for production
+- TypeScript compiler for type checking
 
 **Development Tools**
-- `drizzle-kit` - Database migration tool
-- `tsx` - TypeScript execution for development
-- `esbuild` - Fast JavaScript bundling for production
-- `vite` - Frontend build tool and dev server
+- Replit-specific plugins for development environment (cartographer, dev banner, runtime error modal)
+- Conditional loading based on REPL_ID environment variable
 
-**Data & State Management**
-- `@tanstack/react-query` - Server state management
-- `localforage` - IndexedDB wrapper for offline storage
-- `nanoid` - Unique ID generation for entries and devices
+**Frontend Libraries**
+- @tanstack/react-query - Data fetching and caching
+- localforage - IndexedDB wrapper for offline storage
+- date-fns - Date manipulation and formatting
+- recharts - Data visualization and charts
+- jspdf - PDF generation for exports
+- react-hook-form + zod - Form validation
+- @uiw/react-md-editor - Markdown editor component
 
-**Form & Validation**
-- `react-hook-form` - Form state management
-- `zod` - Schema validation
-- `@hookform/resolvers` - Integration between react-hook-form and Zod
-
-**Database & Backend**
-- `@neondatabase/serverless` - PostgreSQL serverless driver
-- `drizzle-orm` - TypeScript ORM
-- `express` - Node.js web framework
-
-**Authentication Infrastructure**
-- `@clerk/clerk-react` - Frontend authentication components
-- `@clerk/express` - Backend authentication middleware
-- Note: Currently not enforcing authentication - public access mode
-
-**Styling**
-- `tailwindcss` - Utility-first CSS framework
-- `class-variance-authority` - Component variant management
-- `clsx` & `tailwind-merge` - Class name utilities
-
-**PWA Features**
-- Service worker for offline functionality
-- Manifest file for installable app experience
-- Cache API for resource caching
-- Background sync for offline operation replay
-
-**Deployment**
-- Vercel configuration for serverless deployment
-- Production builds via Vite and esbuild
-- Environment variable management for database URLs and API keys
+**Additional Notes**
+- Lab demonstrations (Lab 3-6) showcase progressive enhancement of features
+- Python backend integration demonstrated in Lab 5 (file-based JSON storage)
+- Flask integration demonstrated in Lab 6 (REST API)
+- PWA capabilities include offline mode, installability, and background sync
