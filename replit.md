@@ -1,8 +1,17 @@
-# Learning Journal PWA
+# Learning Journal PWA - Replit Documentation
 
 ## Overview
 
-The Learning Journal is a Progressive Web App (PWA) designed for tracking learning progress through journal entries and project management. It features offline-first functionality, markdown support, analytics visualization, and a modern glassmorphism UI. The application serves as a comprehensive learning portfolio platform with data persistence across devices.
+The Learning Journal is a Progressive Web App (PWA) designed to help students and learners track their educational journey through journal entries, project documentation, and analytics visualization. Built with React, TypeScript, and a Node.js/Express backend, the application features offline-first functionality, beautiful glassmorphism UI design, and comprehensive data management capabilities.
+
+The application serves as a comprehensive learning tool that demonstrates modern web development practices including:
+- Full-stack TypeScript development
+- RESTful API design
+- Offline-first architecture with IndexedDB
+- Progressive Web App features (service workers, caching)
+- Real-time data synchronization
+- Rich text editing with Markdown support
+- Data visualization and analytics
 
 ## User Preferences
 
@@ -12,112 +21,128 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Architecture
 
-**React + TypeScript SPA**
-- Single-page application built with React 18 and TypeScript
-- Vite as the build tool and development server
-- Wouter for lightweight client-side routing (no React Router dependency)
-- Component-based architecture using shadcn/ui component library
-- Tailwind CSS for styling with custom glassmorphism design system
-
-**State Management**
-- TanStack Query (React Query) for server state and caching
-- Local React hooks for component-level state
-- No global state management library (Redux/Zustand) - relying on React Query's cache
-
-**Offline-First Strategy**
-- IndexedDB via localforage for primary client-side storage
-- Sync queue mechanism for offline operation queueing
-- Data fetches prioritize local IndexedDB first, then sync with backend when online
-- Device-specific data isolation using unique device IDs stored in localStorage
+**Framework & Build System**
+- React 18+ with TypeScript for type-safe component development
+- Vite as the build tool for fast development and optimized production builds
+- Wouter for lightweight client-side routing
+- TanStack Query for server state management and caching
 
 **UI Component System**
-- Radix UI primitives for accessible headless components
-- Custom theme system supporting light/dark modes
-- Glassmorphism design pattern with backdrop blur effects
-- Responsive layouts with mobile-first approach
+- Shadcn/ui component library built on Radix UI primitives
+- Tailwind CSS for utility-first styling with custom design tokens
+- Glassmorphism design system with custom glass-card components
+- Dark/light theme support via context provider
+- Responsive design optimized for mobile and desktop
+
+**State Management Strategy**
+- Custom hooks pattern for encapsulating business logic (`useJournals`, `useProjects`, `useProfile`)
+- TanStack Query for server state with automatic background refetching
+- LocalForage (IndexedDB wrapper) for offline-first local storage
+- Device-specific data isolation using unique device IDs stored in localStorage
+
+**Data Flow Pattern**
+- IndexedDB serves as the primary data source (offline-first)
+- Background sync with backend API when online
+- Optimistic updates for instant UI feedback
+- Sync queue mechanism for offline operations that replay when connectivity returns
 
 ### Backend Architecture
 
-**Express.js REST API**
-- Node.js/Express server with TypeScript
-- RESTful API endpoints for CRUD operations
-- No authentication system - public access with device-based data isolation
-- Device ID passed via `X-Device-ID` header for data segmentation
+**Server Framework**
+- Express.js with TypeScript for the HTTP server
+- Node.js runtime environment
+- RESTful API design with JSON payloads
 
-**Data Flow Pattern**
-- Client sends device ID with every request
-- Server filters all queries by device ID (user isolation)
-- No session management or cookies required
-- Designed for Replit deployment environment
+**Authentication & Authorization**
+- **No traditional authentication** - public access model
+- Device-based data isolation using `X-Device-ID` header
+- Each browser/device gets a unique ID for data segregation
+- Clerk authentication infrastructure present but not actively used
+
+**API Structure**
+- `/api/journals` - CRUD operations for journal entries
+- `/api/projects` - CRUD operations for projects
+- `/api/profile` - User profile management
+- Custom device ID header (`X-Device-ID`) for all requests
+
+**Data Validation**
+- Zod schemas for runtime type validation
+- Drizzle-Zod integration for automatic schema generation from database models
+- Client and server-side validation using shared schema definitions
 
 ### Data Storage Solutions
 
-**Database: PostgreSQL via Neon**
+**Database Configuration**
 - Drizzle ORM for type-safe database queries
-- Schema-first approach with TypeScript types generated from Drizzle schemas
-- Tables: users, journal_entries, projects, user_profile, sessions
-- All user data tables include userId foreign key for data isolation
-- Timestamps tracked via createdAt/updatedAt fields
+- PostgreSQL via Neon serverless driver (configured but not required initially)
+- Schema-first approach with migrations support
 
-**Client Storage: IndexedDB**
-- LocalForage wrapper for simplified IndexedDB operations
-- Three stores: journals, projects, syncQueue
-- Primary data source for the frontend (backend is secondary sync target)
-- Enables full offline functionality
+**Database Schema**
+- `users` table - User accounts (email, profile info, timestamps)
+- `journal_entries` table - Learning reflections with markdown content, tags, dates
+- `projects` table - Project documentation with tech stack arrays
+- `user_profile` table - Extended profile information (university, program, bio)
+- `sessions` table - Session storage for authentication
 
-**Sync Architecture**
-- Operations queue in IndexedDB when offline
-- Background sync attempts when connectivity restored
-- Merge strategy: IndexedDB serves as source of truth, backend as backup
-- Client-generated IDs (nanoid) to prevent conflicts
+**Offline Storage**
+- LocalForage (IndexedDB) for structured offline data storage
+- Separate stores for journals, projects, and sync queue
+- Automatic data persistence and retrieval
+- Conflict-free merging strategy (last-write-wins on sync)
+
+**Caching Strategy**
+- Service worker caching for static assets
+- Cache-first strategy for offline resilience
+- Network-first with cache fallback for API requests
+- Sync queue stores pending operations during offline periods
 
 ### External Dependencies
 
-**Third-Party Services**
-- Neon PostgreSQL (Serverless Postgres database)
-- Vercel (Deployment platform, configured but not primary)
-- Replit (Primary deployment environment)
-
-**Key NPM Packages**
-- @tanstack/react-query: Server state management
-- drizzle-orm: Type-safe ORM
-- @neondatabase/serverless: Neon database driver
-- @radix-ui/*: Headless UI components
-- wouter: Lightweight routing
-- localforage: IndexedDB abstraction
-- @uiw/react-md-editor: Markdown editor component
-- date-fns: Date manipulation
-- recharts: Data visualization charts
-- nanoid: Unique ID generation
-- jsPDF: PDF export functionality
+**Third-Party UI Libraries**
+- `@radix-ui/*` - Accessible, unstyled UI primitives (20+ components)
+- `@uiw/react-md-editor` - Markdown editor with preview
+- `recharts` - Data visualization charts (bar, line, pie charts)
+- `date-fns` - Date manipulation and formatting
+- `lucide-react` - Icon library
 
 **Development Tools**
-- Vite: Build tool and dev server
-- TypeScript: Type safety
-- Tailwind CSS: Utility-first styling
-- ESBuild: Server-side bundling for production
+- `drizzle-kit` - Database migration tool
+- `tsx` - TypeScript execution for development
+- `esbuild` - Fast JavaScript bundling for production
+- `vite` - Frontend build tool and dev server
 
-### Design Patterns
+**Data & State Management**
+- `@tanstack/react-query` - Server state management
+- `localforage` - IndexedDB wrapper for offline storage
+- `nanoid` - Unique ID generation for entries and devices
 
-**Offline-First Pattern**
-- All data writes go to IndexedDB immediately
-- Background sync queues operations for server when offline
-- UI never blocks on network requests
-- Optimistic updates for better UX
+**Form & Validation**
+- `react-hook-form` - Form state management
+- `zod` - Schema validation
+- `@hookform/resolvers` - Integration between react-hook-form and Zod
 
-**Device-Based Multi-Tenancy**
-- No user authentication system
-- Each browser/device gets unique ID
-- Device ID used for data filtering on backend
-- Allows public access while maintaining data privacy
+**Database & Backend**
+- `@neondatabase/serverless` - PostgreSQL serverless driver
+- `drizzle-orm` - TypeScript ORM
+- `express` - Node.js web framework
 
-**Component Composition**
-- Reusable UI components (cards, dialogs, forms)
-- Hook-based data fetching patterns
-- Separation of concerns: hooks for data, components for UI
+**Authentication Infrastructure**
+- `@clerk/clerk-react` - Frontend authentication components
+- `@clerk/express` - Backend authentication middleware
+- Note: Currently not enforcing authentication - public access mode
 
-**Type Safety Strategy**
-- Shared schema definitions between client and server
-- Drizzle generates TypeScript types from database schema
-- Zod schemas for runtime validation
-- End-to-end type safety from database to UI
+**Styling**
+- `tailwindcss` - Utility-first CSS framework
+- `class-variance-authority` - Component variant management
+- `clsx` & `tailwind-merge` - Class name utilities
+
+**PWA Features**
+- Service worker for offline functionality
+- Manifest file for installable app experience
+- Cache API for resource caching
+- Background sync for offline operation replay
+
+**Deployment**
+- Vercel configuration for serverless deployment
+- Production builds via Vite and esbuild
+- Environment variable management for database URLs and API keys
