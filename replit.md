@@ -2,9 +2,9 @@
 
 ## Overview
 
-A Progressive Web App (PWA) for tracking learning journeys through journal entries and project documentation. The application features offline-first architecture, enabling users to document their learning progress with markdown support, tag-based organization, and visual analytics. Built as a modern web application with glassmorphism design, the app works seamlessly both online and offline, syncing data when connectivity is restored.
+A modern, offline-first Progressive Web App (PWA) for tracking learning journeys through journal entries and projects. The application features a React-based frontend with TypeScript, an Express backend, and PostgreSQL database via Drizzle ORM. Built with a focus on offline capabilities using IndexedDB for local storage and automatic background synchronization when online.
 
-The application serves dual purposes: (1) a functional learning journal for students and self-learners, and (2) a demonstration platform for various web development concepts including DOM manipulation, browser APIs, backend integration with Python/Flask, and progressive web app capabilities.
+The app includes multiple lab demonstrations (Lab 3-6) showcasing various web development concepts including DOM manipulation, browser APIs, Python backend integration, and Flask REST APIs.
 
 ## User Preferences
 
@@ -14,125 +14,111 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Architecture
 
-**Framework & Build System**
+**Framework & Build Tool**
 - React 18 with TypeScript for type-safe component development
-- Vite as the build tool and development server, providing fast HMR (Hot Module Replacement)
-- Wouter for lightweight client-side routing (alternative to React Router)
-- Path aliases configured via TypeScript (`@/`, `@shared/`, `@assets/`) for clean imports
+- Vite as the build tool and development server for fast HMR
+- Wouter for lightweight client-side routing
+- TailwindCSS with custom design system featuring glassmorphism effects
 
-**UI & Styling**
-- Shadcn/ui component library built on Radix UI primitives for accessible, customizable components
-- Tailwind CSS with custom configuration for design tokens and theming
-- Dark/light theme support with system preference detection
-- Glassmorphism design pattern with custom CSS variables for elevated UI elements
-- Custom color system using HSL values for flexible theming
-
-**State Management**
+**State Management & Data Fetching**
 - TanStack Query (React Query) for server state management and caching
-- LocalForage (IndexedDB wrapper) for client-side data persistence
-- Custom hooks pattern for business logic encapsulation
-- Optimistic updates with automatic rollback on errors
+- LocalForage (IndexedDB wrapper) for offline-first local data persistence
+- Custom hooks pattern for data operations (useJournals, useProjects, useProfile)
+
+**UI Component System**
+- Shadcn/ui component library built on Radix UI primitives
+- Custom theme system with dark/light mode support via context
+- Responsive design with mobile-first breakpoints
+- Glassmorphism design pattern with backdrop blur and translucent surfaces
 
 **Offline-First Strategy**
-- IndexedDB as primary data store using LocalForage
-- Sync queue mechanism to track offline changes
+- IndexedDB as primary data source for journals and projects
+- Sync queue system to track pending operations when offline
 - Automatic background sync when connection restored
-- Device-specific IDs for data isolation (no authentication required)
-
-**Data Flow**
-1. User interactions update IndexedDB immediately (optimistic UI)
-2. Operations queued for sync when offline
-3. Background process syncs with backend when online
-4. Server data merged back into IndexedDB on fetch
+- Device-based data isolation using unique device IDs stored in localStorage
 
 ### Backend Architecture
 
 **Server Framework**
 - Express.js with TypeScript for RESTful API endpoints
-- Separation of concerns: routing, storage layer, authentication middleware
+- Middleware: JSON body parser, CORS handling, request logging
+- Development: Vite middleware integration for HMR in dev mode
+- Production: Static file serving for SPA deployment
 
-**Database & ORM**
-- PostgreSQL as the primary database (via Neon serverless)
+**Authentication & Authorization**
+- Clerk for authentication (configured but optional in current implementation)
+- Device ID-based data isolation for public access without accounts
+- X-Device-ID header used to segregate data per browser/device
+- Fallback "guest" mode for backward compatibility
+
+**API Design**
+- RESTful endpoints for CRUD operations on journals, projects, and profiles
+- Standardized error handling with HTTP status codes
+- Client-provided IDs and timestamps accepted for offline sync support
+- Validation using Zod schemas shared between client and server
+
+### Data Storage Solutions
+
+**Database**
+- PostgreSQL via Neon serverless (connection pooling via HTTP)
 - Drizzle ORM for type-safe database queries and migrations
-- Schema definitions shared between frontend and backend via `shared/schema.ts`
+- Schema defined in shared directory for client/server consistency
 
-**Data Isolation Strategy**
-- No traditional authentication system
-- Device-based isolation using unique device IDs (`X-Device-ID` header)
-- Each device/browser gets its own data partition
-- Fallback to guest ID for backward compatibility
+**Schema Structure**
+- `users`: Authentication and profile data (Clerk integration ready)
+- `journal_entries`: Learning journal posts with markdown content, tags, and dates
+- `projects`: Portfolio projects with tech stack arrays
+- `user_profile`: Extended user metadata (name, student ID, university info)
+- `sessions`: Session storage for future authentication needs
 
-**API Structure**
-- RESTful endpoints following standard HTTP methods (GET, POST, PUT, DELETE)
-- Consistent error handling with HTTP status codes
-- JSON request/response format
-- Device ID extracted from headers for all operations
+**Dual Storage Pattern**
+- Server: PostgreSQL for authoritative data
+- Client: IndexedDB (via LocalForage) for offline-first access
+- Sync: Background reconciliation between local and server on connectivity changes
 
-**Session Management**
-- Session table exists for future authentication (currently unused)
-- Connect-pg-simple for PostgreSQL-backed sessions
-- Prepared for Clerk authentication integration (infrastructure present, not active)
+### Authentication and Authorization
 
-### Database Schema
+**Current Implementation**
+- Public access mode - no authentication required
+- Device ID isolation ensures data privacy per browser
+- Each device gets unique nanoid-based identifier in localStorage
 
-**Core Tables**
-
-1. **users** - User accounts (prepared for future use)
-   - id, email, firstName, lastName, profileImageUrl, timestamps
-
-2. **journal_entries** - Learning journal entries
-   - id (client-generated), userId (device ID), title, content, tags (array), date, timestamps
-   - Client provides IDs for offline-first sync
-
-3. **projects** - Learning projects documentation
-   - id (client-generated), userId (device ID), name, description, techStack (array), timestamps
-
-4. **user_profile** - Extended user information
-   - userId, name, studentId, university, program, email, courseDirector, bio, profilePicture
-
-**Key Design Decisions**
-- Client-generated IDs using nanoid for offline capability
-- Device ID as userId for data isolation without authentication
-- Array fields (tags, techStack) for flexible categorization
-- Timestamps managed by both client and server for sync conflict resolution
+**Clerk Integration (Available)**
+- Frontend: @clerk/clerk-react for UI components
+- Backend: @clerk/express middleware for protected routes
+- Configuration present but not enforced (commented isAuthenticated middleware)
+- Easy migration path: uncomment middleware and add sign-in UI
 
 ### External Dependencies
 
-**Database Service**
-- Neon Serverless PostgreSQL - Cloud-hosted PostgreSQL with HTTP interface
-- Environment variable: `DATABASE_URL`
+**Third-Party Services**
+- Clerk: Authentication platform (configured, not active)
+- Neon: Serverless PostgreSQL hosting
+- Vercel: Deployment platform (config present)
 
-**Future Authentication (Infrastructure Ready)**
-- Clerk - Authentication service (middleware configured but not active)
-- Environment variables: `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
-- Frontend and backend integration present but commented out
+**Browser APIs Demonstrated (Lab 4)**
+- Storage APIs: localStorage, sessionStorage, IndexedDB
+- Clipboard API: Copy/paste with formatted content support
+- Notifications API: Browser notifications with permission handling
+- Geolocation API: User location tracking
+- Weather API: OpenMeteo integration for location-based data
+- Quotes API: Third-party content fetching
 
-**Third-Party APIs (Demonstration Features)**
-- Open-Meteo Weather API - Free weather data (no API key required)
-- Quotable API - Random quotes
-- GitHub API - User profile lookup
-- TikTok RapidAPI - User stats (requires API key in demo)
-
-**Build & Deployment**
-- Vercel - Hosting platform (configuration in vercel.json)
-- ESBuild - Server-side bundling for production
-- TypeScript compiler for type checking
+**UI Libraries**
+- Radix UI: Headless component primitives (40+ components)
+- Recharts: Data visualization for analytics dashboard
+- MDEditor: Markdown editing with preview
+- jsPDF: Client-side PDF generation for exports
+- date-fns: Date manipulation and formatting
 
 **Development Tools**
-- Replit-specific plugins for development environment (cartographer, dev banner, runtime error modal)
-- Conditional loading based on REPL_ID environment variable
+- Drizzle Kit: Database migrations and schema management
+- ESBuild: Production server bundling
+- TSX: TypeScript execution for development
+- Replit plugins: Development environment integration
 
-**Frontend Libraries**
-- @tanstack/react-query - Data fetching and caching
-- localforage - IndexedDB wrapper for offline storage
-- date-fns - Date manipulation and formatting
-- recharts - Data visualization and charts
-- jspdf - PDF generation for exports
-- react-hook-form + zod - Form validation
-- @uiw/react-md-editor - Markdown editor component
-
-**Additional Notes**
-- Lab demonstrations (Lab 3-6) showcase progressive enhancement of features
-- Python backend integration demonstrated in Lab 5 (file-based JSON storage)
-- Flask integration demonstrated in Lab 6 (REST API)
-- PWA capabilities include offline mode, installability, and background sync
+**Lab Demonstrations**
+- Lab 3: Vanilla JavaScript DOM manipulation
+- Lab 4: Browser Storage & Third-Party APIs
+- Lab 5: Python backend with JSON file persistence
+- Lab 6: Flask REST API integration (separate from main Express backend)
