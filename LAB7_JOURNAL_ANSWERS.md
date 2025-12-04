@@ -49,7 +49,7 @@ Enhancing the Flask app with PWA features transforms the Learning Journal into a
 ### 4. Did you face any challenges deploying your PWA, and how did you solve them?
 
 **Challenge 1: HTTPS Requirement**
-- **Problem**: Service workers only work over HTTPS (for security). PythonAnywhere and Replit both provide HTTPS, but local development in HTTP would fail.
+- **Problem**: Service workers only work over HTTPS (for security). Production deployments provide HTTPS, but local development in HTTP would fail.
 - **Solution**: Verified deployment URLs use HTTPS. Configured `vite-plugin-pwa` to generate proper service worker. Tested PWA features on deployed sites rather than localhost HTTP.
 
 **Challenge 2: Cache Invalidation**
