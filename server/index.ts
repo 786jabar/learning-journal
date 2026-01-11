@@ -50,6 +50,20 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
+  // Serve service worker with correct MIME type and no-cache header
+  app.get("/sw.js", (_req, res) => {
+    const swPath = path.join(import.meta.dirname, "..", "public", "sw.js");
+    res.setHeader("Service-Worker-Allowed", "/");
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.sendFile(swPath);
+  });
+
+  // Serve manifest file
+  app.get("/manifest.webmanifest", (_req, res) => {
+    const manifestPath = path.join(import.meta.dirname, "..", "public", "manifest.webmanifest");
+    res.sendFile(manifestPath);
+  });
+
   // Serve standalone Lab 4 demo HTML file (before Vite catch-all)
   app.get("/lab4-demo.html", (_req, res) => {
     const htmlPath = path.join(import.meta.dirname, "..", "public", "lab4-demo.html");
