@@ -1,60 +1,35 @@
 {
-  "name": "Learning Journal - PWA",
-  "short_name": "Learning Journal",
-  "description": "A Progressive Web App for tracking learning journey with offline support and PWA capabilities",
+  "name": "Learning Journal",
+  "short_name": "Journal",
+  "description": "A modern, offline-first progressive web app for tracking your learning journey.",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "theme_color": "#7c3aed",
   "background_color": "#ffffff",
-  "categories": ["education", "productivity"],
-  "screenshots": [
-    {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
+  "theme_color": "#3b82f6",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
+    },
     {
-      "name": "New Journal Entry",
-      "short_name": "New Entry",
-      "description": "Create a new journal entry",
-      "url": "/?action=new-entry",
-      "icons": [
-        {
-          "src": "/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
