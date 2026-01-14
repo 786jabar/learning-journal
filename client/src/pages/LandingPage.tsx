@@ -1,76 +1,137 @@
 import { Link } from "wouter";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Lightbulb, TrendingUp, Users, Zap, Shield, Cloud, CheckCircle2, Sparkles, ArrowRight, Download, Lock } from "lucide-react";
+import { BookOpen, Lightbulb, TrendingUp, Users, Zap, Shield, Cloud, CheckCircle2, Sparkles, ArrowRight, Download, Lock, GraduationCap, Rocket, Star, Heart, Code, PenTool } from "lucide-react";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background Gradients */}
+      {/* Enhanced Animated Background with Multiple Layers */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent/15 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
+        
+        {/* Animated orbs */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/25 rounded-full blur-[100px] animate-float"></div>
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-secondary/20 rounded-full blur-[120px] animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-accent/15 rounded-full blur-[140px] animate-float" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[80px] animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-secondary/15 rounded-full blur-[90px] animate-float" style={{ animationDelay: '3s' }}></div>
+        
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+        <div className="absolute top-40 right-32 w-3 h-3 bg-secondary rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-accent rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/3 right-20 w-4 h-4 bg-primary/50 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
 
-      {/* Hero Section - Glassmorphism */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-20">
+      {/* Hero Section - Enhanced Glassmorphism */}
+      <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
+        {/* Floating decorative icons */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-10 text-primary/20 animate-float" style={{ animationDelay: '0.5s' }}>
+            <BookOpen className="h-16 w-16" />
+          </div>
+          <div className="absolute top-1/3 right-16 text-secondary/20 animate-float" style={{ animationDelay: '1.5s' }}>
+            <GraduationCap className="h-20 w-20" />
+          </div>
+          <div className="absolute bottom-1/4 left-1/4 text-accent/20 animate-float" style={{ animationDelay: '2.5s' }}>
+            <Code className="h-14 w-14" />
+          </div>
+          <div className="absolute bottom-1/3 right-1/4 text-primary/15 animate-float" style={{ animationDelay: '3.5s' }}>
+            <PenTool className="h-12 w-12" />
+          </div>
+          <div className="absolute top-1/2 left-1/6 text-secondary/15 animate-float" style={{ animationDelay: '1s' }}>
+            <Rocket className="h-10 w-10" />
+          </div>
+        </div>
+
         <div className="container relative mx-auto">
           <div className="flex flex-col items-center text-center">
-            {/* Floating Badge */}
-            <Badge className="mb-8 gap-2 glass-card animate-float px-6 py-2 text-sm" variant="secondary" data-testid="badge-pwa">
-              <Sparkles className="h-4 w-4" />
-              Progressive Web App
-            </Badge>
+            {/* Animated Badge with glow */}
+            <div className="relative mb-10">
+              <div className="absolute inset-0 blur-xl bg-gradient-to-r from-primary via-secondary to-accent opacity-50 animate-pulse"></div>
+              <Badge className="relative gap-2 glass-card px-8 py-3 text-sm font-medium border-2 border-white/20" variant="secondary" data-testid="badge-pwa">
+                <Sparkles className="h-4 w-4 animate-spin-slow" />
+                Progressive Web App
+                <Star className="h-4 w-4" />
+              </Badge>
+            </div>
 
-            {/* Main Heading with Gradient Text */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-8 leading-tight max-w-5xl" data-testid="heading-main">
+            {/* Main Heading with Enhanced Gradient Text */}
+            <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold mb-8 leading-tight max-w-5xl tracking-tight" data-testid="heading-main">
               Your Learning Journey,
               <br />
-              <span className="gradient-text">Beautifully Documented</span>
+              <span className="gradient-text bg-clip-text">Beautifully Documented</span>
             </h1>
 
-            {/* Subheading */}
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mb-12 leading-relaxed" data-testid="text-description">
+            {/* Subheading with improved typography */}
+            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mb-14 leading-relaxed font-light" data-testid="text-description">
               Track your learning progress with journal entries, manage projects, and visualize your growth — 
               all while working seamlessly offline with stunning glassmorphism design.
             </p>
 
-            {/* Glass Card for Start Button */}
-            <div className="glass-card rounded-3xl p-8 max-w-md w-full mb-12 animate-glow">
-              <p className="text-sm text-foreground/80 mb-6 font-medium" data-testid="text-getstarted-prompt">
-                Start using the app right now - no account required!
-              </p>
+            {/* Enhanced Glass Card for Start Button */}
+            <div className="relative group mb-14">
+              {/* Animated border glow */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-[2rem] blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-500 animate-pulse-glow"></div>
               
-              <Link href="/">
-                <Button 
-                  size="lg" 
-                  className="w-full text-base gap-3 gradient-bg text-white hover:opacity-90"
-                  data-testid="button-start-app"
-                >
-                  <BookOpen className="h-5 w-5" />
-                  Start Your Learning Journey
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
+              <div className="relative glass-card rounded-[2rem] p-10 max-w-lg w-full border-2 border-white/20 shadow-2xl">
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <Heart className="h-5 w-5 text-secondary animate-pulse" />
+                  <p className="text-base text-foreground/90 font-semibold" data-testid="text-getstarted-prompt">
+                    Start using the app right now - no account required!
+                  </p>
+                </div>
+                
+                <Link href="/">
+                  <Button 
+                    size="lg" 
+                    className="w-full text-lg gap-4 gradient-bg text-white hover:opacity-90 py-7 rounded-2xl font-semibold shadow-lg glow-button"
+                    data-testid="button-start-app"
+                  >
+                    <BookOpen className="h-6 w-6" />
+                    Start Your Learning Journey
+                    <ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+
+                <p className="text-sm text-muted-foreground mt-6 flex items-center justify-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  Free forever, works offline
+                </p>
+              </div>
             </div>
 
-            {/* Trust Indicators - Glass Pills */}
+            {/* Enhanced Trust Indicators */}
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
-                <Shield className="h-4 w-4 text-primary" />
-                <span>Secure & Private</span>
+              <div className="flex items-center gap-3 glass px-6 py-3 rounded-full border border-white/10 hover:border-primary/30 transition-colors">
+                <div className="p-1.5 rounded-full bg-primary/20">
+                  <Shield className="h-4 w-4 text-primary" />
+                </div>
+                <span className="font-medium">Secure & Private</span>
               </div>
-              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
-                <Cloud className="h-4 w-4 text-secondary" />
-                <span>Works Offline</span>
+              <div className="flex items-center gap-3 glass px-6 py-3 rounded-full border border-white/10 hover:border-secondary/30 transition-colors">
+                <div className="p-1.5 rounded-full bg-secondary/20">
+                  <Cloud className="h-4 w-4 text-secondary" />
+                </div>
+                <span className="font-medium">Works Offline</span>
               </div>
-              <div className="flex items-center gap-2 glass px-4 py-2 rounded-full">
-                <Zap className="h-4 w-4 text-accent" />
-                <span>Lightning Fast</span>
+              <div className="flex items-center gap-3 glass px-6 py-3 rounded-full border border-white/10 hover:border-accent/30 transition-colors">
+                <div className="p-1.5 rounded-full bg-accent/20">
+                  <Zap className="h-4 w-4 text-accent" />
+                </div>
+                <span className="font-medium">Lightning Fast</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+          <span className="text-xs text-muted-foreground font-medium">Scroll to explore</span>
+          <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2">
+            <div className="w-1.5 h-2.5 rounded-full bg-muted-foreground/50 animate-pulse"></div>
           </div>
         </div>
       </section>
