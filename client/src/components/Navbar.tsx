@@ -19,6 +19,7 @@ export function Navbar() {
     { path: "/lab4-demo", label: "Lab 4" },
     { path: "/lab5-demo", label: "Lab 5" },
     { path: "/lab6-demo", label: "Lab 6" },
+    { path: "/achievements", label: "Achievements" },
     { path: "/about", label: "About" },
   ];
 
