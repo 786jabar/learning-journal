@@ -1487,7 +1487,9 @@ export default function CandyGamePage() {
                     </div>
                   </div>
                 );
-          })}
+              })}
+            </div>
+          </div>
         </div>
       </div>
     );
