@@ -118,7 +118,7 @@ export default function CandyGamePage() {
   const [totalCleared, setTotalCleared] = useState<Record<number, number>>({});
   const [hintPosition, setHintPosition] = useState<Position | null>(null);
   const [showNoMoves, setShowNoMoves] = useState(false);
-  const [dragStart, setDragStart] = useState<Position | null>(null);
+  const [dragStart, setDragStart] = useState<{pos: Position, x: number, y: number} | null>(null);
   const [highScores, setHighScores] = useState<Record<number, { score: number; stars: number }>>({});
   const [lastMoveTime, setLastMoveTime] = useState(Date.now());
   
@@ -659,35 +659,41 @@ export default function CandyGamePage() {
     }
   };
 
-  const handleDragStart = (row: number, col: number) => {
+  const handleDragStart = (row: number, col: number, e: React.PointerEvent) => {
     if (isAnimating || gameScreen !== "playing") return;
-    setDragStart({ row, col });
+    setDragStart({ pos: { row, col }, x: e.clientX, y: e.clientY });
   };
 
-  const handleDragEnd = (row: number, col: number) => {
-    if (!dragStart || isAnimating || gameScreen !== "playing") return;
+  const handleDragEnd = (e: React.PointerEvent) => {
+    if (!dragStart || isAnimating || gameScreen !== "playing") {
+      setDragStart(null);
+      return;
+    }
     
-    const rowDiff = row - dragStart.row;
-    const colDiff = col - dragStart.col;
+    const dx = e.clientX - dragStart.x;
+    const dy = e.clientY - dragStart.y;
+    const threshold = 20;
     
     let targetPos: Position | null = null;
     
-    if (Math.abs(rowDiff) > Math.abs(colDiff)) {
-      if (rowDiff > 0 && dragStart.row < GRID_SIZE - 1) {
-        targetPos = { row: dragStart.row + 1, col: dragStart.col };
-      } else if (rowDiff < 0 && dragStart.row > 0) {
-        targetPos = { row: dragStart.row - 1, col: dragStart.col };
-      }
-    } else {
-      if (colDiff > 0 && dragStart.col < GRID_SIZE - 1) {
-        targetPos = { row: dragStart.row, col: dragStart.col + 1 };
-      } else if (colDiff < 0 && dragStart.col > 0) {
-        targetPos = { row: dragStart.row, col: dragStart.col - 1 };
+    if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
+      if (Math.abs(dy) > Math.abs(dx)) {
+        if (dy > 0 && dragStart.pos.row < GRID_SIZE - 1) {
+          targetPos = { row: dragStart.pos.row + 1, col: dragStart.pos.col };
+        } else if (dy < 0 && dragStart.pos.row > 0) {
+          targetPos = { row: dragStart.pos.row - 1, col: dragStart.pos.col };
+        }
+      } else {
+        if (dx > 0 && dragStart.pos.col < GRID_SIZE - 1) {
+          targetPos = { row: dragStart.pos.row, col: dragStart.pos.col + 1 };
+        } else if (dx < 0 && dragStart.pos.col > 0) {
+          targetPos = { row: dragStart.pos.row, col: dragStart.pos.col - 1 };
+        }
       }
     }
     
     if (targetPos) {
-      swapCandies(dragStart, targetPos);
+      swapCandies(dragStart.pos, targetPos);
     }
     
     setDragStart(null);
@@ -1145,11 +1151,11 @@ export default function CandyGamePage() {
                     <button
                       key={`${rowIndex}-${colIndex}-${candy.id}`}
                       onClick={() => handleCandyClick(rowIndex, colIndex)}
-                      onPointerDown={() => handleDragStart(rowIndex, colIndex)}
-                      onPointerUp={() => handleDragEnd(rowIndex, colIndex)}
-                      onPointerLeave={() => {
+                      onPointerDown={(e) => handleDragStart(rowIndex, colIndex, e)}
+                      onPointerUp={(e) => handleDragEnd(e)}
+                      onPointerLeave={(e) => {
                         if (dragStart) {
-                          handleDragEnd(rowIndex, colIndex);
+                          handleDragEnd(e);
                         }
                       }}
                       disabled={isAnimating || gameScreen !== "playing"}
