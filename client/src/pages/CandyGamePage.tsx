@@ -17,12 +17,12 @@ import {
 const GRID_SIZE = 8;
 
 const CANDY_TYPES = [
-  { gradient: "from-red-400 via-red-500 to-red-600", glow: "shadow-red-500/50" },
+  { gradient: "from-rose-400 via-rose-500 to-rose-600", glow: "shadow-rose-500/50" },
   { gradient: "from-orange-400 via-orange-500 to-orange-600", glow: "shadow-orange-500/50" },
-  { gradient: "from-yellow-400 via-yellow-500 to-yellow-600", glow: "shadow-yellow-500/50" },
-  { gradient: "from-green-400 via-green-500 to-green-600", glow: "shadow-green-500/50" },
-  { gradient: "from-blue-400 via-blue-500 to-blue-600", glow: "shadow-blue-500/50" },
-  { gradient: "from-purple-400 via-purple-500 to-purple-600", glow: "shadow-purple-500/50" },
+  { gradient: "from-yellow-300 via-yellow-400 to-yellow-500", glow: "shadow-yellow-400/50" },
+  { gradient: "from-emerald-400 via-emerald-500 to-emerald-600", glow: "shadow-emerald-500/50" },
+  { gradient: "from-sky-400 via-sky-500 to-sky-600", glow: "shadow-sky-500/50" },
+  { gradient: "from-indigo-400 via-indigo-500 to-indigo-600", glow: "shadow-indigo-500/50" },
 ];
 
 interface Candy {
@@ -388,10 +388,10 @@ export default function CandyGamePage() {
 
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-4">
-          <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 drop-shadow-lg" data-testid="text-game-title">
-            Sweet Match
+          <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-red-500 to-purple-500 drop-shadow-lg" data-testid="text-game-title">
+            Candy Rush Saga
           </h1>
-          <p className="text-purple-200/80 text-sm">Match 3 or more to score!</p>
+          <p className="text-pink-100/80 text-sm font-medium">Sweetest Puzzle Adventure!</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2 mb-4">
