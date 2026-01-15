@@ -24,6 +24,8 @@ import Lab5Report from "@/pages/Lab5Report";
 import Lab6DemoPage from "@/pages/Lab6DemoPage";
 import Lab6Report from "@/pages/Lab6Report";
 import AchievementsPage from "@/pages/AchievementsPage";
+import CandyGamePage from "@/pages/CandyGamePage";
+import CanvasPage from "@/pages/CanvasPage";
 
 function Router() {
   // All routes are now public - no authentication required
@@ -43,6 +45,8 @@ function Router() {
       <Route path="/lab6-demo" component={Lab6DemoPage} />
       <Route path="/lab6-report" component={Lab6Report} />
       <Route path="/achievements" component={AchievementsPage} />
+      <Route path="/candy-game" component={CandyGamePage} />
+      <Route path="/canvas" component={CanvasPage} />
       <Route path="/about" component={AboutPage} />
       <Route component={NotFound} />
     </Switch>
