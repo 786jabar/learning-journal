@@ -240,15 +240,47 @@ export default function CandyGamePage() {
   const [highScores, setHighScores] = useState<Record<number, { score: number; stars: number }>>({});
   const [lastMoveTime, setLastMoveTime] = useState(Date.now());
   
-  const [lives, setLives] = useState(5);
+  const [lives, setLives] = useState(() => {
+    const saved = localStorage.getItem("candyRush_lives");
+    return saved ? Math.min(JSON.parse(saved), 5) : 5;
+  });
   const [maxLives] = useState(5);
-  const [lastLifeTime, setLastLifeTime] = useState(Date.now());
-  const [boosters, setBoosters] = useState({ hammer: 3, shuffle: 2, lollipop: 1 });
-  const [coins, setCoins] = useState(500);
-  const [dailyRewardClaimed, setDailyRewardClaimed] = useState(false);
-  const [dailyStreak, setDailyStreak] = useState(1);
+  const [lastLifeTime, setLastLifeTime] = useState(() => {
+    const saved = localStorage.getItem("candyRush_lastLifeTime");
+    return saved ? JSON.parse(saved) : Date.now();
+  });
+  const [boosters, setBoosters] = useState(() => {
+    const saved = localStorage.getItem("candyRush_boosters");
+    return saved ? JSON.parse(saved) : { hammer: 3, shuffle: 2, lollipop: 1 };
+  });
+  const [coins, setCoins] = useState(() => {
+    const saved = localStorage.getItem("candyRush_coins");
+    return saved ? JSON.parse(saved) : 500;
+  });
+  const [dailyRewardClaimed, setDailyRewardClaimed] = useState(() => {
+    const saved = localStorage.getItem("candyRush_lastClaimDate");
+    if (!saved) return false;
+    const lastClaimDate = new Date(saved).toDateString();
+    const today = new Date().toDateString();
+    return lastClaimDate === today;
+  });
+  const [dailyStreak, setDailyStreak] = useState(() => {
+    const saved = localStorage.getItem("candyRush_dailyStreak");
+    const lastDate = localStorage.getItem("candyRush_lastClaimDate");
+    if (!saved || !lastDate) return 1;
+    const lastClaimDate = new Date(lastDate);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (lastClaimDate.toDateString() === yesterday.toDateString()) {
+      return JSON.parse(saved);
+    } else if (lastClaimDate.toDateString() === new Date().toDateString()) {
+      return JSON.parse(saved);
+    }
+    return 1;
+  });
   const [showDailyReward, setShowDailyReward] = useState(false);
   const [selectedBooster, setSelectedBooster] = useState<"hammer" | "lollipop" | null>(null);
+  const LIFE_REGEN_TIME = 300000;
   
   const boardRef = useRef<HTMLDivElement>(null);
   const idCounterRef = useRef(0);
@@ -1046,6 +1078,9 @@ export default function CandyGamePage() {
   };
 
   const beginPlaying = () => {
+    if (lives <= 0) return;
+    setLives(prev => prev - 1);
+    setLastLifeTime(Date.now());
     setGameScreen("playing");
     setLastMoveTime(Date.now());
   };
@@ -1075,10 +1110,7 @@ export default function CandyGamePage() {
   };
 
   const retryLevel = () => {
-    if (lives > 0) {
-      setLives(prev => prev - 1);
-      startLevel(level);
-    }
+    startLevel(level);
   };
 
   const useHammer = (row: number, col: number) => {
@@ -1141,7 +1173,10 @@ export default function CandyGamePage() {
     }
     
     setDailyRewardClaimed(true);
-    setDailyStreak(prev => prev + 1);
+    const newStreak = dailyStreak + 1;
+    setDailyStreak(newStreak);
+    localStorage.setItem("candyRush_lastClaimDate", new Date().toISOString());
+    localStorage.setItem("candyRush_dailyStreak", JSON.stringify(newStreak));
     setShowDailyReward(false);
   };
 
@@ -1206,6 +1241,81 @@ export default function CandyGamePage() {
       }
     };
   }, [lastMoveTime, gameScreen, isAnimating, grid, findValidMoves]);
+
+  useEffect(() => {
+    localStorage.setItem("candyRush_lives", JSON.stringify(lives));
+  }, [lives]);
+
+  useEffect(() => {
+    localStorage.setItem("candyRush_lastLifeTime", JSON.stringify(lastLifeTime));
+  }, [lastLifeTime]);
+
+  useEffect(() => {
+    localStorage.setItem("candyRush_boosters", JSON.stringify(boosters));
+  }, [boosters]);
+
+  useEffect(() => {
+    localStorage.setItem("candyRush_coins", JSON.stringify(coins));
+  }, [coins]);
+
+  useEffect(() => {
+    localStorage.setItem("candyRush_highScores", JSON.stringify(highScores));
+  }, [highScores]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("candyRush_highScores");
+    if (saved) {
+      setHighScores(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (lives >= maxLives) return;
+    
+    const now = Date.now();
+    const timeSinceLastRegen = now - lastLifeTime;
+    if (timeSinceLastRegen >= LIFE_REGEN_TIME) {
+      const livesToAdd = Math.floor(timeSinceLastRegen / LIFE_REGEN_TIME);
+      const actualLivesToAdd = Math.min(livesToAdd, maxLives - lives);
+      if (actualLivesToAdd > 0) {
+        setLives(prev => Math.min(prev + actualLivesToAdd, maxLives));
+        setLastLifeTime(lastLifeTime + actualLivesToAdd * LIFE_REGEN_TIME);
+      }
+    }
+    
+    const interval = setInterval(() => {
+      const currentNow = Date.now();
+      const elapsed = currentNow - lastLifeTime;
+      
+      if (elapsed >= LIFE_REGEN_TIME) {
+        const livesToRegen = Math.floor(elapsed / LIFE_REGEN_TIME);
+        const actualRegen = Math.min(livesToRegen, maxLives - lives);
+        if (actualRegen > 0) {
+          setLives(prev => Math.min(prev + actualRegen, maxLives));
+          setLastLifeTime(prev => prev + actualRegen * LIFE_REGEN_TIME);
+        }
+      }
+    }, 10000);
+    
+    return () => clearInterval(interval);
+  }, [lives, lastLifeTime, maxLives, LIFE_REGEN_TIME]);
+
+  useEffect(() => {
+    const checkNewDay = () => {
+      const lastClaimDate = localStorage.getItem("candyRush_lastClaimDate");
+      if (lastClaimDate) {
+        const lastDate = new Date(lastClaimDate).toDateString();
+        const today = new Date().toDateString();
+        if (lastDate !== today) {
+          setDailyRewardClaimed(false);
+        }
+      }
+    };
+    
+    checkNewDay();
+    const interval = setInterval(checkNewDay, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getSwapTransform = (row: number, col: number) => {
     if (!swappingCandies) return '';
@@ -1617,35 +1727,87 @@ export default function CandyGamePage() {
           </div>
         </div>
 
-        <div className="flex justify-center gap-3 mb-4">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setGameScreen("paused")}
-            className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
-            data-testid="button-pause"
-          >
-            <Pause className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={retryLevel}
-            className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
-            data-testid="button-reset"
-          >
-            <RotateCcw className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setIsMuted(!isMuted)}
-            className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
-            data-testid="button-mute"
-          >
-            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-          </Button>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setGameScreen("paused")}
+              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              data-testid="button-pause"
+            >
+              <Pause className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={retryLevel}
+              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              data-testid="button-reset"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsMuted(!isMuted)}
+              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              data-testid="button-mute"
+            >
+              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </Button>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedBooster(selectedBooster === "hammer" ? null : "hammer")}
+              disabled={boosters.hammer <= 0}
+              className={`relative ${selectedBooster === "hammer" ? 'bg-amber-500/50 border-amber-400' : 'bg-white/10 border-white/30'} text-white backdrop-blur-sm`}
+              data-testid="button-booster-hammer"
+            >
+              <Hammer className="h-4 w-4" />
+              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-amber-500 text-white">
+                {boosters.hammer}
+              </Badge>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={useShuffleBooster}
+              disabled={boosters.shuffle <= 0}
+              className="relative bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              data-testid="button-booster-shuffle"
+            >
+              <Shuffle className="h-4 w-4" />
+              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-green-500 text-white">
+                {boosters.shuffle}
+              </Badge>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedBooster(selectedBooster === "lollipop" ? null : "lollipop")}
+              disabled={boosters.lollipop <= 0}
+              className={`relative ${selectedBooster === "lollipop" ? 'bg-purple-500/50 border-purple-400' : 'bg-white/10 border-white/30'} text-white backdrop-blur-sm`}
+              data-testid="button-booster-lollipop"
+            >
+              <Candy className="h-4 w-4" />
+              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-purple-500 text-white">
+                {boosters.lollipop}
+              </Badge>
+            </Button>
+          </div>
         </div>
+        
+        {selectedBooster && (
+          <div className="bg-amber-500/20 border border-amber-400/50 rounded-lg p-2 mb-4 text-center">
+            <p className="text-amber-200 text-sm font-medium">
+              {selectedBooster === "hammer" ? "Tap a candy to smash it!" : "Tap a candy to create a Color Bomb!"}
+            </p>
+          </div>
+        )}
 
         <div className="relative">
           <div className="absolute -inset-2 bg-gradient-to-br from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl" />
@@ -1675,7 +1837,7 @@ export default function CandyGamePage() {
                   return (
                     <button
                       key={`${rowIndex}-${colIndex}-${candy.id}`}
-                      onClick={() => !isBlockedCell && handleCandyClick(rowIndex, colIndex)}
+                      onClick={() => !isBlockedCell && handleCandyClickWithBooster(rowIndex, colIndex)}
                       onPointerDown={(e) => !isBlockedCell && handleDragStart(rowIndex, colIndex, e)}
                       onPointerUp={(e) => handleDragEnd(e)}
                       onPointerLeave={(e) => {
