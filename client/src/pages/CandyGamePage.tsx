@@ -457,6 +457,103 @@ export default function CandyGamePage() {
       setSwappingCandies(null);
       
       await new Promise(resolve => setTimeout(resolve, 100));
+
+      const candy1 = newGrid[pos1.row][pos1.col];
+      const candy2 = newGrid[pos2.row][pos2.col];
+      const hasSpecial = candy1.special !== "none" || candy2.special !== "none";
+
+      if (hasSpecial) {
+        let specialActivated = false;
+
+        if (candy1.special === "color-bomb" || candy2.special === "color-bomb") {
+          const bombCandy = candy1.special === "color-bomb" ? candy1 : candy2;
+          const bombPos = candy1.special === "color-bomb" ? pos1 : pos2;
+          const targetCandy = candy1.special === "color-bomb" ? candy2 : candy1;
+
+          triggerScreenShake(10);
+          spawnFloatingText("Color Bomb!", bombPos.row, bombPos.col, "#fbbf24");
+
+          const colorsCounted: Record<number, number> = {};
+          for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+              if (newGrid[r][c].colorIndex === targetCandy.colorIndex) {
+                spawnParticles(r, c, newGrid[r][c].colorIndex, 12, "explosion");
+                colorsCounted[newGrid[r][c].colorIndex] = (colorsCounted[newGrid[r][c].colorIndex] || 0) + 1;
+                newGrid[r][c] = { ...newGrid[r][c], colorIndex: -1, isMatched: true, special: "none" };
+              }
+            }
+          }
+          newGrid[bombPos.row][bombPos.col] = { ...bombCandy, colorIndex: -1, isMatched: true, special: "none" };
+
+          setTotalCleared(prev => {
+            const updated = { ...prev };
+            for (const [color, count] of Object.entries(colorsCounted)) {
+              updated[Number(color)] = (updated[Number(color)] || 0) + count;
+            }
+            return updated;
+          });
+          setScore(prev => prev + Object.values(colorsCounted).reduce((a, b) => a + b, 0) * 100);
+          specialActivated = true;
+        }
+
+        if ((candy1.special === "striped-h" || candy1.special === "striped-v") && !specialActivated) {
+          const affected = activateSpecialCandy(newGrid, pos1.row, pos1.col);
+          for (const aPos of affected) {
+            spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 8);
+            newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
+          }
+          newGrid[pos1.row][pos1.col] = { ...candy1, colorIndex: -1, isMatched: true, special: "none" };
+          triggerScreenShake(5);
+          spawnFloatingText("Striped!", pos1.row, pos1.col, "#22d3ee");
+          specialActivated = true;
+        }
+
+        if ((candy2.special === "striped-h" || candy2.special === "striped-v") && !specialActivated) {
+          const affected = activateSpecialCandy(newGrid, pos2.row, pos2.col);
+          for (const aPos of affected) {
+            spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 8);
+            newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
+          }
+          newGrid[pos2.row][pos2.col] = { ...candy2, colorIndex: -1, isMatched: true, special: "none" };
+          triggerScreenShake(5);
+          spawnFloatingText("Striped!", pos2.row, pos2.col, "#22d3ee");
+          specialActivated = true;
+        }
+
+        if (candy1.special === "wrapped" && !specialActivated) {
+          const affected = activateSpecialCandy(newGrid, pos1.row, pos1.col);
+          for (const aPos of affected) {
+            spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 10, "explosion");
+            newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
+          }
+          newGrid[pos1.row][pos1.col] = { ...candy1, colorIndex: -1, isMatched: true, special: "none" };
+          triggerScreenShake(8);
+          spawnFloatingText("Wrapped!", pos1.row, pos1.col, "#a855f7");
+          specialActivated = true;
+        }
+
+        if (candy2.special === "wrapped" && !specialActivated) {
+          const affected = activateSpecialCandy(newGrid, pos2.row, pos2.col);
+          for (const aPos of affected) {
+            spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 10, "explosion");
+            newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
+          }
+          newGrid[pos2.row][pos2.col] = { ...candy2, colorIndex: -1, isMatched: true, special: "none" };
+          triggerScreenShake(8);
+          spawnFloatingText("Wrapped!", pos2.row, pos2.col, "#a855f7");
+          specialActivated = true;
+        }
+
+        if (specialActivated) {
+          setGrid(newGrid);
+          await new Promise(resolve => setTimeout(resolve, 300));
+          await processMatches(newGrid);
+          setMoves(prev => prev - 1);
+          setIsAnimating(false);
+          setSelectedCandy(null);
+          return;
+        }
+      }
       
       const { matches } = findMatches(newGrid);
       
@@ -479,7 +576,7 @@ export default function CandyGamePage() {
     }
     
     setSelectedCandy(null);
-  }, [grid, isAnimating, isPaused, gameOver, findMatches, processMatches]);
+  }, [grid, isAnimating, isPaused, gameOver, findMatches, processMatches, activateSpecialCandy, triggerScreenShake, spawnFloatingText, spawnParticles]);
 
   const handleCandyClick = (row: number, col: number) => {
     if (isAnimating || isPaused || gameOver) return;
