@@ -44,6 +44,7 @@ const COMBO_MESSAGES = [
 type SpecialType = "none" | "striped-h" | "striped-v" | "wrapped" | "color-bomb";
 type GameScreen = "menu" | "level-preview" | "playing" | "paused" | "level-complete" | "game-over";
 type BlockerType = "ice" | "chocolate" | "licorice" | "jelly";
+type IngredientType = "cherry" | "hazelnut";
 
 interface Candy {
   id: number;
@@ -52,6 +53,7 @@ interface Candy {
   isMatched: boolean;
   isNew: boolean;
   isFalling: boolean;
+  ingredient?: IngredientType;
 }
 
 interface BlockerCell {
@@ -91,10 +93,16 @@ interface FloatingText {
 }
 
 interface LevelObjective {
-  type: "score" | "clear-color" | "clear-jelly" | "clear-ice" | "clear-chocolate";
+  type: "score" | "clear-color" | "clear-jelly" | "clear-ice" | "clear-chocolate" | "clear-blockers" | "drop-ingredients" | "collect-candies";
   target: number;
   current: number;
   colorIndex?: number;
+  ingredientType?: IngredientType;
+}
+
+interface IngredientSpawn {
+  col: number;
+  type: IngredientType;
 }
 
 interface LevelData {
@@ -103,6 +111,7 @@ interface LevelData {
   objectives: LevelObjective[];
   starThresholds: [number, number, number];
   blockers?: BlockerPosition[];
+  ingredients?: IngredientSpawn[];
 }
 
 const LEVELS: LevelData[] = [
@@ -152,17 +161,49 @@ const LEVELS: LevelData[] = [
   { 
     level: 5, 
     moves: 35, 
-    objectives: [{ type: "clear-jelly", target: 16, current: 0 }, { type: "clear-ice", target: 8, current: 0 }], 
+    objectives: [{ type: "drop-ingredients", target: 3, current: 0, ingredientType: "cherry" }], 
+    starThresholds: [4000, 7000, 10000],
+    ingredients: [
+      { col: 2, type: "cherry" },
+      { col: 4, type: "cherry" },
+      { col: 6, type: "cherry" },
+    ]
+  },
+  { 
+    level: 6, 
+    moves: 30, 
+    objectives: [{ type: "collect-candies", target: 30, current: 0, colorIndex: 0 }, { type: "collect-candies", target: 30, current: 0, colorIndex: 2 }], 
+    starThresholds: [3500, 6000, 9000],
+  },
+  { 
+    level: 7, 
+    moves: 35, 
+    objectives: [{ type: "clear-blockers", target: 20, current: 0 }, { type: "score", target: 5000, current: 0 }], 
     starThresholds: [5000, 8000, 12000],
     blockers: [
       { row: 1, col: 1, type: "jelly" }, { row: 1, col: 2, type: "jelly" }, { row: 1, col: 5, type: "jelly" }, { row: 1, col: 6, type: "jelly" },
       { row: 2, col: 1, type: "jelly" }, { row: 2, col: 2, type: "jelly" }, { row: 2, col: 5, type: "jelly" }, { row: 2, col: 6, type: "jelly" },
       { row: 5, col: 1, type: "jelly" }, { row: 5, col: 2, type: "jelly" }, { row: 5, col: 5, type: "jelly" }, { row: 5, col: 6, type: "jelly" },
-      { row: 6, col: 1, type: "jelly" }, { row: 6, col: 2, type: "jelly" }, { row: 6, col: 5, type: "jelly" }, { row: 6, col: 6, type: "jelly" },
       { row: 3, col: 3, type: "ice", layers: 2 }, { row: 3, col: 4, type: "ice", layers: 2 },
       { row: 4, col: 3, type: "ice", layers: 2 }, { row: 4, col: 4, type: "ice", layers: 2 },
-      { row: 0, col: 0, type: "ice", layers: 1 }, { row: 0, col: 7, type: "ice", layers: 1 },
-      { row: 7, col: 0, type: "ice", layers: 1 }, { row: 7, col: 7, type: "ice", layers: 1 },
+    ]
+  },
+  { 
+    level: 8, 
+    moves: 40, 
+    objectives: [
+      { type: "drop-ingredients", target: 2, current: 0, ingredientType: "cherry" },
+      { type: "drop-ingredients", target: 2, current: 0, ingredientType: "hazelnut" },
+    ], 
+    starThresholds: [6000, 10000, 15000],
+    ingredients: [
+      { col: 1, type: "cherry" },
+      { col: 3, type: "hazelnut" },
+      { col: 5, type: "cherry" },
+      { col: 6, type: "hazelnut" },
+    ],
+    blockers: [
+      { row: 4, col: 0, type: "licorice" }, { row: 4, col: 7, type: "licorice" },
     ]
   },
 ];
@@ -186,6 +227,9 @@ export default function CandyGamePage() {
   const [totalCleared, setTotalCleared] = useState<Record<number, number>>({});
   const [blockerGrid, setBlockerGrid] = useState<(BlockerCell | null)[][]>([]);
   const [blockersCleared, setBlockersCleared] = useState<Record<BlockerType, number>>({} as Record<BlockerType, number>);
+  const [ingredientsDropped, setIngredientsDropped] = useState<Record<IngredientType, number>>({ cherry: 0, hazelnut: 0 });
+  const [levelIngredients, setLevelIngredients] = useState<IngredientSpawn[]>([]);
+  const [ingredientSpawnIndex, setIngredientSpawnIndex] = useState(0);
   const [hintPosition, setHintPosition] = useState<Position | null>(null);
   const [showNoMoves, setShowNoMoves] = useState(false);
   const [dragStart, setDragStart] = useState<{pos: Position, x: number, y: number} | null>(null);
@@ -579,23 +623,48 @@ export default function CandyGamePage() {
     });
 
     for (let col = 0; col < GRID_SIZE; col++) {
+      for (let row = GRID_SIZE - 1; row >= 0; row--) {
+        const candy = newGrid[row][col];
+        if (candy.ingredient && row === GRID_SIZE - 1) {
+          setIngredientsDropped(prev => ({
+            ...prev,
+            [candy.ingredient!]: (prev[candy.ingredient!] || 0) + 1
+          }));
+          spawnParticles(row, col, 3, 16, "star");
+          spawnFloatingText("Collected!", row, col, "#22c55e");
+          newGrid[row][col] = { ...candy, ingredient: undefined, colorIndex: -1, isMatched: true };
+        }
+      }
+    }
+
+    for (let col = 0; col < GRID_SIZE; col++) {
       let emptySpaces = 0;
       for (let row = GRID_SIZE - 1; row >= 0; row--) {
-        if (newGrid[row][col].colorIndex === -1) {
+        if (newGrid[row][col].colorIndex === -1 && !newGrid[row][col].ingredient) {
           emptySpaces++;
         } else if (emptySpaces > 0) {
           newGrid[row + emptySpaces][col] = { ...newGrid[row][col], isFalling: true };
-          newGrid[row][col] = { ...newGrid[row][col], colorIndex: -1, isMatched: true };
+          newGrid[row][col] = { ...newGrid[row][col], colorIndex: -1, isMatched: true, ingredient: undefined };
         }
       }
       
       for (let row = emptySpaces - 1; row >= 0; row--) {
-        newGrid[row][col] = createCandy(true);
+        const newCandy = createCandy(true);
+        
+        if (row === 0 && levelIngredients.length > 0 && ingredientSpawnIndex < levelIngredients.length) {
+          const nextIngredient = levelIngredients[ingredientSpawnIndex];
+          if (nextIngredient && col === nextIngredient.col) {
+            newCandy.ingredient = nextIngredient.type;
+            setIngredientSpawnIndex(prev => prev + 1);
+          }
+        }
+        
+        newGrid[row][col] = newCandy;
       }
     }
     
     return newGrid;
-  }, [activateSpecialCandy, createCandy, getNextId, spawnParticles, triggerScreenShake]);
+  }, [activateSpecialCandy, createCandy, getNextId, spawnParticles, spawnFloatingText, triggerScreenShake, levelIngredients, ingredientSpawnIndex]);
 
   const processMatches = useCallback(async (currentGrid: Candy[][]): Promise<Candy[][]> => {
     let grid = currentGrid;
@@ -855,6 +924,9 @@ export default function CandyGamePage() {
     setObjectives(levelData.objectives.map(o => ({ ...o, current: 0 })));
     setTotalCleared({});
     setBlockersCleared({ ice: 0, chocolate: 0, jelly: 0, licorice: 0 });
+    setIngredientsDropped({ cherry: 0, hazelnut: 0 });
+    setLevelIngredients(levelData.ingredients || []);
+    setIngredientSpawnIndex(0);
     setGrid(initializeGrid(levelData.blockers));
     setParticles([]);
     setFloatingTexts([]);
@@ -900,6 +972,9 @@ export default function CandyGamePage() {
   useEffect(() => {
     if (gameScreen !== "playing" || objectives.length === 0) return;
     
+    const totalBlockersCleared = (blockersCleared.ice || 0) + (blockersCleared.chocolate || 0) + (blockersCleared.jelly || 0) + (blockersCleared.licorice || 0);
+    const totalCandiesCleared = Object.values(totalCleared).reduce((a, b) => a + b, 0);
+    
     const allObjectivesMet = objectives.every(obj => {
       if (obj.type === "score") return score >= obj.target;
       if (obj.type === "clear-color" && obj.colorIndex !== undefined) {
@@ -908,6 +983,13 @@ export default function CandyGamePage() {
       if (obj.type === "clear-jelly") return (blockersCleared.jelly || 0) >= obj.target;
       if (obj.type === "clear-ice") return (blockersCleared.ice || 0) >= obj.target;
       if (obj.type === "clear-chocolate") return (blockersCleared.chocolate || 0) >= obj.target;
+      if (obj.type === "clear-blockers") return totalBlockersCleared >= obj.target;
+      if (obj.type === "collect-candies" && obj.colorIndex !== undefined) {
+        return (totalCleared[obj.colorIndex] || 0) >= obj.target;
+      }
+      if (obj.type === "drop-ingredients" && obj.ingredientType) {
+        return (ingredientsDropped[obj.ingredientType] || 0) >= obj.target;
+      }
       return false;
     });
     
@@ -916,7 +998,7 @@ export default function CandyGamePage() {
     } else if (moves <= 0) {
       setGameScreen("game-over");
     }
-  }, [score, moves, objectives, totalCleared, blockersCleared, gameScreen]);
+  }, [score, moves, objectives, totalCleared, blockersCleared, ingredientsDropped, gameScreen]);
 
   useEffect(() => {
     if (gameScreen !== "playing" || isAnimating) return;
@@ -1223,18 +1305,22 @@ export default function CandyGamePage() {
           </div>
           <div className="space-y-2">
             {objectives.map((obj, idx) => {
+              const totalBlockersCount = (blockersCleared.ice || 0) + (blockersCleared.chocolate || 0) + (blockersCleared.jelly || 0) + (blockersCleared.licorice || 0);
               let current = 0;
               if (obj.type === "score") current = score;
               else if (obj.type === "clear-color" && obj.colorIndex !== undefined) current = totalCleared[obj.colorIndex] || 0;
+              else if (obj.type === "collect-candies" && obj.colorIndex !== undefined) current = totalCleared[obj.colorIndex] || 0;
               else if (obj.type === "clear-jelly") current = blockersCleared.jelly || 0;
               else if (obj.type === "clear-ice") current = blockersCleared.ice || 0;
               else if (obj.type === "clear-chocolate") current = blockersCleared.chocolate || 0;
+              else if (obj.type === "clear-blockers") current = totalBlockersCount;
+              else if (obj.type === "drop-ingredients" && obj.ingredientType) current = ingredientsDropped[obj.ingredientType] || 0;
               
               const isComplete = current >= obj.target;
               return (
                 <div key={idx} className="flex items-center gap-2">
                   {obj.type === "score" && <Star className={`h-4 w-4 ${isComplete ? 'text-green-400' : 'text-yellow-400'}`} />}
-                  {obj.type === "clear-color" && obj.colorIndex !== undefined && (
+                  {(obj.type === "clear-color" || obj.type === "collect-candies") && obj.colorIndex !== undefined && (
                     <div className={`w-4 h-4 rounded-full bg-gradient-to-br ${CANDY_TYPES[obj.colorIndex].gradient} ${isComplete ? 'ring-2 ring-green-400' : ''}`} />
                   )}
                   {obj.type === "clear-jelly" && (
@@ -1245,6 +1331,12 @@ export default function CandyGamePage() {
                   )}
                   {obj.type === "clear-chocolate" && (
                     <div className={`w-4 h-4 rounded bg-gradient-to-br from-amber-700 to-amber-900 ${isComplete ? 'ring-2 ring-green-400' : ''}`} />
+                  )}
+                  {obj.type === "clear-blockers" && (
+                    <div className={`w-4 h-4 rounded bg-gradient-to-br from-gray-500 to-gray-700 ${isComplete ? 'ring-2 ring-green-400' : ''}`} />
+                  )}
+                  {obj.type === "drop-ingredients" && (
+                    <div className={`w-4 h-4 rounded-full ${obj.ingredientType === "cherry" ? 'bg-gradient-to-br from-red-400 to-red-600' : 'bg-gradient-to-br from-amber-600 to-amber-800'} ${isComplete ? 'ring-2 ring-green-400' : ''}`} />
                   )}
                   <div className="flex-1 h-3 bg-black/30 rounded-full overflow-hidden">
                     <div 
@@ -1314,7 +1406,7 @@ export default function CandyGamePage() {
                   const candyType = CANDY_TYPES[candy.colorIndex];
                   const swapTransform = getSwapTransform(rowIndex, colIndex);
                   const blocker = blockerGrid[rowIndex]?.[colIndex];
-                  const isBlockedCell = blocker && (blocker.type === "chocolate" || blocker.type === "licorice");
+                  const isBlockedCell = !!(blocker && (blocker.type === "chocolate" || blocker.type === "licorice"));
                   
                   return (
                     <button
@@ -1390,6 +1482,19 @@ export default function CandyGamePage() {
                               {blocker.layers >= 2 && (
                                 <div className="absolute inset-1 border border-white/40 rounded-lg" />
                               )}
+                            </div>
+                          )}
+                          
+                          {candy.ingredient && (
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <div className={`w-3/4 h-3/4 rounded-full ${
+                                candy.ingredient === "cherry" 
+                                  ? 'bg-gradient-to-br from-red-400 via-red-500 to-red-700 shadow-lg shadow-red-500/50' 
+                                  : 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-800 shadow-lg shadow-amber-500/50'
+                              }`}>
+                                <div className="absolute top-1 left-1/2 w-1 h-2 bg-green-600 rounded-full -translate-x-1/2" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent rounded-full" />
+                              </div>
                             </div>
                           )}
                         </div>
