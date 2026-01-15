@@ -17,7 +17,11 @@ import {
   Heart,
   Lightbulb,
   Shuffle,
-  ChevronRight
+  ChevronRight,
+  Gift,
+  Hammer,
+  Candy,
+  MapPin
 } from "lucide-react";
 
 const GRID_SIZE = 8;
@@ -235,6 +239,16 @@ export default function CandyGamePage() {
   const [dragStart, setDragStart] = useState<{pos: Position, x: number, y: number} | null>(null);
   const [highScores, setHighScores] = useState<Record<number, { score: number; stars: number }>>({});
   const [lastMoveTime, setLastMoveTime] = useState(Date.now());
+  
+  const [lives, setLives] = useState(5);
+  const [maxLives] = useState(5);
+  const [lastLifeTime, setLastLifeTime] = useState(Date.now());
+  const [boosters, setBoosters] = useState({ hammer: 3, shuffle: 2, lollipop: 1 });
+  const [coins, setCoins] = useState(500);
+  const [dailyRewardClaimed, setDailyRewardClaimed] = useState(false);
+  const [dailyStreak, setDailyStreak] = useState(1);
+  const [showDailyReward, setShowDailyReward] = useState(false);
+  const [selectedBooster, setSelectedBooster] = useState<"hammer" | "lollipop" | null>(null);
   
   const boardRef = useRef<HTMLDivElement>(null);
   const idCounterRef = useRef(0);
@@ -752,8 +766,105 @@ export default function CandyGamePage() {
 
       if (hasSpecial) {
         let specialActivated = false;
+        const colorsCounted: Record<number, number> = {};
 
-        if (candy1.special === "color-bomb" || candy2.special === "color-bomb") {
+        const isStriped = (s: SpecialType) => s === "striped-h" || s === "striped-v";
+
+        if (candy1.special === "color-bomb" && candy2.special === "color-bomb") {
+          triggerScreenShake(15);
+          spawnFloatingText("MEGA BLAST!", pos1.row, pos1.col, "#ff0000");
+          
+          for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+              if (newGrid[r][c].colorIndex !== -1) {
+                spawnParticles(r, c, newGrid[r][c].colorIndex, 16, "explosion");
+                colorsCounted[newGrid[r][c].colorIndex] = (colorsCounted[newGrid[r][c].colorIndex] || 0) + 1;
+                newGrid[r][c] = { ...newGrid[r][c], colorIndex: -1, isMatched: true, special: "none" };
+              }
+            }
+          }
+          setScore(prev => prev + 5000);
+          specialActivated = true;
+        }
+        else if ((candy1.special === "color-bomb" && isStriped(candy2.special)) || 
+                 (candy2.special === "color-bomb" && isStriped(candy1.special))) {
+          const stripedCandy = isStriped(candy1.special) ? candy1 : candy2;
+          const targetColor = stripedCandy.colorIndex;
+          
+          triggerScreenShake(12);
+          spawnFloatingText("Striped Storm!", pos1.row, pos1.col, "#00ffff");
+          
+          for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+              if (newGrid[r][c].colorIndex === targetColor) {
+                for (let cc = 0; cc < GRID_SIZE; cc++) {
+                  if (newGrid[r][cc].colorIndex !== -1) {
+                    spawnParticles(r, cc, newGrid[r][cc].colorIndex, 8, "explosion");
+                    colorsCounted[newGrid[r][cc].colorIndex] = (colorsCounted[newGrid[r][cc].colorIndex] || 0) + 1;
+                    newGrid[r][cc] = { ...newGrid[r][cc], colorIndex: -1, isMatched: true, special: "none" };
+                  }
+                }
+                for (let rr = 0; rr < GRID_SIZE; rr++) {
+                  if (newGrid[rr][c].colorIndex !== -1) {
+                    spawnParticles(rr, c, newGrid[rr][c].colorIndex, 8, "explosion");
+                    colorsCounted[newGrid[rr][c].colorIndex] = (colorsCounted[newGrid[rr][c].colorIndex] || 0) + 1;
+                    newGrid[rr][c] = { ...newGrid[rr][c], colorIndex: -1, isMatched: true, special: "none" };
+                  }
+                }
+              }
+            }
+          }
+          newGrid[pos1.row][pos1.col] = { ...candy1, colorIndex: -1, isMatched: true, special: "none" };
+          newGrid[pos2.row][pos2.col] = { ...candy2, colorIndex: -1, isMatched: true, special: "none" };
+          setScore(prev => prev + 3000);
+          specialActivated = true;
+        }
+        else if (isStriped(candy1.special) && isStriped(candy2.special)) {
+          triggerScreenShake(10);
+          spawnFloatingText("Cross Blast!", pos1.row, pos1.col, "#22d3ee");
+          
+          const centerRow = pos1.row;
+          const centerCol = pos1.col;
+          
+          for (let c = 0; c < GRID_SIZE; c++) {
+            if (newGrid[centerRow][c].colorIndex !== -1) {
+              spawnParticles(centerRow, c, newGrid[centerRow][c].colorIndex, 10, "explosion");
+              colorsCounted[newGrid[centerRow][c].colorIndex] = (colorsCounted[newGrid[centerRow][c].colorIndex] || 0) + 1;
+              newGrid[centerRow][c] = { ...newGrid[centerRow][c], colorIndex: -1, isMatched: true, special: "none" };
+            }
+          }
+          for (let r = 0; r < GRID_SIZE; r++) {
+            if (newGrid[r][centerCol].colorIndex !== -1) {
+              spawnParticles(r, centerCol, newGrid[r][centerCol].colorIndex, 10, "explosion");
+              colorsCounted[newGrid[r][centerCol].colorIndex] = (colorsCounted[newGrid[r][centerCol].colorIndex] || 0) + 1;
+              newGrid[r][centerCol] = { ...newGrid[r][centerCol], colorIndex: -1, isMatched: true, special: "none" };
+            }
+          }
+          setScore(prev => prev + 2000);
+          specialActivated = true;
+        }
+        else if (candy1.special === "wrapped" && candy2.special === "wrapped") {
+          triggerScreenShake(12);
+          spawnFloatingText("MEGA Wrapped!", pos1.row, pos1.col, "#a855f7");
+          
+          const centerRow = pos1.row;
+          const centerCol = pos1.col;
+          
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              const r = centerRow + dr;
+              const c = centerCol + dc;
+              if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE && newGrid[r][c].colorIndex !== -1) {
+                spawnParticles(r, c, newGrid[r][c].colorIndex, 12, "explosion");
+                colorsCounted[newGrid[r][c].colorIndex] = (colorsCounted[newGrid[r][c].colorIndex] || 0) + 1;
+                newGrid[r][c] = { ...newGrid[r][c], colorIndex: -1, isMatched: true, special: "none" };
+              }
+            }
+          }
+          setScore(prev => prev + 2500);
+          specialActivated = true;
+        }
+        else if (candy1.special === "color-bomb" || candy2.special === "color-bomb") {
           const bombCandy = candy1.special === "color-bomb" ? candy1 : candy2;
           const bombPos = candy1.special === "color-bomb" ? pos1 : pos2;
           const targetCandy = candy1.special === "color-bomb" ? candy2 : candy1;
@@ -761,7 +872,6 @@ export default function CandyGamePage() {
           triggerScreenShake(10);
           spawnFloatingText("Color Bomb!", bombPos.row, bombPos.col, "#fbbf24");
 
-          const colorsCounted: Record<number, number> = {};
           for (let r = 0; r < GRID_SIZE; r++) {
             for (let c = 0; c < GRID_SIZE; c++) {
               if (newGrid[r][c].colorIndex === targetCandy.colorIndex) {
@@ -772,22 +882,14 @@ export default function CandyGamePage() {
             }
           }
           newGrid[bombPos.row][bombPos.col] = { ...bombCandy, colorIndex: -1, isMatched: true, special: "none" };
-
-          setTotalCleared(prev => {
-            const updated = { ...prev };
-            for (const [color, count] of Object.entries(colorsCounted)) {
-              updated[Number(color)] = (updated[Number(color)] || 0) + count;
-            }
-            return updated;
-          });
           setScore(prev => prev + Object.values(colorsCounted).reduce((a, b) => a + b, 0) * 100);
           specialActivated = true;
         }
-
-        if ((candy1.special === "striped-h" || candy1.special === "striped-v") && !specialActivated) {
+        else if (isStriped(candy1.special)) {
           const affected = activateSpecialCandy(newGrid, pos1.row, pos1.col);
           for (const aPos of affected) {
             spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 8);
+            colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] = (colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] || 0) + 1;
             newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
           }
           newGrid[pos1.row][pos1.col] = { ...candy1, colorIndex: -1, isMatched: true, special: "none" };
@@ -795,11 +897,11 @@ export default function CandyGamePage() {
           spawnFloatingText("Striped!", pos1.row, pos1.col, "#22d3ee");
           specialActivated = true;
         }
-
-        if ((candy2.special === "striped-h" || candy2.special === "striped-v") && !specialActivated) {
+        else if (isStriped(candy2.special)) {
           const affected = activateSpecialCandy(newGrid, pos2.row, pos2.col);
           for (const aPos of affected) {
             spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 8);
+            colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] = (colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] || 0) + 1;
             newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
           }
           newGrid[pos2.row][pos2.col] = { ...candy2, colorIndex: -1, isMatched: true, special: "none" };
@@ -807,11 +909,11 @@ export default function CandyGamePage() {
           spawnFloatingText("Striped!", pos2.row, pos2.col, "#22d3ee");
           specialActivated = true;
         }
-
-        if (candy1.special === "wrapped" && !specialActivated) {
+        else if (candy1.special === "wrapped") {
           const affected = activateSpecialCandy(newGrid, pos1.row, pos1.col);
           for (const aPos of affected) {
             spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 10, "explosion");
+            colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] = (colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] || 0) + 1;
             newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
           }
           newGrid[pos1.row][pos1.col] = { ...candy1, colorIndex: -1, isMatched: true, special: "none" };
@@ -819,11 +921,11 @@ export default function CandyGamePage() {
           spawnFloatingText("Wrapped!", pos1.row, pos1.col, "#a855f7");
           specialActivated = true;
         }
-
-        if (candy2.special === "wrapped" && !specialActivated) {
+        else if (candy2.special === "wrapped") {
           const affected = activateSpecialCandy(newGrid, pos2.row, pos2.col);
           for (const aPos of affected) {
             spawnParticles(aPos.row, aPos.col, newGrid[aPos.row][aPos.col].colorIndex, 10, "explosion");
+            colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] = (colorsCounted[newGrid[aPos.row][aPos.col].colorIndex] || 0) + 1;
             newGrid[aPos.row][aPos.col] = { ...newGrid[aPos.row][aPos.col], colorIndex: -1, isMatched: true, special: "none" };
           }
           newGrid[pos2.row][pos2.col] = { ...candy2, colorIndex: -1, isMatched: true, special: "none" };
@@ -833,6 +935,13 @@ export default function CandyGamePage() {
         }
 
         if (specialActivated) {
+          setTotalCleared(prev => {
+            const updated = { ...prev };
+            for (const [color, count] of Object.entries(colorsCounted)) {
+              updated[Number(color)] = (updated[Number(color)] || 0) + count;
+            }
+            return updated;
+          });
           setGrid(newGrid);
           await new Promise(resolve => setTimeout(resolve, 300));
           await processMatches(newGrid);
@@ -966,7 +1075,84 @@ export default function CandyGamePage() {
   };
 
   const retryLevel = () => {
-    startLevel(level);
+    if (lives > 0) {
+      setLives(prev => prev - 1);
+      startLevel(level);
+    }
+  };
+
+  const useHammer = (row: number, col: number) => {
+    if (boosters.hammer <= 0 || isAnimating || gameScreen !== "playing") return;
+    
+    const newGrid = grid.map(r => r.map(c => ({ ...c })));
+    if (newGrid[row][col].colorIndex !== -1) {
+      spawnParticles(row, col, newGrid[row][col].colorIndex, 16, "explosion");
+      newGrid[row][col] = { ...newGrid[row][col], colorIndex: -1, isMatched: true, special: "none" };
+      setBoosters(prev => ({ ...prev, hammer: prev.hammer - 1 }));
+      setGrid(newGrid);
+      setSelectedBooster(null);
+      processMatches(newGrid);
+    }
+  };
+
+  const useLollipop = (row: number, col: number) => {
+    if (boosters.lollipop <= 0 || isAnimating || gameScreen !== "playing") return;
+    
+    const newGrid = grid.map(r => r.map(c => ({ ...c })));
+    const candy = newGrid[row][col];
+    if (candy.colorIndex !== -1 && candy.special === "none") {
+      newGrid[row][col] = { ...candy, special: "color-bomb" };
+      setBoosters(prev => ({ ...prev, lollipop: prev.lollipop - 1 }));
+      setGrid(newGrid);
+      setSelectedBooster(null);
+      spawnFloatingText("Color Bomb!", row, col, "#fbbf24");
+    }
+  };
+
+  const useShuffleBooster = () => {
+    if (boosters.shuffle <= 0 || isAnimating || gameScreen !== "playing") return;
+    setBoosters(prev => ({ ...prev, shuffle: prev.shuffle - 1 }));
+    shuffleBoard();
+  };
+
+  const claimDailyReward = () => {
+    if (dailyRewardClaimed) return;
+    
+    const rewards = [
+      { coins: 100, lives: 1 },
+      { coins: 150, lives: 1 },
+      { coins: 200, lives: 2 },
+      { coins: 250, lives: 2 },
+      { coins: 300, lives: 3, boosters: { hammer: 1 } },
+      { coins: 400, lives: 3, boosters: { shuffle: 1 } },
+      { coins: 500, lives: 5, boosters: { hammer: 1, lollipop: 1 } },
+    ];
+    
+    const reward = rewards[Math.min(dailyStreak - 1, rewards.length - 1)];
+    
+    setCoins(prev => prev + reward.coins);
+    setLives(prev => Math.min(prev + reward.lives, maxLives));
+    if (reward.boosters) {
+      setBoosters(prev => ({
+        hammer: prev.hammer + (reward.boosters.hammer || 0),
+        shuffle: prev.shuffle + (reward.boosters.shuffle || 0),
+        lollipop: prev.lollipop + (reward.boosters.lollipop || 0),
+      }));
+    }
+    
+    setDailyRewardClaimed(true);
+    setDailyStreak(prev => prev + 1);
+    setShowDailyReward(false);
+  };
+
+  const handleCandyClickWithBooster = (row: number, col: number) => {
+    if (selectedBooster === "hammer") {
+      useHammer(row, col);
+    } else if (selectedBooster === "lollipop") {
+      useLollipop(row, col);
+    } else {
+      handleCandyClick(row, col);
+    }
   };
 
   useEffect(() => {
@@ -1082,37 +1268,115 @@ export default function CandyGamePage() {
 
   if (gameScreen === "menu") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-8 px-4 flex flex-col items-center justify-center">
-        <div className="text-center mb-8">
-          <h1 className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-red-500 to-purple-500 drop-shadow-lg mb-2" data-testid="text-game-title">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-4 px-4 flex flex-col">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 bg-red-500/30 px-3 py-1.5 rounded-full border border-red-400/50">
+              <Heart className="w-5 h-5 text-red-400 fill-red-400" />
+              <span className="text-white font-bold">{lives}/{maxLives}</span>
+            </div>
+            <div className="flex items-center gap-1 bg-yellow-500/30 px-3 py-1.5 rounded-full border border-yellow-400/50">
+              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+              <span className="text-white font-bold">{coins}</span>
+            </div>
+          </div>
+          
+          {!dailyRewardClaimed && (
+            <Button
+              onClick={() => setShowDailyReward(true)}
+              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-xl animate-pulse"
+              data-testid="button-daily-reward"
+            >
+              <Gift className="w-5 h-5 mr-2" />
+              Day {dailyStreak}
+            </Button>
+          )}
+        </div>
+
+        {showDailyReward && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-sm bg-gradient-to-br from-purple-800 to-indigo-900 border-purple-500/50">
+              <CardHeader className="text-center">
+                <Gift className="w-16 h-16 mx-auto text-yellow-400 mb-2" />
+                <CardTitle className="text-2xl text-white">Daily Reward!</CardTitle>
+                <p className="text-purple-200">Day {dailyStreak} Streak</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <Star className="w-8 h-8 mx-auto text-yellow-400 fill-yellow-400" />
+                    <p className="text-white font-bold mt-1">{100 + dailyStreak * 50}</p>
+                    <p className="text-xs text-purple-200">Coins</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <Heart className="w-8 h-8 mx-auto text-red-400 fill-red-400" />
+                    <p className="text-white font-bold mt-1">{Math.min(dailyStreak, 3)}</p>
+                    <p className="text-xs text-purple-200">Lives</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-3">
+                    <Hammer className="w-8 h-8 mx-auto text-amber-400" />
+                    <p className="text-white font-bold mt-1">{dailyStreak >= 5 ? 1 : 0}</p>
+                    <p className="text-xs text-purple-200">Booster</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={claimDailyReward}
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white h-12 text-lg font-bold rounded-xl"
+                  data-testid="button-claim-reward"
+                >
+                  Claim Reward!
+                </Button>
+                <Button
+                  onClick={() => setShowDailyReward(false)}
+                  variant="ghost"
+                  className="w-full text-purple-300"
+                >
+                  Maybe Later
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <div className="text-center mb-4">
+          <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-red-500 to-purple-500 drop-shadow-lg mb-1" data-testid="text-game-title">
             Candy Rush Saga
           </h1>
-          <p className="text-pink-200 text-lg">Sweetest Puzzle Adventure!</p>
+          <p className="text-pink-200 text-sm">Sweetest Puzzle Adventure!</p>
         </div>
-        
-        <div className="w-full max-w-md space-y-3">
-          <h2 className="text-white text-xl font-bold text-center mb-4">Select Level</h2>
-          {LEVELS.map((lvl, idx) => {
-            const hs = highScores[lvl.level];
-            return (
-              <Button
-                key={lvl.level}
-                onClick={() => startLevel(lvl.level)}
-                className="w-full h-16 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-2xl flex items-center justify-between px-6"
-                data-testid={`button-level-${lvl.level}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-black text-xl">
-                    {lvl.level}
+
+        <div className="flex-1 overflow-auto">
+          <div className="relative w-full max-w-md mx-auto py-4">
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-500/50 via-purple-500/50 to-indigo-500/50 -translate-x-1/2 rounded-full" />
+            
+            <div className="space-y-4">
+              {LEVELS.map((lvl, idx) => {
+                const hs = highScores[lvl.level];
+                const isUnlocked = lvl.level === 1 || highScores[lvl.level - 1]?.stars > 0;
+                const isLeft = idx % 2 === 0;
+                
+                return (
+                  <div key={lvl.level} className={`flex items-center ${isLeft ? 'justify-start' : 'justify-end'}`}>
+                    <div className={`relative ${isLeft ? 'ml-4' : 'mr-4'}`}>
+                      <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-4 h-4 rounded-full bg-purple-400 border-2 border-white" style={{ left: isLeft ? 'calc(100% + 20px)' : '-20px' }} />
+                      
+                      <Button
+                        onClick={() => isUnlocked && lives > 0 && startLevel(lvl.level)}
+                        disabled={!isUnlocked || lives <= 0}
+                        className={`w-20 h-20 rounded-full flex flex-col items-center justify-center p-2 ${
+                          isUnlocked 
+                            ? 'bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white shadow-lg shadow-purple-500/50' 
+                            : 'bg-gray-600 text-gray-400'
+                        }`}
+                        data-testid={`button-level-${lvl.level}`}
+                      >
+                        <MapPin className="w-4 h-4 mb-1" />
+                        <span className="font-black text-xl">{lvl.level}</span>
+                        {hs && <div className="flex gap-0.5 mt-0.5">{renderStars(hs.stars, "sm")}</div>}
+                      </Button>
+                    </div>
                   </div>
-                  <span className="font-bold text-lg">Level {lvl.level}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hs && renderStars(hs.stars)}
-                  <ChevronRight className="w-5 h-5" />
-                </div>
-              </Button>
-            );
+                );
           })}
         </div>
       </div>
