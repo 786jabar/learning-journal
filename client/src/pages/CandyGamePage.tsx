@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -1659,6 +1659,13 @@ export default function CandyGamePage() {
           0% { filter: hue-rotate(0deg); }
           100% { filter: hue-rotate(360deg); }
         }
+        @keyframes confetti {
+          0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(720deg) scale(0.5); opacity: 0; }
+        }
+        .animate-confetti {
+          animation: confetti 3s ease-out infinite;
+        }
         .candy-selected {
           animation: candyBounce 0.4s ease-in-out infinite;
         }
@@ -1696,49 +1703,65 @@ export default function CandyGamePage() {
       <div 
         className={`max-w-lg mx-auto transition-transform ${screenShake ? 'screen-shake' : ''}`}
       >
-        <div className="text-center mb-4">
-          <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-red-500 to-purple-500 drop-shadow-lg" data-testid="text-game-title">
-            Candy Rush Saga
-          </h1>
-          <p className="text-pink-100/80 text-sm font-medium">Level {level}</p>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="bg-gradient-to-br from-purple-600/50 to-purple-800/50 backdrop-blur-xl rounded-2xl p-3 border border-purple-400/40 text-center shadow-lg shadow-purple-500/20">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Star className="h-4 w-4 text-yellow-400" />
-              <span className="text-xs text-purple-200 uppercase tracking-wide font-semibold">Score</span>
+        <div className="relative bg-black/40 backdrop-blur-xl rounded-3xl p-4 mb-4 border border-white/10 shadow-2xl">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
+          
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 flex items-center justify-center shadow-lg shadow-pink-500/30 border border-white/20">
+                <span className="font-black text-xl text-white">{level}</span>
+              </div>
+              <div>
+                <p className="text-white font-bold text-lg leading-tight">Level {level}</p>
+                <p className="text-purple-300/80 text-xs">Candy Rush</p>
+              </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-white tabular-nums" data-testid="text-score">
-              {score.toLocaleString()}
+            
+            <div className="flex items-center gap-3">
+              <div className="text-center">
+                <div className={`flex items-center gap-1 px-3 py-1.5 rounded-xl ${moves <= 5 ? 'bg-red-500/30 border-red-400/50' : 'bg-amber-500/30 border-amber-400/50'} border`}>
+                  <Zap className={`h-5 w-5 ${moves <= 5 ? 'text-red-400' : 'text-amber-400'}`} />
+                  <span className={`font-black text-xl tabular-nums ${moves <= 5 ? 'text-red-400 animate-pulse' : 'text-amber-400'}`} data-testid="text-moves">
+                    {moves}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-amber-600/50 to-orange-800/50 backdrop-blur-xl rounded-2xl p-3 border border-amber-400/40 text-center shadow-lg shadow-amber-500/20">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Zap className="h-4 w-4 text-amber-400" />
-              <span className="text-xs text-amber-200 uppercase tracking-wide font-semibold">Moves</span>
+          <div className="flex items-center gap-3 bg-black/30 rounded-2xl p-2">
+            <Star className="h-5 w-5 text-yellow-400 fill-yellow-400 flex-shrink-0" />
+            <div className="flex-1">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-purple-200 font-medium">Score</span>
+                <span className="text-sm font-black text-white tabular-nums" data-testid="text-score">{score.toLocaleString()}</span>
+              </div>
+              <div className="h-2 bg-black/40 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${Math.min(100, (score / (objectives.find(o => o.type === 'score')?.target || 10000)) * 100)}%` }}
+                />
+              </div>
             </div>
-            <div className={`text-2xl sm:text-3xl font-black tabular-nums ${moves <= 5 ? 'text-red-400 animate-pulse' : 'text-amber-400'}`} data-testid="text-moves">
-              {moves}
-            </div>
-          </div>
-          
-          <div className="bg-gradient-to-br from-emerald-600/50 to-green-800/50 backdrop-blur-xl rounded-2xl p-3 border border-emerald-400/40 text-center shadow-lg shadow-emerald-500/20">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Trophy className="h-4 w-4 text-emerald-400" />
-              <span className="text-xs text-emerald-200 uppercase tracking-wide font-semibold">Level</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-emerald-400" data-testid="text-level">
-              {level}
+            <div className="flex gap-0.5">
+              {[1, 2, 3].map((s) => (
+                <Star 
+                  key={s} 
+                  className={`h-4 w-4 transition-all duration-300 ${
+                    calculateStars() >= s 
+                      ? 'text-yellow-400 fill-yellow-400 scale-110' 
+                      : 'text-gray-600'
+                  }`} 
+                />
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-purple-600/40 to-pink-600/40 backdrop-blur-xl rounded-2xl p-3 mb-4 border border-white/20 shadow-lg">
+        <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-3 mb-4 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2 mb-2">
-            <Target className="h-4 w-4 text-pink-300" />
-            <span className="text-pink-200 text-xs uppercase tracking-wide font-semibold">Objectives</span>
+            <Target className="h-4 w-4 text-pink-400" />
+            <span className="text-pink-300 text-xs uppercase tracking-widest font-bold">Goals</span>
           </div>
           <div className="space-y-2">
             {objectives.map((obj, idx) => {
@@ -1790,74 +1813,74 @@ export default function CandyGamePage() {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-2">
+        <div className="flex justify-between items-center gap-2 mb-4 bg-black/20 backdrop-blur-sm rounded-2xl p-2 border border-white/5">
+          <div className="flex gap-1.5">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={() => setGameScreen("paused")}
-              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              className="bg-white/10 border border-white/20 text-white"
               data-testid="button-pause"
             >
-              <Pause className="h-4 w-4" />
+              <Pause className="h-5 w-5" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={retryLevel}
-              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              className="bg-white/10 border border-white/20 text-white"
               data-testid="button-reset"
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="h-5 w-5" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={() => setIsMuted(!isMuted)}
-              className="bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              className="bg-white/10 border border-white/20 text-white"
               data-testid="button-mute"
             >
-              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
             </Button>
           </div>
           
           <div className="flex gap-2">
             <Button
-              variant="outline"
-              size="sm"
+              variant={selectedBooster === "hammer" ? "default" : "outline"}
+              size="icon"
               onClick={() => setSelectedBooster(selectedBooster === "hammer" ? null : "hammer")}
               disabled={boosters.hammer <= 0}
-              className={`relative ${selectedBooster === "hammer" ? 'bg-amber-500/50 border-amber-400' : 'bg-white/10 border-white/30'} text-white backdrop-blur-sm`}
+              className={`relative ${selectedBooster === "hammer" ? 'bg-amber-500 text-white' : 'bg-white/10 border-white/20 text-white'}`}
               data-testid="button-booster-hammer"
             >
-              <Hammer className="h-4 w-4" />
-              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-amber-500 text-white">
+              <Hammer className="h-5 w-5" />
+              <Badge className="absolute -top-2 -right-2 h-5 min-w-[20px] p-0 flex items-center justify-center text-[10px] bg-amber-500 text-white">
                 {boosters.hammer}
               </Badge>
             </Button>
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={useShuffleBooster}
               disabled={boosters.shuffle <= 0}
-              className="relative bg-white/10 border-white/30 text-white backdrop-blur-sm"
+              className="relative bg-white/10 border-white/20 text-white"
               data-testid="button-booster-shuffle"
             >
-              <Shuffle className="h-4 w-4" />
-              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-green-500 text-white">
+              <Shuffle className="h-5 w-5" />
+              <Badge className="absolute -top-2 -right-2 h-5 min-w-[20px] p-0 flex items-center justify-center text-[10px] bg-green-500 text-white">
                 {boosters.shuffle}
               </Badge>
             </Button>
             <Button
-              variant="outline"
-              size="sm"
+              variant={selectedBooster === "lollipop" ? "default" : "outline"}
+              size="icon"
               onClick={() => setSelectedBooster(selectedBooster === "lollipop" ? null : "lollipop")}
               disabled={boosters.lollipop <= 0}
-              className={`relative ${selectedBooster === "lollipop" ? 'bg-purple-500/50 border-purple-400' : 'bg-white/10 border-white/30'} text-white backdrop-blur-sm`}
+              className={`relative ${selectedBooster === "lollipop" ? 'bg-purple-500 text-white' : 'bg-white/10 border-white/20 text-white'}`}
               data-testid="button-booster-lollipop"
             >
-              <Candy className="h-4 w-4" />
-              <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-purple-500 text-white">
+              <Candy className="h-5 w-5" />
+              <Badge className="absolute -top-2 -right-2 h-5 min-w-[20px] p-0 flex items-center justify-center text-[10px] bg-purple-500 text-white">
                 {boosters.lollipop}
               </Badge>
             </Button>
@@ -1873,13 +1896,15 @@ export default function CandyGamePage() {
         )}
 
         <div className="relative">
-          <div className="absolute -inset-2 bg-gradient-to-br from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl" />
+          <div className="absolute -inset-3 bg-gradient-to-br from-pink-500/40 via-purple-500/40 to-indigo-500/40 rounded-[2rem] blur-2xl animate-pulse" style={{ animationDuration: '3s' }} />
+          <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-[1.75rem] blur-lg" />
           
           <div 
             ref={boardRef}
-            className="relative bg-gradient-to-br from-indigo-800/90 to-purple-900/90 backdrop-blur-xl rounded-3xl p-2 sm:p-3 border-4 border-purple-400/60 board-glow shadow-2xl shadow-purple-500/30"
+            className="relative bg-gradient-to-br from-indigo-900/95 via-purple-900/95 to-indigo-950/95 backdrop-blur-xl rounded-[1.5rem] p-2 sm:p-3 border-2 border-purple-300/40 shadow-[0_0_60px_rgba(168,85,247,0.4),inset_0_1px_0_rgba(255,255,255,0.1),inset_0_-2px_10px_rgba(0,0,0,0.3)]"
           >
-            <div className="absolute inset-2 rounded-2xl border border-white/10 pointer-events-none" />
+            <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-2 rounded-[1.25rem] border border-white/5 pointer-events-none" />
             
             <div 
               className="grid gap-1 relative touch-none"
@@ -1909,7 +1934,7 @@ export default function CandyGamePage() {
                         }
                       }}
                       disabled={isAnimating || gameScreen !== "playing" || isBlockedCell}
-                      className="aspect-square p-0.5 sm:p-1 relative touch-none"
+                      className="aspect-square p-[2px] sm:p-[3px] relative touch-none bg-black/20 rounded-lg"
                       style={{ transform: swapTransform, transition: swapTransform ? 'transform 0.2s ease-in-out' : 'none' }}
                       data-testid={`button-candy-${rowIndex}-${colIndex}`}
                     >
@@ -2092,41 +2117,88 @@ export default function CandyGamePage() {
         )}
 
         {gameScreen === "level-complete" && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50">
-            <Card className="bg-gradient-to-br from-purple-800/95 to-indigo-900/95 backdrop-blur-xl border-2 border-purple-400/60 p-6 text-center max-w-sm mx-4 rounded-3xl shadow-2xl shadow-purple-500/30">
-              <CardHeader className="pb-2">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(30)].map((_, i) => {
+                const colors = ['#f43f5e', '#f97316', '#eab308', '#22c55e', '#0ea5e9', '#8b5cf6'];
+                const leftPos = ((i * 37) % 100);
+                const delay = (i * 0.1) % 2;
+                const duration = 2 + (i % 3);
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 rounded-full animate-confetti"
+                    style={{
+                      left: `${leftPos}%`,
+                      top: '-10px',
+                      backgroundColor: colors[i % 6],
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${duration}s`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-96 h-96 bg-gradient-radial from-yellow-500/30 via-amber-500/10 to-transparent rounded-full animate-pulse" style={{ animationDuration: '2s' }} />
+            </div>
+            
+            <Card className="relative bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-950/95 backdrop-blur-xl border-2 border-yellow-400/40 p-2 text-center max-w-sm mx-4 rounded-3xl shadow-2xl shadow-yellow-500/30">
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-400/10 via-transparent to-transparent pointer-events-none" />
+              
+              <CardHeader className="pb-2 relative">
                 <CardTitle className="text-3xl sm:text-4xl font-black text-white flex flex-col items-center gap-3">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center animate-bounce shadow-lg shadow-amber-500/50">
-                    <Trophy className="h-12 w-12 text-white" />
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-yellow-400/50 rounded-full blur-xl animate-pulse" />
+                    <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-yellow-300 via-amber-400 to-orange-500 flex items-center justify-center shadow-xl shadow-amber-500/60 border-4 border-yellow-200/50">
+                      <Trophy className="h-12 w-12 text-white drop-shadow-lg" />
+                    </div>
                   </div>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400" style={{ textShadow: '0 0 40px rgba(251, 191, 36, 0.5)' }}>
                     Level Complete!
                   </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 pt-4">
-                {renderStars(calculateStars(), "lg")}
+              <CardContent className="space-y-4 pt-2 relative">
+                <div className="flex justify-center gap-2">
+                  {[1, 2, 3].map((s) => (
+                    <div key={s} className="relative">
+                      {calculateStars() >= s && (
+                        <div className="absolute inset-0 bg-yellow-400/50 rounded-full blur-md animate-pulse" />
+                      )}
+                      <Star 
+                        className={`relative h-10 w-10 transition-all duration-500 ${
+                          calculateStars() >= s 
+                            ? 'text-yellow-400 fill-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]' 
+                            : 'text-gray-600'
+                        }`}
+                        style={{ animationDelay: `${s * 0.2}s` }}
+                      />
+                    </div>
+                  ))}
+                </div>
                 
-                <div className="bg-black/40 rounded-2xl p-4">
-                  <p className="text-purple-200 text-sm mb-1">Final Score</p>
-                  <p className="text-4xl font-black text-white">{score.toLocaleString()}</p>
+                <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+                  <p className="text-purple-300 text-xs uppercase tracking-widest mb-1">Final Score</p>
+                  <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-100 to-white">{score.toLocaleString()}</p>
                 </div>
                 
                 <div className="flex flex-col gap-3">
                   {level < LEVELS.length && (
                     <Button
                       onClick={nextLevel}
-                      className="w-full h-14 text-lg font-bold bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30"
+                      className="w-full h-14 text-lg font-black bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white rounded-2xl shadow-xl shadow-amber-500/40 border-2 border-yellow-300/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
                       data-testid="button-next-level"
                     >
-                      <Sparkles className="h-5 w-5 mr-2" />
-                      Next Level
+                      <Sparkles className="h-6 w-6 mr-2" />
+                      NEXT LEVEL
                     </Button>
                   )}
                   <Button
                     onClick={() => setGameScreen("menu")}
                     variant="ghost"
-                    className="text-purple-300 hover:text-white"
+                    className="text-purple-300/80 hover:text-white font-medium"
                     data-testid="button-back-to-menu-complete"
                   >
                     Back to Levels
