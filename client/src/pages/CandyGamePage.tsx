@@ -238,6 +238,7 @@ export default function CandyGamePage() {
   const [hintPosition, setHintPosition] = useState<Position | null>(null);
   const [showNoMoves, setShowNoMoves] = useState(false);
   const [dragStart, setDragStart] = useState<{pos: Position, x: number, y: number} | null>(null);
+  const [pressedCandy, setPressedCandy] = useState<Position | null>(null);
   const [highScores, setHighScores] = useState<Record<number, { score: number; stars: number }>>({});
   const [lastMoveTime, setLastMoveTime] = useState(Date.now());
   
@@ -1623,9 +1624,25 @@ export default function CandyGamePage() {
           50% { transform: scale(1.15); }
         }
         @keyframes candyPop {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.4); opacity: 0.5; }
+          0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+          15% { transform: scale(1.15); filter: brightness(2); }
+          30% { transform: scale(1.3); opacity: 1; filter: brightness(2.5); box-shadow: 0 0 30px currentColor; }
+          60% { transform: scale(0.8); opacity: 0.8; }
           100% { transform: scale(0); opacity: 0; }
+        }
+        @keyframes candyPress {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.92); }
+          100% { transform: scale(1); }
+        }
+        @keyframes impactRipple {
+          0% { transform: scale(0.5); opacity: 0.8; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+        @keyframes matchFlash {
+          0% { background: transparent; }
+          30% { background: rgba(255,255,255,0.6); }
+          100% { background: transparent; }
         }
         @keyframes candyDrop {
           0% { transform: translateY(-120%); opacity: 0; }
@@ -1670,7 +1687,13 @@ export default function CandyGamePage() {
           animation: candyBounce 0.4s ease-in-out infinite;
         }
         .candy-matched {
-          animation: candyPop 0.25s ease-out forwards;
+          animation: candyPop 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .candy-press {
+          animation: candyPress 0.15s ease-out;
+        }
+        .match-flash {
+          animation: matchFlash 0.2s ease-out;
         }
         .candy-new {
           animation: candyDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -1691,12 +1714,42 @@ export default function CandyGamePage() {
           animation: rainbow 2s linear infinite;
         }
         .screen-shake {
-          animation: shake 0.3s ease-in-out;
+          animation: shake 0.25s cubic-bezier(0.36, 0.07, 0.19, 0.97);
         }
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px) rotate(-1deg); }
-          75% { transform: translateX(5px) rotate(1deg); }
+          0%, 100% { transform: translate(0, 0) rotate(0); }
+          10% { transform: translate(-4px, 2px) rotate(-0.5deg); }
+          20% { transform: translate(4px, -2px) rotate(0.5deg); }
+          30% { transform: translate(-4px, -1px) rotate(-0.3deg); }
+          40% { transform: translate(3px, 2px) rotate(0.3deg); }
+          50% { transform: translate(-3px, 1px) rotate(-0.2deg); }
+          60% { transform: translate(2px, -1px) rotate(0.2deg); }
+          70% { transform: translate(-2px, 0px); }
+          80% { transform: translate(1px, 1px); }
+          90% { transform: translate(-1px, -1px); }
+        }
+        .big-shake {
+          animation: bigShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+        @keyframes bigShake {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          10% { transform: translate(-8px, 4px) scale(1.01) rotate(-1deg); }
+          20% { transform: translate(8px, -3px) scale(0.99) rotate(1deg); }
+          30% { transform: translate(-6px, 2px) rotate(-0.5deg); }
+          40% { transform: translate(6px, -2px) rotate(0.5deg); }
+          50% { transform: translate(-4px, 1px); }
+          60% { transform: translate(4px, 0px); }
+          70% { transform: translate(-2px, 1px); }
+          80% { transform: translate(2px, -1px); }
+          90% { transform: translate(-1px, 0px); }
+        }
+        .combo-flash {
+          animation: comboFlash 0.15s ease-out;
+        }
+        @keyframes comboFlash {
+          0% { filter: brightness(1); }
+          50% { filter: brightness(1.3) saturate(1.2); }
+          100% { filter: brightness(1); }
         }
       `}</style>
 
@@ -1916,6 +1969,7 @@ export default function CandyGamePage() {
               {grid.map((row, rowIndex) =>
                 row.map((candy, colIndex) => {
                   const isSelected = selectedCandy?.row === rowIndex && selectedCandy?.col === colIndex;
+                  const isPressed = pressedCandy?.row === rowIndex && pressedCandy?.col === colIndex;
                   const isHint = hintPosition?.row === rowIndex && hintPosition?.col === colIndex;
                   const candyType = CANDY_TYPES[candy.colorIndex];
                   const swapTransform = getSwapTransform(rowIndex, colIndex);
@@ -1926,12 +1980,24 @@ export default function CandyGamePage() {
                     <button
                       key={`${rowIndex}-${colIndex}-${candy.id}`}
                       onClick={() => !isBlockedCell && handleCandyClickWithBooster(rowIndex, colIndex)}
-                      onPointerDown={(e) => !isBlockedCell && handleDragStart(rowIndex, colIndex, e)}
-                      onPointerUp={(e) => handleDragEnd(e)}
+                      onPointerDown={(e) => {
+                        if (!isBlockedCell) {
+                          setPressedCandy({ row: rowIndex, col: colIndex });
+                          handleDragStart(rowIndex, colIndex, e);
+                        }
+                      }}
+                      onPointerUp={(e) => {
+                        setPressedCandy(null);
+                        handleDragEnd(e);
+                      }}
                       onPointerLeave={(e) => {
+                        setPressedCandy(null);
                         if (dragStart) {
                           handleDragEnd(e);
                         }
+                      }}
+                      onPointerCancel={() => {
+                        setPressedCandy(null);
                       }}
                       disabled={isAnimating || gameScreen !== "playing" || isBlockedCell}
                       className="aspect-square p-[2px] sm:p-[3px] relative touch-none bg-black/20 rounded-lg"
@@ -1965,6 +2031,7 @@ export default function CandyGamePage() {
                             w-full h-full rounded-xl relative overflow-hidden
                             ${candyType ? `bg-gradient-to-br ${candyType.gradient}` : 'bg-transparent'}
                             ${isSelected ? 'candy-selected ring-2 ring-white ring-offset-2 ring-offset-transparent scale-110' : ''}
+                            ${isPressed && !isSelected ? 'scale-90' : ''}
                             ${isHint && !isSelected ? 'candy-hint' : ''}
                             ${candy.isMatched ? 'candy-matched' : ''}
                             ${candy.isNew ? 'candy-new' : ''}
