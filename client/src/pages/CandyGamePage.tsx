@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { 
   Trophy, 
   RotateCcw, 
@@ -1120,7 +1121,7 @@ export default function CandyGamePage() {
     if (newGrid[row][col].colorIndex !== -1) {
       spawnParticles(row, col, newGrid[row][col].colorIndex, 16, "explosion");
       newGrid[row][col] = { ...newGrid[row][col], colorIndex: -1, isMatched: true, special: "none" };
-      setBoosters(prev => ({ ...prev, hammer: prev.hammer - 1 }));
+      setBoosters((prev: { hammer: number; shuffle: number; lollipop: number }) => ({ ...prev, hammer: prev.hammer - 1 }));
       setGrid(newGrid);
       setSelectedBooster(null);
       processMatches(newGrid);
@@ -1134,7 +1135,7 @@ export default function CandyGamePage() {
     const candy = newGrid[row][col];
     if (candy.colorIndex !== -1 && candy.special === "none") {
       newGrid[row][col] = { ...candy, special: "color-bomb" };
-      setBoosters(prev => ({ ...prev, lollipop: prev.lollipop - 1 }));
+      setBoosters((prev: { hammer: number; shuffle: number; lollipop: number }) => ({ ...prev, lollipop: prev.lollipop - 1 }));
       setGrid(newGrid);
       setSelectedBooster(null);
       spawnFloatingText("Color Bomb!", row, col, "#fbbf24");
@@ -1143,7 +1144,7 @@ export default function CandyGamePage() {
 
   const useShuffleBooster = () => {
     if (boosters.shuffle <= 0 || isAnimating || gameScreen !== "playing") return;
-    setBoosters(prev => ({ ...prev, shuffle: prev.shuffle - 1 }));
+    setBoosters((prev: { hammer: number; shuffle: number; lollipop: number }) => ({ ...prev, shuffle: prev.shuffle - 1 }));
     shuffleBoard();
   };
 
@@ -1162,10 +1163,10 @@ export default function CandyGamePage() {
     
     const reward = rewards[Math.min(dailyStreak - 1, rewards.length - 1)];
     
-    setCoins(prev => prev + reward.coins);
-    setLives(prev => Math.min(prev + reward.lives, maxLives));
+    setCoins((prev: number) => prev + reward.coins);
+    setLives((prev: number) => Math.min(prev + reward.lives, maxLives));
     if (reward.boosters) {
-      setBoosters(prev => ({
+      setBoosters((prev: { hammer: number; shuffle: number; lollipop: number }) => ({
         hammer: prev.hammer + (reward.boosters.hammer || 0),
         shuffle: prev.shuffle + (reward.boosters.shuffle || 0),
         lollipop: prev.lollipop + (reward.boosters.lollipop || 0),
@@ -1291,8 +1292,8 @@ export default function CandyGamePage() {
         const livesToRegen = Math.floor(elapsed / LIFE_REGEN_TIME);
         const actualRegen = Math.min(livesToRegen, maxLives - lives);
         if (actualRegen > 0) {
-          setLives(prev => Math.min(prev + actualRegen, maxLives));
-          setLastLifeTime(prev => prev + actualRegen * LIFE_REGEN_TIME);
+          setLives((prev: number) => Math.min(prev + actualRegen, maxLives));
+          setLastLifeTime((prev: number) => prev + actualRegen * LIFE_REGEN_TIME);
         }
       }
     }, 10000);
@@ -2101,6 +2102,8 @@ export default function CandyGamePage() {
             </Card>
           </div>
         )}
+
+        <PWAInstallPrompt />
       </div>
     </div>
   );
