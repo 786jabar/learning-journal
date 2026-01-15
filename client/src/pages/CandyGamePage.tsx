@@ -30,12 +30,12 @@ const BASE_POINTS = 10;
 const HINT_DELAY = 4000;
 
 const CANDY_TYPES = [
-  { gradient: "from-rose-400 via-rose-500 to-rose-600", glow: "shadow-rose-500/60", name: "rose", color: "#f43f5e" },
-  { gradient: "from-orange-400 via-orange-500 to-orange-600", glow: "shadow-orange-500/60", name: "orange", color: "#f97316" },
-  { gradient: "from-yellow-300 via-yellow-400 to-yellow-500", glow: "shadow-yellow-400/60", name: "yellow", color: "#eab308" },
-  { gradient: "from-emerald-400 via-emerald-500 to-emerald-600", glow: "shadow-emerald-500/60", name: "green", color: "#22c55e" },
-  { gradient: "from-sky-400 via-sky-500 to-sky-600", glow: "shadow-sky-500/60", name: "blue", color: "#0ea5e9" },
-  { gradient: "from-violet-400 via-violet-500 to-violet-600", glow: "shadow-violet-500/60", name: "purple", color: "#8b5cf6" },
+  { gradient: "from-rose-300 via-rose-500 to-rose-700", glow: "shadow-rose-500/80", innerGlow: "shadow-rose-300/50", name: "rose", color: "#f43f5e", darkRim: "border-rose-800/40" },
+  { gradient: "from-orange-300 via-orange-500 to-orange-700", glow: "shadow-orange-500/80", innerGlow: "shadow-orange-300/50", name: "orange", color: "#f97316", darkRim: "border-orange-800/40" },
+  { gradient: "from-yellow-200 via-yellow-400 to-yellow-600", glow: "shadow-yellow-400/80", innerGlow: "shadow-yellow-200/50", name: "yellow", color: "#eab308", darkRim: "border-yellow-700/40" },
+  { gradient: "from-emerald-300 via-emerald-500 to-emerald-700", glow: "shadow-emerald-500/80", innerGlow: "shadow-emerald-300/50", name: "green", color: "#22c55e", darkRim: "border-emerald-800/40" },
+  { gradient: "from-sky-300 via-sky-500 to-sky-700", glow: "shadow-sky-500/80", innerGlow: "shadow-sky-300/50", name: "blue", color: "#0ea5e9", darkRim: "border-sky-800/40" },
+  { gradient: "from-violet-300 via-violet-500 to-violet-700", glow: "shadow-violet-500/80", innerGlow: "shadow-violet-300/50", name: "purple", color: "#8b5cf6", darkRim: "border-violet-800/40" },
 ];
 
 const COMBO_MESSAGES = [
@@ -1379,34 +1379,45 @@ export default function CandyGamePage() {
 
   if (gameScreen === "menu") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-4 px-4 flex flex-col">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1 bg-red-500/30 px-3 py-1.5 rounded-full border border-red-400/50">
-              <Heart className="w-5 h-5 text-red-400 fill-red-400" />
-              <span className="text-white font-bold">{lives}/{maxLives}</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 py-4 px-4 flex flex-col relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 -left-20 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-40 -right-20 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="relative z-10 flex justify-between items-center gap-2 mb-6 bg-black/30 backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-2xl">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-red-600/40 to-red-500/20 px-4 py-2 rounded-xl border border-red-400/30 shadow-lg shadow-red-500/20">
+              <div className="relative">
+                <Heart className="w-6 h-6 text-red-400 fill-red-400 drop-shadow-lg" />
+                <div className="absolute inset-0 animate-ping">
+                  <Heart className="w-6 h-6 text-red-400/30 fill-red-400/30" />
+                </div>
+              </div>
+              <span className="text-white font-black text-lg drop-shadow-md">{lives}/{maxLives}</span>
             </div>
-            <div className="flex items-center gap-1 bg-yellow-500/30 px-3 py-1.5 rounded-full border border-yellow-400/50">
-              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-              <span className="text-white font-bold">{coins}</span>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-600/40 to-amber-500/20 px-4 py-2 rounded-xl border border-yellow-400/30 shadow-lg shadow-yellow-500/20">
+              <Star className="w-6 h-6 text-yellow-400 fill-yellow-400 drop-shadow-lg" />
+              <span className="text-white font-black text-lg drop-shadow-md">{coins}</span>
             </div>
           </div>
           
           {!dailyRewardClaimed && (
             <Button
               onClick={() => setShowDailyReward(true)}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-xl animate-pulse"
+              className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-green-500/40 border border-green-400/30 font-bold"
               data-testid="button-daily-reward"
             >
-              <Gift className="w-5 h-5 mr-2" />
+              <Gift className="w-5 h-5 mr-2 animate-bounce" />
               Day {dailyStreak}
             </Button>
           )}
         </div>
 
         {showDailyReward && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-sm bg-gradient-to-br from-purple-800 to-indigo-900 border-purple-500/50">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-sm bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-950/95 backdrop-blur-xl border-2 border-purple-400/40 shadow-2xl shadow-purple-500/30 rounded-3xl">
               <CardHeader className="text-center">
                 <Gift className="w-16 h-16 mx-auto text-yellow-400 mb-2" />
                 <CardTitle className="text-2xl text-white">Daily Reward!</CardTitle>
@@ -1449,18 +1460,27 @@ export default function CandyGamePage() {
           </div>
         )}
 
-        <div className="text-center mb-4">
-          <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-red-500 to-purple-500 drop-shadow-lg mb-1" data-testid="text-game-title">
-            Candy Rush Saga
+        <div className="relative text-center mb-6">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-64 h-32 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 blur-3xl rounded-full" />
+          </div>
+          <h1 className="relative text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-400 to-purple-400 drop-shadow-2xl mb-2 tracking-tight" style={{ textShadow: '0 4px 30px rgba(236, 72, 153, 0.5)' }} data-testid="text-game-title">
+            Candy Rush
           </h1>
-          <p className="text-pink-200 text-sm">Sweetest Puzzle Adventure!</p>
+          <p className="relative text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400" style={{ textShadow: '0 2px 20px rgba(251, 191, 36, 0.5)' }}>
+            SAGA
+          </p>
+          <p className="text-purple-300/80 text-sm mt-1 font-medium">The Sweetest Puzzle Adventure</p>
         </div>
 
-        <div className="flex-1 overflow-auto">
-          <div className="relative w-full max-w-md mx-auto py-4">
-            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-500/50 via-purple-500/50 to-indigo-500/50 -translate-x-1/2 rounded-full" />
+        <div className="relative flex-1 overflow-auto">
+          <div className="relative w-full max-w-md mx-auto py-6 px-2">
+            <div className="absolute left-1/2 top-0 bottom-0 w-2 -translate-x-1/2">
+              <div className="absolute inset-0 bg-gradient-to-b from-pink-500/60 via-purple-500/60 to-indigo-500/60 rounded-full blur-sm" />
+              <div className="absolute inset-0 bg-gradient-to-b from-pink-400 via-purple-400 to-indigo-400 rounded-full opacity-80" />
+            </div>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               {LEVELS.map((lvl, idx) => {
                 const hs = highScores[lvl.level];
                 const isUnlocked = lvl.level === 1 || highScores[lvl.level - 1]?.stars > 0;
@@ -1468,23 +1488,43 @@ export default function CandyGamePage() {
                 
                 return (
                   <div key={lvl.level} className={`flex items-center ${isLeft ? 'justify-start' : 'justify-end'}`}>
-                    <div className={`relative ${isLeft ? 'ml-4' : 'mr-4'}`}>
-                      <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-4 h-4 rounded-full bg-purple-400 border-2 border-white" style={{ left: isLeft ? 'calc(100% + 20px)' : '-20px' }} />
+                    <div className={`relative ${isLeft ? 'ml-8' : 'mr-8'}`}>
+                      <div 
+                        className={`absolute w-5 h-5 rounded-full top-1/2 -translate-y-1/2 ${isUnlocked ? 'bg-gradient-to-br from-yellow-300 to-amber-500 shadow-lg shadow-yellow-400/50' : 'bg-gray-600'} border-2 border-white`} 
+                        style={{ [isLeft ? 'right' : 'left']: '-30px' }} 
+                      />
                       
-                      <Button
+                      <button
                         onClick={() => isUnlocked && lives > 0 && startLevel(lvl.level)}
                         disabled={!isUnlocked || lives <= 0}
-                        className={`w-20 h-20 rounded-full flex flex-col items-center justify-center p-2 ${
+                        className={`relative w-24 h-24 rounded-2xl flex flex-col items-center justify-center transition-all duration-300 ${
                           isUnlocked 
-                            ? 'bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white shadow-lg shadow-purple-500/50' 
-                            : 'bg-gray-600 text-gray-400'
+                            ? 'bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 hover:scale-105 active:scale-95 text-white shadow-xl shadow-pink-500/40 border-2 border-white/30' 
+                            : 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-500 border-2 border-gray-600/50'
                         }`}
                         data-testid={`button-level-${lvl.level}`}
                       >
-                        <MapPin className="w-4 h-4 mb-1" />
-                        <span className="font-black text-xl">{lvl.level}</span>
-                        {hs && <div className="flex gap-0.5 mt-0.5">{renderStars(hs.stars, "sm")}</div>}
-                      </Button>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
+                        
+                        {!isUnlocked && (
+                          <div className="absolute inset-0 rounded-2xl bg-black/40 flex items-center justify-center backdrop-blur-[1px]">
+                            <div className="w-8 h-8 rounded-full bg-gray-900/80 flex items-center justify-center">
+                              <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {isUnlocked && (
+                          <>
+                            <span className="font-black text-3xl drop-shadow-lg">{lvl.level}</span>
+                            {hs && hs.stars > 0 && (
+                              <div className="flex gap-0.5 mt-1">{renderStars(hs.stars, "sm")}</div>
+                            )}
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 );
@@ -1499,52 +1539,68 @@ export default function CandyGamePage() {
   if (gameScreen === "level-preview") {
     const levelData = LEVELS[level - 1] || LEVELS[LEVELS.length - 1];
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-8 px-4 flex flex-col items-center justify-center">
-        <Card className="bg-gradient-to-br from-purple-800/95 to-indigo-900/95 backdrop-blur-xl border-2 border-purple-400/60 p-6 text-center max-w-sm mx-4 rounded-3xl shadow-2xl">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-4xl font-black text-white">Level {level}</CardTitle>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 py-8 px-4 flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        </div>
+        
+        <Card className="relative bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-950/90 backdrop-blur-xl border-2 border-purple-400/40 p-2 text-center max-w-sm mx-4 rounded-3xl shadow-2xl shadow-purple-500/30">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
+          
+          <CardHeader className="pb-2 relative">
+            <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 flex items-center justify-center mb-4 shadow-xl shadow-pink-500/40 border-2 border-white/30">
+              <span className="font-black text-4xl text-white drop-shadow-lg">{level}</span>
+            </div>
+            <CardTitle className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-100 to-white">Level {level}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-black/30 rounded-2xl p-4 space-y-3">
-              <div className="flex items-center justify-center gap-2 text-amber-400">
-                <Zap className="w-5 h-5" />
-                <span className="font-bold">{levelData.moves} Moves</span>
+          
+          <CardContent className="space-y-5 relative">
+            <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-5 space-y-4 border border-white/10">
+              <div className="flex items-center justify-center gap-3 text-amber-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 flex items-center justify-center border border-amber-400/30">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <span className="font-black text-2xl">{levelData.moves}</span>
+                <span className="text-amber-200/80 font-medium">Moves</span>
               </div>
               
-              <div className="border-t border-white/20 pt-3">
-                <p className="text-purple-200 text-sm uppercase tracking-wide mb-2">Goals</p>
-                {levelData.objectives.map((obj, idx) => (
-                  <div key={idx} className="flex items-center justify-center gap-2 text-white">
-                    {obj.type === "score" && (
-                      <>
-                        <Star className="w-4 h-4 text-yellow-400" />
-                        <span>Score {obj.target.toLocaleString()} points</span>
-                      </>
-                    )}
-                    {obj.type === "clear-color" && obj.colorIndex !== undefined && (
-                      <>
-                        <div className={`w-4 h-4 rounded-full bg-gradient-to-br ${CANDY_TYPES[obj.colorIndex].gradient}`} />
-                        <span>Clear {obj.target} {CANDY_TYPES[obj.colorIndex].name} candies</span>
-                      </>
-                    )}
-                  </div>
-                ))}
+              <div className="border-t border-white/10 pt-4">
+                <p className="text-purple-300 text-xs uppercase tracking-widest mb-3 font-semibold">Objectives</p>
+                <div className="space-y-2">
+                  {levelData.objectives.map((obj, idx) => (
+                    <div key={idx} className="flex items-center justify-center gap-3 text-white bg-white/5 rounded-xl px-3 py-2">
+                      {obj.type === "score" && (
+                        <>
+                          <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                          <span className="font-semibold">Score {obj.target.toLocaleString()}</span>
+                        </>
+                      )}
+                      {obj.type === "clear-color" && obj.colorIndex !== undefined && (
+                        <>
+                          <div className={`w-6 h-6 rounded-lg bg-gradient-to-br ${CANDY_TYPES[obj.colorIndex].gradient} shadow-md`} />
+                          <span className="font-semibold">Clear {obj.target} {CANDY_TYPES[obj.colorIndex].name}</span>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             
             <Button
               onClick={beginPlaying}
-              className="w-full h-14 text-lg font-bold bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-2xl shadow-lg"
+              className="w-full h-14 text-lg font-black bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white rounded-2xl shadow-xl shadow-amber-500/40 border-2 border-yellow-300/30 hover:scale-[1.02] active:scale-[0.98] transition-transform"
               data-testid="button-start-level"
             >
-              <Play className="w-5 h-5 mr-2" />
-              Start Level
+              <Play className="w-6 h-6 mr-2" />
+              PLAY
             </Button>
             
             <Button
               onClick={() => setGameScreen("menu")}
               variant="ghost"
-              className="text-purple-300 hover:text-white"
+              className="text-purple-300/80 hover:text-white font-medium"
               data-testid="button-back-to-menu"
             >
               Back to Levels
@@ -1556,7 +1612,11 @@ export default function CandyGamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-4 px-2 sm:py-8 sm:px-4 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 py-4 px-2 sm:py-8 sm:px-4 overflow-hidden relative">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 -left-10 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 -right-10 w-56 h-56 bg-purple-500/15 rounded-full blur-3xl" />
+      </div>
       <style>{`
         @keyframes candyBounce {
           0%, 100% { transform: scale(1); }
@@ -1879,21 +1939,23 @@ export default function CandyGamePage() {
                           className={`
                             w-full h-full rounded-xl relative overflow-hidden
                             ${candyType ? `bg-gradient-to-br ${candyType.gradient}` : 'bg-transparent'}
-                            ${isSelected ? 'candy-selected ring-2 ring-white ring-offset-2 ring-offset-transparent' : ''}
+                            ${isSelected ? 'candy-selected ring-2 ring-white ring-offset-2 ring-offset-transparent scale-110' : ''}
                             ${isHint && !isSelected ? 'candy-hint' : ''}
                             ${candy.isMatched ? 'candy-matched' : ''}
                             ${candy.isNew ? 'candy-new' : ''}
                             ${candy.isFalling ? 'candy-falling' : ''}
                             ${candy.colorIndex === -1 ? 'opacity-0' : 'opacity-100'}
                             ${candy.special === "color-bomb" ? 'color-bomb-candy' : ''}
-                            shadow-lg ${candyType?.glow || ''}
-                            transition-opacity duration-150
+                            shadow-xl ${candyType?.glow || ''}
+                            transition-all duration-150
+                            border ${candyType?.darkRim || 'border-transparent'}
                           `}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-white/20 to-transparent rounded-xl" />
-                          <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-black/30 to-transparent rounded-xl" />
-                          <div className="absolute top-1 left-1 w-2 h-2 sm:w-3 sm:h-3 bg-white/70 rounded-full blur-sm" />
-                          <div className="absolute top-2 left-2 w-1 h-1 bg-white rounded-full" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/25 to-transparent rounded-xl" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent rounded-xl" />
+                          <div className="absolute top-[10%] left-[15%] w-[35%] h-[25%] bg-white/80 rounded-full blur-[2px] rotate-[-30deg]" />
+                          <div className="absolute top-[15%] left-[20%] w-[15%] h-[10%] bg-white rounded-full" />
+                          <div className="absolute bottom-[8%] right-[8%] w-[20%] h-[15%] bg-black/15 rounded-full blur-sm" />
                           {renderSpecialIndicator(candy.special)}
                           
                           {blocker && blocker.type === "jelly" && (
