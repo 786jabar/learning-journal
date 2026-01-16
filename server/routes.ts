@@ -782,18 +782,6 @@ Appendix D: Screenshots
         { width: contentWidth }
       );
 
-      // Add page numbers
-      const pages = doc.bufferedPageRange();
-      for (let i = 0; i < pages.count; i++) {
-        doc.switchToPage(i);
-        doc.fontSize(9).text(
-          `${i + 1}`,
-          0,
-          doc.page.height - 30,
-          { align: 'center', width: doc.page.width }
-        );
-      }
-
       doc.end();
     } catch (error) {
       console.error("Error generating PDF:", error);
