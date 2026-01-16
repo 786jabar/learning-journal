@@ -191,7 +191,7 @@ export default function Lab7DemoPage() {
                   <>
                     <CheckCircle2 className="h-8 w-8 text-green-500" />
                     <div>
-                      <p className="font-semibold text-green-600 dark:text-green-400">Online</p>
+                      <p className="font-semibold text-green-600 dark:text-green-400" data-testid="text-online-status">Online</p>
                       <p className="text-sm text-muted-foreground">Connected to internet</p>
                     </div>
                   </>
@@ -199,7 +199,7 @@ export default function Lab7DemoPage() {
                   <>
                     <XCircle className="h-8 w-8 text-red-500" />
                     <div>
-                      <p className="font-semibold text-red-600 dark:text-red-400">Offline</p>
+                      <p className="font-semibold text-red-600 dark:text-red-400" data-testid="text-offline-status">Offline</p>
                       <p className="text-sm text-muted-foreground">No internet connection</p>
                     </div>
                   </>
@@ -227,7 +227,7 @@ export default function Lab7DemoPage() {
                   <>
                     <CheckCircle2 className="h-6 w-6 text-green-500" />
                     <div>
-                      <p className="font-semibold text-green-600 dark:text-green-400">Registered</p>
+                      <p className="font-semibold text-green-600 dark:text-green-400" data-testid="text-sw-registered">Registered</p>
                       <p className="text-sm text-muted-foreground">SW is active</p>
                     </div>
                   </>
@@ -235,7 +235,7 @@ export default function Lab7DemoPage() {
                   <>
                     <XCircle className="h-6 w-6 text-amber-500" />
                     <div>
-                      <p className="font-semibold">Not Registered</p>
+                      <p className="font-semibold" data-testid="text-sw-not-registered">Not Registered</p>
                       <p className="text-sm text-muted-foreground">SW not available</p>
                     </div>
                   </>
@@ -267,7 +267,7 @@ export default function Lab7DemoPage() {
                   <>
                     <CheckCircle2 className="h-6 w-6 text-green-500" />
                     <div>
-                      <p className="font-semibold text-green-600 dark:text-green-400">Installed</p>
+                      <p className="font-semibold text-green-600 dark:text-green-400" data-testid="text-pwa-installed">Installed</p>
                       <p className="text-sm text-muted-foreground">Running as PWA</p>
                     </div>
                   </>
@@ -275,7 +275,7 @@ export default function Lab7DemoPage() {
                   <>
                     <Download className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="font-semibold">Not Installed</p>
+                      <p className="font-semibold" data-testid="text-pwa-not-installed">Not Installed</p>
                       <p className="text-sm text-muted-foreground">Install for best experience</p>
                     </div>
                   </>
@@ -328,7 +328,7 @@ export default function Lab7DemoPage() {
                   <p className="text-sm font-medium mb-2">Active Caches:</p>
                   <div className="flex flex-wrap gap-1">
                     {cacheStatus.map((cache, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">
+                      <Badge key={i} variant="secondary" className="text-xs" data-testid={`badge-cache-${i}`}>
                         {cache}
                       </Badge>
                     ))}
@@ -350,10 +350,13 @@ export default function Lab7DemoPage() {
               <div className="p-4 rounded-lg bg-muted">
                 <p className="text-sm">
                   <span className="font-medium">Permission: </span>
-                  <Badge variant={
-                    Notification.permission === 'granted' ? 'default' :
-                    Notification.permission === 'denied' ? 'destructive' : 'secondary'
-                  }>
+                  <Badge 
+                    variant={
+                      Notification.permission === 'granted' ? 'default' :
+                      Notification.permission === 'denied' ? 'destructive' : 'secondary'
+                    }
+                    data-testid="badge-notification-permission"
+                  >
                     {Notification.permission}
                   </Badge>
                 </p>
@@ -380,24 +383,24 @@ export default function Lab7DemoPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between p-2 rounded bg-muted">
+                <div className="flex justify-between gap-4 p-2 rounded bg-muted" data-testid="manifest-name">
                   <span className="text-muted-foreground">Name:</span>
-                  <span className="font-medium">Learning Journal</span>
+                  <span className="font-medium" data-testid="text-manifest-name">Learning Journal</span>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-muted">
+                <div className="flex justify-between gap-4 p-2 rounded bg-muted" data-testid="manifest-display">
                   <span className="text-muted-foreground">Display:</span>
-                  <span className="font-medium">Standalone</span>
+                  <span className="font-medium" data-testid="text-manifest-display">Standalone</span>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-muted">
+                <div className="flex justify-between gap-4 p-2 rounded bg-muted" data-testid="manifest-theme">
                   <span className="text-muted-foreground">Theme Color:</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-purple-600" />
-                    <span className="font-medium">#7c3aed</span>
+                    <div className="w-4 h-4 rounded bg-primary" />
+                    <span className="font-medium" data-testid="text-manifest-color">#7c3aed</span>
                   </div>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-muted">
+                <div className="flex justify-between gap-4 p-2 rounded bg-muted" data-testid="manifest-url">
                   <span className="text-muted-foreground">Start URL:</span>
-                  <span className="font-medium">/</span>
+                  <span className="font-medium" data-testid="text-manifest-url">/</span>
                 </div>
               </div>
             </CardContent>
