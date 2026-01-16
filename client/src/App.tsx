@@ -24,6 +24,7 @@ import Lab5Report from "@/pages/Lab5Report";
 import Lab6DemoPage from "@/pages/Lab6DemoPage";
 import Lab6Report from "@/pages/Lab6Report";
 import Lab7DemoPage from "@/pages/Lab7DemoPage";
+import PortfolioPage from "@/pages/PortfolioPage";
 import AchievementsPage from "@/pages/AchievementsPage";
 import CandyGamePage from "@/pages/CandyGamePage";
 import CanvasPage from "@/pages/CanvasPage";
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/lab6-demo" component={Lab6DemoPage} />
       <Route path="/lab6-report" component={Lab6Report} />
       <Route path="/lab7-demo" component={Lab7DemoPage} />
+      <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/achievements" component={AchievementsPage} />
       <Route path="/candy-game" component={CandyGamePage} />
       <Route path="/canvas" component={CanvasPage} />

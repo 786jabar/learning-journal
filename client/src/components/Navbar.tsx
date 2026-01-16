@@ -20,6 +20,7 @@ export function Navbar() {
     { path: "/lab5-demo", label: "Lab 5" },
     { path: "/lab6-demo", label: "Lab 6" },
     { path: "/lab7-demo", label: "Lab 7" },
+    { path: "/portfolio", label: "Portfolio" },
     { path: "/achievements", label: "Achievements" },
     { path: "/candy-game", label: "Candy Rush" },
     { path: "/canvas", label: "Canvas" },
