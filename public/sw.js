@@ -1,36 +1,38 @@
-const CACHE_NAME = 'candy-rush-saga-v1';
-const STATIC_CACHE = 'candy-rush-static-v1';
-const DYNAMIC_CACHE = 'candy-rush-dynamic-v1';
+const CACHE_NAME = 'learning-journal-v2';
+const STATIC_CACHE = 'learning-journal-static-v2';
+const DYNAMIC_CACHE = 'learning-journal-dynamic-v2';
 
 const urlsToCache = [
   '/',
-  '/candy-game',
   '/index.html',
   '/manifest.webmanifest',
-  '/favicon.png'
+  '/app-icon-192.png',
+  '/app-icon-512.png'
 ];
 
 self.addEventListener('install', event => {
+  console.log('Learning Journal SW: Installing...');
   self.skipWaiting();
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => {
-        console.log('Candy Rush: Caching static assets');
+        console.log('Learning Journal SW: Caching static assets');
         return cache.addAll(urlsToCache).catch(err => {
-          console.error('Failed to cache resources:', err);
+          console.error('Failed to cache some resources:', err);
         });
       })
   );
 });
 
 self.addEventListener('activate', event => {
+  console.log('Learning Journal SW: Activating...');
   const currentCaches = [STATIC_CACHE, DYNAMIC_CACHE];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (!currentCaches.includes(cacheName)) {
-            console.log('Candy Rush: Deleting old cache:', cacheName);
+            console.log('Learning Journal SW: Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -44,11 +46,13 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
+  // Network first for API calls
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirst(event.request));
     return;
   }
 
+  // Cache first for static assets
   event.respondWith(cacheFirst(event.request));
 });
 
@@ -71,11 +75,13 @@ async function cacheFirst(request) {
       return cachedResponse;
     }
     
+    // For navigation requests, return the cached index page
     if (request.mode === 'navigate') {
-      return caches.match('/');
+      const indexCache = await caches.match('/');
+      if (indexCache) return indexCache;
     }
     
-    return new Response('Offline - Please check your connection', {
+    return new Response('Offline - Content not available', {
       status: 503,
       headers: { 'Content-Type': 'text/plain' },
     });
@@ -95,7 +101,7 @@ async function networkFirst(request) {
     if (cachedResponse) {
       return cachedResponse;
     }
-    return new Response(JSON.stringify({ error: 'Offline' }), {
+    return new Response(JSON.stringify({ error: 'Offline', message: 'Data will sync when online' }), {
       status: 503,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -107,3 +113,5 @@ self.addEventListener('message', event => {
     self.skipWaiting();
   }
 });
+
+console.log('Learning Journal Service Worker loaded');
