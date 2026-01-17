@@ -130,60 +130,100 @@ Live Project: [Your PythonAnywhere Link]`,
 
   mini_q1: `I added several significant features to enhance the Learning Journal beyond the core requirements:
 
-1. **Celestial Memory Game**: A visually stunning space-themed card matching game with unique mechanics. Features include: (a) Constellation Quest System - cards grouped into constellations (Orion, Cassiopeia, Ursa Major, Andromeda) that grant power-ups when completed, (b) Wild Comet Cards - special cards that match anything, adding strategy, (c) Power-Up System - Reveal (show matching pair) and Freeze Time (pause timer) unlocked by completing constellations, (d) Four unlockable visual themes (Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare) earned through wins, (e) Three game modes (Zen, Challenge with combo multipliers, Constellation Quest), (f) Memory Echo - ghost silhouettes briefly visible after mismatches, (g) Constellation lines connecting matched pairs, (h) Animated starfield with shooting stars, (i) 3D card flips and particle explosions, (j) Score system with streak-based combo multipliers up to 5x.
+1. **Celestial Memory Game**: A visually stunning space-themed card matching game with extensive features:
+   - **30 Beautiful Celestial Icons**: Stars, moons, planets, nebulae, rockets, satellites, and more with stunning 3-color gradient effects
+   - **Ambient Background Music**: Sweet melodic music using Web Audio API with C major 7 chord foundation and gentle random chimes
+   - **Constellation Quest System**: Cards grouped into constellations (Orion, Cassiopeia, Ursa Major, Andromeda) that grant power-ups when completed
+   - **Wild Comet Cards**: Special cards that match anything, adding strategic depth
+   - **Power-Up System**: Reveal (show matching pair) and Freeze Time (pause timer) unlocked by completing constellations
+   - **Endless Mode**: Progressive difficulty that continues infinitely with achievement tracking
+   - **Four Unlockable Themes**: Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare earned through wins
+   - **Three Game Modes**: Zen, Challenge with combo multipliers, and Constellation Quest
+   - **Visual Effects**: 3D card flips, particle explosions, memory echo ghost silhouettes, constellation lines, animated starfield with shooting stars
+   - **Score System**: Streak-based combo multipliers up to 5x bonus
 
-2. **Analytics Dashboard**: A comprehensive analytics page showing learning streaks, weekly entry trends using Recharts visualizations, tag clouds for topic analysis, and activity heatmaps similar to GitHub's contribution graph.
+2. **Professional Creative Canvas**: A full-featured drawing application with:
+   - **Multiple Drawing Tools**: Pen, Eraser, Line, Rectangle, Circle, Fill (flood fill)
+   - **Live Shape Preview**: Overlay canvas shows shapes as you draw before committing
+   - **Color System**: 10 preset colors plus custom color picker input
+   - **Brush Size Control**: Adjustable from 1-50 pixels with slider
+   - **History System**: Undo/Redo with up to 50 states using refs for proper state tracking
+   - **Gallery System**: Save drawings locally, view saved artwork, load and continue editing
+   - **Export Feature**: Download drawings as PNG files
+   - **Touch Support**: Full mobile/tablet drawing support with proper coordinate scaling
 
-3. **Achievements System**: A gamification system that tracks user progress and awards badges for milestones like writing streaks, completing projects, and consistent journaling.
+3. **Mobile App Navigation**: Complete app-like experience:
+   - **Bottom Navigation Bar**: Mobile-style tab bar with Home, Explore, Game, Canvas, More icons
+   - **Menu Page**: Organized hub with all features in categories (Core Features, Lab Demos, Creative & Fun, Profile & Settings)
+   - **Options Page**: User preferences for sound, notifications, animations, auto-save, font size, language
+   - **Settings Page**: Dark mode, storage management, device ID, PWA controls, data export
+   - **Explore Page**: Feature discovery with featured items, quick links, and pro tips
 
-4. **Drawing Canvas**: An interactive canvas using the Canvas API where users can create visual notes and sketches to accompany their journal entries.
+4. **Analytics Dashboard**: Comprehensive analytics with learning streaks, weekly trends using Recharts, tag clouds, and GitHub-style activity heatmaps.
 
-5. **Enhanced Journal Features**: Rich markdown editor, tag management, search and filter functionality, and PDF export capabilities.
+5. **Achievements System**: Gamification with badges for milestones, progress tracking, and persistent achievement storage.
 
-6. **PWA Enhancements**: Comprehensive offline support, install prompts, network status indicators, and service worker management interface.`,
+6. **Enhanced Journal Features**: Rich markdown editor, tag management, search/filter, and PDF export.
 
-  mini_q2: `I chose to create the Celestial Memory game as my mini project for several strategic reasons:
+7. **PWA Enhancements**: Offline support, install prompts, network status indicators, and service worker management.`,
 
-**Unique Theme and Identity**: Rather than a generic memory game, I created a cohesive "space exploration" experience. The celestial theme (stars, moons, planets, nebulae) gives the game a distinct identity that sets it apart from typical card games.
+  mini_q2: `I chose to create a comprehensive mini project with multiple components for several strategic reasons:
 
-**Visual Polish and Premium Feel**: I implemented glassmorphism effects (frosted glass cards, backdrop blur), animated starfield backgrounds, 3D card flip animations, and particle effects on matches. These details create a premium, polished experience that demonstrates attention to visual design.
+**Celestial Memory Game - Unique Theme and Identity**: Rather than a generic memory game, I created a cohesive "space exploration" experience with 30 beautiful celestial icons featuring 3-color gradients. The space theme (stars, moons, planets, nebulae, rockets, satellites) gives the game a distinct identity.
 
-**Multiple Game Modes**: Zen mode for relaxed play and Challenge mode with streak bonuses demonstrates designing for different user preferences and adding meaningful gameplay variety.
+**Ambient Audio Experience**: Implemented Web Audio API to generate sweet melodic background music using a C major 7 chord foundation (C4, E4, G4, B4) with gentle random chimes every 2 seconds. Users can toggle music on/off in both menu and gameplay.
 
-**Advanced React Patterns**: The game showcases: useState for complex state (cards, flipped, matches, streaks), useEffect for timers, useCallback for memoized functions, useRef for DOM access, and conditional rendering. The streak system and hint feature add non-trivial state logic.
+**Visual Polish and Premium Feel**: Glassmorphism effects (frosted glass cards, backdrop blur), animated starfield backgrounds, 3D card flip animations, and particle effects on matches create a premium, polished experience.
 
-**CSS Animation Skills**: 3D card flips using CSS transforms, particle animations, pulsing glows, and smooth transitions demonstrate strong CSS animation capabilities - skills valuable for creating engaging user interfaces.
+**Professional Canvas Tool**: Built a complete drawing application demonstrating Canvas API mastery:
+- Multiple tools (pen, eraser, line, rectangle, circle, fill) with live preview
+- Overlay canvas architecture for non-destructive shape preview
+- History management using useRef to avoid stale closure issues
+- Touch event handling with proper coordinate scaling for mobile devices
+- Gallery system with localStorage persistence
 
-**Portfolio Value**: A visually stunning, unique game with thoughtful UX demonstrates ability to build complete, polished features from concept to implementation.
+**Mobile App Navigation System**: Designed complete app-like navigation:
+- Bottom navigation bar (mobile-only) with icon + label tabs
+- Organized Menu page with feature categories
+- Options and Settings pages for user customization
+- Explore page for feature discovery
 
-**Unique Mechanics That Set It Apart**:
-1. Constellation System - cards belong to constellations; complete a constellation to unlock powers
-2. Wild Comet Cards - strategic element where some cards match anything
-3. Power-ups earned through gameplay (Reveal matching pairs, Freeze timer)
-4. Unlockable themes create long-term progression (win games to unlock new visual styles)
-5. Memory Echo - ghost images appear after mismatches, aiding memory
-6. Visual constellation lines connecting matched pairs
-7. Score multipliers that reward consecutive matches up to 5x bonus`,
+**Advanced React Patterns**: The project showcases useState for complex state, useEffect for timers and audio, useCallback for memoized functions, useRef for DOM access and state tracking, conditional rendering, and functional state updates to avoid stale closures.
 
-  mini_q3: `I faced several technical challenges during the Celestial Memory development:
+**Technical Challenges Solved**:
+1. Achievement persistence with functional state updates to avoid stale closures
+2. Canvas coordinate scaling for proper drawing on responsive layouts
+3. Touch event handling for mobile drawing (using changedTouches for touchend)
+4. Web Audio API for dynamic music generation
+5. History undo/redo using refs to access current state`,
 
-**3D Card Flip Animation**: Creating convincing 3D card flips required CSS 3D transforms with perspective, transform-style: preserve-3d, and backface-visibility. I had to carefully position both the front (question mark) and back (icon) faces and rotate them correctly when flipping.
+  mini_q3: `I faced several technical challenges during development:
 
-**Particle Effects System**: Implementing particle bursts on matches required dynamically creating particle elements, positioning them relative to the game board, animating them with CSS, and cleaning them up after animation completes to prevent memory leaks.
+**CELESTIAL MEMORY GAME CHALLENGES:**
 
-**Streak Bonus Logic**: The challenge mode tracks consecutive matches (streaks) and displays encouraging messages. Managing this state alongside the main game state required careful coordination to reset streaks on mismatches while preserving the max streak for the final score.
+**3D Card Flip Animation**: Creating convincing 3D card flips required CSS 3D transforms with perspective, transform-style: preserve-3d, and backface-visibility. I had to carefully position both the front and back faces and rotate them correctly.
 
-**Hint System**: Implementing hints that briefly reveal a matching pair required: (a) finding unmatched pairs in state, (b) temporarily highlighting them with a CSS class, (c) removing the highlight after a timeout, (d) limiting hint usage. This added complexity to the state management.
+**Web Audio API Music Generation**: Implementing ambient background music required understanding oscillators, gain nodes, and audio scheduling. I created a C major 7 chord using multiple oscillators tuned to C4, E4, G4, B4 frequencies with gentle random chimes played at intervals.
 
-**Glassmorphism on Various Backgrounds**: Making glassmorphism cards look good required careful tuning of backdrop-blur, background opacity, and border colors. The animated starfield background needed to be subtle enough not to distract from gameplay.
+**Achievement Persistence with Stale Closures**: Initially, achievements weren't saving correctly because state updates used stale closure values. I fixed this by using functional state updates (setAchievements(prev => ...)) and passing updatedCards directly to achievement checks instead of relying on state.
 
-**Responsive Grid for Different Difficulties**: Each difficulty has different card counts requiring different grid layouts. I used dynamic gridTemplateColumns with the config object and responsive card sizes (w-14 sm:w-16 md:w-20) to ensure the game looks good on all devices.
+**Endless Mode Achievement Tracking**: The endless mode achievements required tracking progress across multiple rounds. I solved this by using functional updates and immediate state calculations rather than depending on React's async state updates.
 
-**Constellation Tracking System**: Managing which cards belong to which constellations, tracking completion progress, and triggering power-up rewards required careful state design. Each constellation has associated card pairs and a power reward, and the system must detect when all pairs in a constellation are matched.
+**CREATIVE CANVAS CHALLENGES:**
 
-**Wild Card Matching Logic**: Implementing cards that match anything required modifying the match detection to check for wild card status while ensuring wild cards work correctly with the constellation system.
+**Canvas Coordinate Scaling**: Drawing coordinates were incorrect because the canvas display size differed from its logical size. I implemented coordinate scaling using getBoundingClientRect() to calculate scaleX and scaleY ratios.
 
-**Theme Unlock Progression**: Creating a system where winning games unlocks new visual themes required tracking total wins across sessions, persisting to localStorage, and dynamically updating the theme list's locked/unlocked states.`,
+**Overlay Canvas for Live Preview**: Shape tools needed to show the shape while dragging before committing. I implemented a transparent overlay canvas that renders the preview and clears on mouse up while the final shape is drawn on the main canvas.
+
+**Undo/Redo with Refs**: The history system initially failed because saveToHistory and restoreFromHistory used stale state from closures. I solved this by storing history in useRef and syncing with useEffect, then reading from refs in the callback functions.
+
+**Touch Event Handling**: Mobile drawing crashed because touchend has empty touches array. I fixed this by using e.changedTouches as fallback: const touch = e.touches[0] || e.changedTouches?.[0].
+
+**MOBILE NAVIGATION CHALLENGES:**
+
+**Bottom Navigation Bar**: Implementing mobile app-style navigation required conditional rendering based on screen size, proper z-index stacking, and adding bottom padding to main content to prevent overlap.
+
+**Responsive Layout**: Ensuring the app works well on all screen sizes required careful use of Tailwind responsive classes and testing across different viewports.`,
 
   mini_q4: `Given more time, I would implement these improvements:
 
@@ -206,17 +246,31 @@ Live Project: [Your PythonAnywhere Link]`,
 - Backend: Node.js, Express.js, Drizzle ORM
 - Database: PostgreSQL (Neon), IndexedDB (localforage)
 - PWA: Service Workers, Web App Manifest, Workbox
+- Audio: Web Audio API for dynamic music generation
+- Graphics: HTML5 Canvas API with overlay architecture
 - Build Tools: Vite, ESBuild
 
 **Appendix B: Key Features Summary**
 1. Journal Entries with Markdown support
 2. Project Tracking with tech stack tags
 3. Analytics Dashboard with visualizations
-4. Achievements and Gamification
-5. Celestial Memory Game (space-themed with unique visual design)
-6. Drawing Canvas
-7. Offline-first Architecture
-8. PWA Installability
+4. Achievements and Gamification System
+5. Celestial Memory Game with:
+   - 30 celestial icons with gradient effects
+   - Ambient background music (Web Audio API)
+   - Constellation quest system with power-ups
+   - Multiple game modes and unlockable themes
+   - Endless mode with progressive difficulty
+6. Professional Creative Canvas with:
+   - Drawing tools (pen, eraser, line, rectangle, circle, fill)
+   - Live shape preview with overlay canvas
+   - Gallery system and PNG export
+   - Full mobile/touch support
+7. Mobile App Navigation:
+   - Bottom navigation bar for mobile devices
+   - Menu, Options, Settings, Explore pages
+8. Offline-first Architecture
+9. PWA Installability
 
 **Appendix C: API Endpoints**
 - GET/POST /api/journals - Journal CRUD
@@ -225,7 +279,7 @@ Live Project: [Your PythonAnywhere Link]`,
 - GET/PUT /api/profile - User profile
 
 **Appendix D: Screenshots**
-[Include screenshots of: Home Dashboard, Journal Entry Page, Analytics Charts, Celestial Memory Game Menu, Celestial Memory Gameplay, PWA Install Process, Offline Mode]`,
+[Include screenshots of: Home Dashboard with Quick Actions, Bottom Navigation Bar, Menu Page, Celestial Memory Game with Music Toggle, Creative Canvas with Tools, Settings Page, Explore Page, PWA Install Process]`,
 
   bibliography: `1. Mozilla Developer Network (MDN). (2024). Progressive Web Apps. https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps
 
