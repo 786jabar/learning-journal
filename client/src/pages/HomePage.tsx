@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, TrendingUp, BookOpen, Code2, Calendar } from "lucide-react";
+import { Plus, TrendingUp, BookOpen, Code2, Calendar, Menu, Compass, Settings, Gamepad2, Palette } from "lucide-react";
 import { Link } from "wouter";
 import { JournalCard } from "@/components/JournalCard";
 import { CalendarHeatmap } from "@/components/CalendarHeatmap";
@@ -11,6 +11,13 @@ import { useJournals } from "@/hooks/useJournalStore";
 import { useProjects } from "@/hooks/useProjectStore";
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))", "hsl(var(--chart-5))"];
+
+const quickActions = [
+  { path: "/menu", label: "Menu", icon: Menu, description: "All Features", gradient: "from-purple-500 to-pink-500" },
+  { path: "/explore", label: "Explore", icon: Compass, description: "Discover", gradient: "from-cyan-500 to-blue-500" },
+  { path: "/memory-game", label: "Play Game", icon: Gamepad2, description: "Celestial Memory", gradient: "from-orange-500 to-red-500" },
+  { path: "/canvas", label: "Draw", icon: Palette, description: "Creative Canvas", gradient: "from-green-500 to-teal-500" },
+];
 
 export default function HomePage() {
   const { journals, isLoading: journalsLoading } = useJournals();
@@ -84,9 +91,28 @@ export default function HomePage() {
           <h1 className="text-5xl font-bold mb-4" data-testid="text-welcome">
             Welcome to Your <span className="gradient-text">Learning Journal</span>
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
-            Track your progress, reflect on your journey, and build amazing projects with our stunning glassmorphism design.
+          <p className="text-lg text-muted-foreground mb-6 max-w-2xl">
+            Track your progress, reflect on your journey, and build amazing projects.
           </p>
+          
+          {/* Quick Actions Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {quickActions.map((action) => (
+              <Link key={action.path} href={action.path}>
+                <div 
+                  className="glass p-4 rounded-xl text-center hover-elevate cursor-pointer transition-all"
+                  data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <div className={`w-12 h-12 mx-auto mb-2 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
+                    <action.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <p className="font-semibold">{action.label}</p>
+                  <p className="text-xs text-muted-foreground">{action.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
           <Link href="/journal" asChild>
             <Button size="lg" className="gradient-bg text-white glow-button" data-testid="button-new-entry">
               <Plus className="h-5 w-5 mr-2" />
