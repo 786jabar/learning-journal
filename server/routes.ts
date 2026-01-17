@@ -450,7 +450,7 @@ The offline-first architecture uses the localforage library (which wraps Indexed
 KEY CHALLENGES AND SOLUTIONS:
 The most significant challenge was implementing bidirectional data synchronization between IndexedDB (client) and PostgreSQL (server). I solved this by implementing a sync queue that tracks pending operations when offline and processes them when connectivity returns, using timestamps to handle conflict resolution.
 
-This portfolio documents each lab's specific learning outcomes and includes a comprehensive mini project - the Candy Rush Saga game - which demonstrates advanced JavaScript programming, algorithm design, and creative problem-solving abilities.`,
+This portfolio documents each lab's specific learning outcomes and includes a mini project - the Memory Match card game - which demonstrates JavaScript skills, React state management, and interactive UI design.`,
         { width: contentWidth }
       );
 
@@ -1289,8 +1289,8 @@ I used Chrome DevTools' Application tab to: inspect service worker state, view c
 
 Beyond the core journal functionality required by the module, I added several significant features that demonstrate advanced web development skills and provide genuine user value.
 
-1. CANDY RUSH SAGA GAME (Primary Mini Project):
-A fully-featured match-3 puzzle game inspired by popular mobile games like Candy Crush. The game includes: (a) 8x8 game board with 6 candy types rendered using React components with CSS animations, (b) Match detection algorithm that identifies horizontal and vertical matches of 3+ candies, (c) Cascade system where candies fall after matches and new candies spawn from the top, (d) Progressive difficulty across 10+ levels with unique objectives (score targets, clear jellies, collect specific candies), (e) Special candies created from 4+ matches (striped candies clear entire rows/columns, wrapped candies create explosions), (f) Scoring system with star ratings based on performance, (g) Move limits per level requiring strategic thinking, (h) Blockers like ice and jelly layers that add challenge, (i) Level progression with unlock system, (j) High score tracking stored in IndexedDB.
+1. MEMORY MATCH GAME (Primary Mini Project):
+A fun and engaging card-matching game where players flip cards to find matching pairs. The game features: (a) Grid of face-down cards with colorful icons that can be flipped by clicking, (b) Three difficulty levels - Easy (6 pairs/12 cards), Medium (8 pairs/16 cards), Hard (12 pairs/24 cards), (c) Move counter tracking how many card pairs the player has attempted, (d) Timer showing elapsed time since game start, (e) Best score tracking for each difficulty level stored in localStorage, (f) Star rating based on performance (fewer moves = more stars), (g) Satisfying CSS animations for card flips and successful matches, (h) Dynamic grid layout that adjusts based on difficulty, (i) Responsive design that works on mobile and desktop, (j) Victory celebration modal with play again option.
 
 2. ANALYTICS DASHBOARD:
 A comprehensive analytics page that visualizes learning progress: (a) Weekly entry charts using Recharts library showing journal activity trends, (b) Tag cloud visualization displaying frequently used topics, (c) Learning streaks tracking consecutive days of journaling, (d) Activity heatmap similar to GitHub's contribution graph, (e) Statistics cards showing total entries, words written, and projects completed.
@@ -1312,27 +1312,30 @@ Interactive demonstration of all PWA capabilities as detailed in Lab 7.`,
       doc.font('Helvetica-Bold').text('9.2 Why did you choose your mini project idea?');
       doc.moveDown(0.3);
       doc.font('Helvetica').text(
-        `STRATEGIC RATIONALE FOR CANDY RUSH SAGA GAME:
+        `STRATEGIC RATIONALE FOR MEMORY MATCH GAME:
 
-Choosing the right mini project required balancing educational value, technical challenge, and portfolio appeal. The Candy Rush Saga game satisfied all three criteria exceptionally well.
+Choosing the right mini project required balancing simplicity, educational value, and user enjoyment. The Memory Match game satisfied all three criteria excellently.
 
-TECHNICAL CHALLENGE - DEMONSTRATING ADVANCED SKILLS:
-Match-3 puzzle games are deceptively complex. They require: (1) 2D array manipulation for the game board, (2) Pattern recognition algorithms for match detection, (3) Recursive logic for cascade effects, (4) Animation timing and sequencing, (5) State management for scores, moves, objectives, (6) Level design and progression systems. These challenges pushed my JavaScript skills far beyond basic DOM manipulation, requiring algorithmic thinking typically associated with computer science fundamentals.
+SIMPLICITY WITH DEPTH:
+Memory games are universally understood - flip cards, find pairs. This simplicity makes the game immediately accessible to any user, yet the gameplay is engaging and tests cognitive skills. Unlike complex games that require tutorials, users can start playing instantly.
 
-USER ENGAGEMENT - RETENTION MECHANISM:
-A game adds entertainment value to the learning journal, encouraging regular app usage. Users might open the app to play a quick game and then be reminded to write their journal entry. This cross-feature engagement is a proven strategy in app design. The gamification aspect connects to the achievements system - learning consistency is rewarded alongside game performance.
+TECHNICAL DEMONSTRATION - REACT FUNDAMENTALS:
+The Memory Match game is an ideal showcase of core React concepts: (1) useState for managing card states (flipped, matched, selected), (2) useEffect for timer functionality and localStorage integration, (3) Event handling for card click interactions, (4) Conditional rendering based on game state, (5) Array manipulation for shuffling cards and tracking matches, (6) Component-based UI with reusable card components. These are fundamental skills for any React developer.
 
-CANVAS API AND ANIMATION EXPLORATION:
-While I ultimately used React components for rendering (for simpler state management), I explored the HTML5 Canvas API during development. The animation techniques learned (requestAnimationFrame, CSS keyframes, transition timing) are directly applicable to data visualization, interactive charts, and engaging UI effects.
+MULTIPLE DIFFICULTY LEVELS:
+Implementing Easy (6 pairs), Medium (8 pairs), and Hard (12 pairs) modes demonstrates: (a) Dynamic grid rendering based on configuration, (b) Scalable game logic that works with any number of pairs, (c) Responsive layout adjustments for different grid sizes.
 
-CREATIVE EXPRESSION:
-The FGCT6021 module emphasizes creative digital development. A game showcases both technical implementation ability and design thinking: color choices, visual feedback, difficulty curves, and user interface layout all required creative decisions.
+BROWSER STORAGE INTEGRATION:
+Best score tracking for each difficulty level demonstrates localStorage APIs - a key browser capability. The game remembers your performance even after closing the browser, showing understanding of client-side persistence.
+
+USER ENGAGEMENT:
+Games provide a mental break that can actually improve learning focus. Having a quick Memory Match game available encourages users to return to the app, where they might then write a journal entry.
+
+CLEAN, MAINTAINABLE CODE:
+The game's straightforward logic results in clean, readable code that's easy to understand and maintain - an important software engineering principle. Unlike complex games with hundreds of edge cases, Memory Match has clear, testable logic.
 
 PORTFOLIO VALUE:
-A polished, playable game is an impressive portfolio piece that demonstrates: (a) Ability to scope and complete a complex project, (b) Problem-solving skills with algorithms, (c) Attention to user experience and visual design, (d) Integration of multiple technologies (React, CSS animations, state management).
-
-COURSE ALIGNMENT:
-The game demonstrates mastery of: JavaScript (core logic), DOM/React (rendering), CSS (animations, layout), and state management - all key module outcomes.`,
+A polished, responsive game with good animations shows: (a) Attention to user experience, (b) CSS animation skills, (c) Proper state management, (d) Complete feature implementation from start to finish.`,
         { width: contentWidth }
       );
       
@@ -1340,52 +1343,46 @@ The game demonstrates mastery of: JavaScript (core logic), DOM/React (rendering)
       doc.fontSize(10).font('Helvetica-Bold').text('9.3 What technical challenges did you face and how did you solve them?');
       doc.moveDown(0.3);
       doc.font('Helvetica').text(
-        `DETAILED TECHNICAL CHALLENGES AND SOLUTIONS:
+        `TECHNICAL CHALLENGES AND SOLUTIONS:
 
-CHALLENGE 1 - MATCH-3 DETECTION ALGORITHM:
-Problem: Finding all horizontal and vertical matches of 3 or more consecutive candies in an 8x8 grid is more complex than it appears. Simple iteration misses edge cases and can double-count candies that are part of both horizontal and vertical matches.
+CHALLENGE 1 - CARD FLIP TIMING AND CLICK PREVENTION:
+Problem: Players could rapidly click multiple cards, breaking the game logic. Two cards need to be compared, but a third click during comparison would cause bugs. Also, non-matching cards need time to be visible before flipping back.
 
-Solution: I implemented a two-pass algorithm:
-Pass 1 - Horizontal Scan: For each row, iterate through columns tracking consecutive candies of the same type. When the streak reaches 3+, record all positions.
-Pass 2 - Vertical Scan: For each column, iterate through rows with the same logic.
-Deduplication: Store matched positions in a JavaScript Set (using "row,col" strings as keys) to automatically eliminate duplicates.
+Solution: I implemented an isChecking state that acts as a lock:
+1. When two cards are flipped, set isChecking = true
+2. Disable all card clicks while isChecking is true
+3. Use setTimeout to delay the comparison logic
+4. After comparison completes (match or no-match), set isChecking = false
+This ensures clean turn-based gameplay without race conditions.
 
-The algorithm runs in O(n*m) time where n=rows and m=columns, making it efficient for real-time gameplay.
+CHALLENGE 2 - MATCH DETECTION WITH CARD IDs:
+Problem: Each card needs a unique ID for React keys and click handling, but pairs of cards share the same icon. Distinguishing between "which card was clicked" and "do these cards match" required careful data design.
 
-CHALLENGE 2 - CASCADE SYSTEM (Gravity + Spawning + Chain Reactions):
-Problem: After matches are cleared, remaining candies must fall down to fill gaps, new candies must spawn at the top, and the new board state might contain new matches that need to be cleared - creating chain reactions.
+Solution: Each card object has two properties:
+- id: Unique identifier (0, 1, 2, 3...) for React keys and click tracking
+- iconIndex: Shared between pairs (0, 0, 1, 1, 2, 2...) for match comparison
+When two cards are flipped, I compare their iconIndex values while using their id values to update the correct cards in state.
 
-Solution: I implemented a recursive cascade function using async/await for proper animation timing:
-1. Clear matched candies (set to null in the array)
-2. Apply gravity: For each column, shift non-null candies down to fill gaps
-3. Spawn new candies: Fill remaining null positions at the top with random candies
-4. Check for new matches: Run match detection again
-5. If new matches found, recursively call cascade
-6. Animation timing: Use await new Promise(resolve => setTimeout(resolve, 300)) between steps to allow visual feedback
+CHALLENGE 3 - PREVENTING DOUBLE-CLICKS ON SAME CARD:
+Problem: Users could click the same card twice, which would incorrectly count as two flipped cards and trigger match logic on a single card.
 
-CHALLENGE 3 - STATE MANAGEMENT COMPLEXITY:
-Problem: The game state includes: board (8x8 array), score, moves remaining, level objectives, special candy positions, and animation states. Managing this with multiple useState calls became unwieldy and caused bugs.
+Solution: Before processing a click, I check multiple conditions:
+if (card.isFlipped || card.isMatched || isChecking) return;
+This guards against: clicking already-flipped cards, clicking matched cards, and clicking during the comparison delay.
 
-Solution: Consolidated state into a single structured object with a reducer-like pattern:
-const [gameState, setGameState] = useState({
-  board: initialBoard,
-  score: 0,
-  movesLeft: 20,
-  objectives: { targetScore: 5000 },
-  isAnimating: false
-});
+CHALLENGE 4 - RESPONSIVE GRID LAYOUT:
+Problem: Different difficulty levels have different numbers of cards (12, 16, or 24), requiring different grid layouts. The grid also needs to look good on both mobile and desktop.
 
-Created helper functions for each action (handleSwap, handleMatch, handleCascade) that compute the new state immutably and update it atomically.
+Solution: I used dynamic grid-template-columns based on the difficulty configuration:
+style={{ gridTemplateColumns: repeat(config.cols, minmax(0, 1fr)) }}
+Combined with responsive card sizes (w-16 h-16 md:w-20 md:h-20), the grid adapts to both difficulty level and screen size.
 
-CHALLENGE 4 - PERFORMANCE OPTIMIZATION:
-Problem: Initial implementation re-rendered all 64 cells on every state change, causing noticeable lag during cascades.
+CHALLENGE 5 - BEST SCORE PERSISTENCE:
+Problem: Best scores need to persist across browser sessions and be tracked separately for each difficulty level.
 
-Solution: (1) Used React.memo() to prevent cell re-renders unless their specific candy changes, (2) Batched state updates to reduce render cycles, (3) Used CSS transforms instead of layout changes for animations (transforms are GPU-accelerated).
-
-CHALLENGE 5 - SPECIAL CANDY LOGIC:
-Problem: Special candies (striped, wrapped, color bomb) have complex effects that interact with each other.
-
-Solution: Created a priority-based effect system where effects are queued and resolved in order, with each effect potentially adding more effects to the queue (e.g., a color bomb matching a striped candy triggers multiple line clears).`,
+Solution: I store scores in localStorage as a JSON object with difficulty levels as keys:
+{ easy: 12, medium: 18, hard: 30 }
+On game load, I read from localStorage (with null checks for first-time players). On game completion, I compare the current moves to the stored best and update if the new score is better (fewer moves).`,
         { width: contentWidth }
       );
       doc.moveDown(0.5);
@@ -1394,18 +1391,18 @@ Solution: Created a priority-based effect system where effects are queued and re
       doc.font('Helvetica').text(
         `FUTURE IMPROVEMENTS AND EXTENSIONS:
 
-Given additional development time, I would implement the following enhancements across the Learning Journal and Candy Rush Saga game:
+Given additional development time, I would implement the following enhancements across the Learning Journal and Memory Match game:
 
 GAME ENHANCEMENTS:
-1. More Level Variety: Add 50+ levels with unique objectives like "collect 20 blue candies" or "clear all blockers in 15 moves." Design a level editor for creating custom challenges.
+1. Themes and Card Sets: Add different visual themes (animals, flags, food, emojis) that players can unlock or choose. This adds variety and personalization.
 
-2. Power-Ups Shop: Implement an in-game currency (earned through gameplay) that can purchase power-ups like extra moves, pre-game boosts (start with a color bomb), or hints.
+2. Sound Effects: Add satisfying audio feedback for card flips, successful matches, and game completion. Include a mute toggle for quiet environments.
 
-3. Sound Effects and Music: Add satisfying audio feedback for matches, cascades, and level completion. Include background music with volume controls.
+3. Multiplayer Mode: Implement a two-player mode where players take turns, with scoring based on how many pairs each player finds.
 
-4. Animations Improvement: Enhance visual effects with particle systems for explosions, smoother candy falling physics, and celebratory animations for level completion.
+4. Timed Challenge Mode: Add a mode where players race against a countdown timer rather than just tracking elapsed time.
 
-5. Leaderboards: Implement global and friends leaderboards using the server backend, allowing competitive play.
+5. Statistics Dashboard: Track and display lifetime statistics like total games played, total pairs matched, average moves per game, and best times for each difficulty.
 
 JOURNAL ENHANCEMENTS:
 1. AI-Powered Features: Integrate OpenAI API to: (a) Summarize weekly learning automatically, (b) Suggest related topics based on journal content, (c) Generate study questions from entries, (d) Provide writing feedback and suggestions.
@@ -1481,7 +1478,7 @@ ANALYTICS AND INSIGHTS:
 
 GAMIFICATION FEATURES:
 7. Achievements System: Badge rewards for milestones encouraging continued engagement.
-8. Candy Rush Saga Game: Complete match-3 puzzle game with 10+ levels, scoring, and progression system.
+8. Memory Match Game: Card-matching game with 3 difficulty levels, scoring, and best time tracking.
 
 CREATIVE TOOLS:
 9. Drawing Canvas: Freehand drawing tool for visual notes and sketches.
@@ -1582,7 +1579,7 @@ INDEXEDDB SCHEMA (Client-Side):
 1. Home Dashboard - Overview of journal entries and projects
 2. Journal Entry Creation - Markdown editor with preview
 3. Analytics Dashboard - Charts showing learning trends
-4. Candy Rush Saga Game - Gameplay screenshot with UI
+4. Memory Match Game - Gameplay screenshot showing cards and score
 5. PWA Install Process - Browser install prompt
 6. Offline Mode Indicator - App functioning without internet
 7. Lab Demo Pages - Interactive demonstrations

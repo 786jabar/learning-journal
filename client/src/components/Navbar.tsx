@@ -22,7 +22,7 @@ export function Navbar() {
     { path: "/lab7-demo", label: "Lab 7" },
     { path: "/portfolio", label: "Portfolio" },
     { path: "/achievements", label: "Achievements" },
-    { path: "/candy-game", label: "Candy Rush" },
+    { path: "/memory-game", label: "Memory Game" },
     { path: "/canvas", label: "Canvas" },
     { path: "/about", label: "About" },
   ];

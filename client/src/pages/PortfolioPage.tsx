@@ -67,7 +67,7 @@ The main objectives of this project were to create a functional learning journal
 
 Throughout this project, I developed skills in frontend development with React and Tailwind CSS, backend API design with Express.js, database management with Drizzle ORM and PostgreSQL, and PWA implementation including service workers and manifest configuration. Key challenges included implementing offline data synchronization, creating an intuitive user interface, and integrating multiple APIs for enhanced functionality.
 
-This portfolio reflects on each lab's learning outcomes and documents the mini project extension - a Candy Rush Saga game that demonstrates advanced JavaScript skills and creative problem-solving.`,
+This portfolio reflects on each lab's learning outcomes and documents the mini project extension - a Memory Match card game that demonstrates JavaScript skills and interactive UI design.`,
 
   lab1: `In Lab 1, I set up the foundational development environment for the Learning Journal PWA. I began by creating a GitHub repository to manage version control, ensuring all code changes were tracked with meaningful commit messages. Using VS Code as my primary IDE, I configured essential extensions including ESLint, Prettier, and the TypeScript compiler for improved code quality.
 
@@ -130,7 +130,7 @@ Live Project: [Your PythonAnywhere Link]`,
 
   mini_q1: `I added several significant features to enhance the Learning Journal beyond the core requirements:
 
-1. **Candy Rush Saga Game**: A fully-featured match-3 puzzle game with multiple levels, objectives, power-ups, and a scoring system. The game features candy animations, special candies (striped, wrapped, color bomb), blockers like jellies and ice, and progressive difficulty across levels.
+1. **Memory Match Game**: A fun card-matching game where players flip cards to find matching pairs. Features include three difficulty levels (Easy with 6 pairs, Medium with 8 pairs, Hard with 12 pairs), move counter, timer, best score tracking stored in localStorage, and satisfying animations when cards match. The game uses React state management and demonstrates event handling, conditional rendering, and local storage APIs.
 
 2. **Analytics Dashboard**: A comprehensive analytics page showing learning streaks, weekly entry trends using Recharts visualizations, tag clouds for topic analysis, and activity heatmaps similar to GitHub's contribution graph.
 
@@ -142,29 +142,33 @@ Live Project: [Your PythonAnywhere Link]`,
 
 6. **PWA Enhancements**: Comprehensive offline support, install prompts, network status indicators, and service worker management interface.`,
 
-  mini_q2: `I chose to create the Candy Rush Saga game as my mini project for several strategic reasons:
+  mini_q2: `I chose to create the Memory Match card game as my mini project for several strategic reasons:
 
-**Technical Challenge**: Match-3 games require complex algorithms including cascade detection, match finding across rows and columns, gravity simulation for falling pieces, and special candy combinations. This allowed me to demonstrate advanced JavaScript programming skills beyond basic DOM manipulation.
+**Simplicity with Depth**: Memory games are easy to understand but engaging to play. The rules are simple (flip two cards, find matches) but the gameplay requires concentration and memory skills.
 
-**User Engagement**: A game adds entertainment value to the learning journal, making users more likely to return to the app regularly. The gamification aspect connects to the achievement system, rewarding users for their learning consistency.
+**Technical Demonstration**: The game demonstrates key React concepts: useState for managing card states (flipped, matched), useEffect for timer functionality, event handling for card clicks, and conditional rendering based on game state. It's a clean example of component-based UI development.
 
-**Canvas API Exploration**: Building the game deepened my understanding of the HTML5 Canvas API, animation frames, and game loop patterns - skills applicable to data visualization and interactive features.
+**User Engagement**: Games add entertainment value to the learning journal, making users more likely to return to the app regularly. Taking a mental break with a quick memory game can actually improve focus for learning.
 
-**Creative Expression**: The course encourages creative extensions, and a game showcases both technical ability and design thinking. The level progression system, visual effects, and user interface design required careful planning and iteration.
+**Multiple Difficulty Levels**: Implementing Easy (6 pairs), Medium (8 pairs), and Hard (12 pairs) modes demonstrates dynamic grid rendering and scalable game logic.
 
-**Portfolio Value**: A polished game is an impressive portfolio piece that demonstrates my ability to take on complex projects and see them through to completion.`,
+**LocalStorage Integration**: Best score tracking demonstrates browser storage APIs - the game remembers your best performance even after closing the browser.
 
-  mini_q3: `I faced several significant technical challenges during development:
+**Portfolio Value**: A polished, responsive game shows I can build complete interactive features with good UX, proper state management, and attention to visual design.`,
 
-**Match-3 Algorithm**: Implementing the match detection logic that finds all horizontal and vertical matches of 3+ candies was complex. I solved this by creating a two-pass algorithm - first scanning rows, then columns, and collecting all matched positions in a Set to avoid duplicates.
+  mini_q3: `I faced several technical challenges during the Memory Game development:
 
-**Cascade System**: After matches are cleared, remaining candies must fall and new ones must spawn, potentially creating new matches. I implemented a recursive cascade function that continues until no new matches are found, with proper animation timing using async/await and setTimeout.
+**Card Flip Timing**: Managing the timing of card flips was tricky - players shouldn't be able to flip more than two cards at once, and non-matching cards need time to be seen before flipping back. I solved this with an isChecking state that temporarily disables card clicks, and setTimeout to control the reveal duration.
 
-**State Management**: Managing the game state (board, score, moves, objectives, power-ups) became complex. I organized state using React's useState with structured objects and created helper functions for each game action, making the code more maintainable.
+**Match Detection**: When two cards are flipped, comparing them correctly required tracking flipped card IDs and looking up their icon types. I stored both the card ID and iconIndex in state, using the iconIndex to determine matches while the ID uniquely identifies each card instance.
 
-**Performance Optimization**: Initial implementations caused performance issues with re-renders. I optimized by using React.memo for grid cells, batching state updates, and implementing efficient board comparison algorithms.
+**Preventing Double-Clicks**: Users could click the same card twice, causing bugs. I added checks to prevent re-flipping already flipped or matched cards by checking card.isFlipped and card.isMatched before processing clicks.
 
-**Offline Synchronization**: Ensuring data syncs correctly between IndexedDB and the server required careful handling of conflict resolution and queue management. I implemented a last-write-wins strategy with timestamps.`,
+**Grid Layout Responsiveness**: Making the card grid look good on all screen sizes required careful CSS. I used dynamic grid-template-columns based on difficulty level and responsive card sizes with Tailwind breakpoints (w-16 h-16 md:w-20 md:h-20).
+
+**Best Score Persistence**: Storing and retrieving best scores for each difficulty level from localStorage required careful JSON serialization and null checks for first-time players.
+
+**Animation Smoothness**: Creating satisfying flip and match animations required CSS transitions with proper transform properties and timing functions. I used Tailwind's transition classes combined with conditional className application.`,
 
   mini_q4: `Given more time, I would implement these improvements:
 
@@ -194,7 +198,7 @@ Live Project: [Your PythonAnywhere Link]`,
 2. Project Tracking with tech stack tags
 3. Analytics Dashboard with visualizations
 4. Achievements and Gamification
-5. Candy Rush Saga Game (10+ levels)
+5. Memory Match Game (3 difficulty levels)
 6. Drawing Canvas
 7. Offline-first Architecture
 8. PWA Installability
@@ -206,7 +210,7 @@ Live Project: [Your PythonAnywhere Link]`,
 - GET/PUT /api/profile - User profile
 
 **Appendix D: Screenshots**
-[Include screenshots of: Home Dashboard, Journal Entry Page, Analytics Charts, Candy Game, PWA Install Process, Offline Mode]`,
+[Include screenshots of: Home Dashboard, Journal Entry Page, Analytics Charts, Memory Game, PWA Install Process, Offline Mode]`,
 
   bibliography: `1. Mozilla Developer Network (MDN). (2024). Progressive Web Apps. https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps
 

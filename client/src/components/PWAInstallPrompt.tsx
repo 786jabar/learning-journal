@@ -78,7 +78,7 @@ export function PWAInstallPrompt() {
               <div className="flex items-center gap-2">
                 <Smartphone className="h-5 w-5 text-purple-300" />
                 <CardTitle className="text-white text-lg" data-testid="text-ios-install-title">
-                  Install Candy Rush
+                  Install Learning Journal
                 </CardTitle>
               </div>
               <Button
@@ -118,7 +118,7 @@ export function PWAInstallPrompt() {
             <div className="flex items-center gap-2">
               <Download className="h-5 w-5 text-purple-300" />
               <CardTitle className="text-white text-lg" data-testid="text-install-title">
-                Install Candy Rush Saga
+                Install Learning Journal
               </CardTitle>
             </div>
             <Button
