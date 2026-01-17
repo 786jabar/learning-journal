@@ -30,6 +30,10 @@ export default function Lab7DemoPage() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [notificationSupported] = useState(() => typeof window !== 'undefined' && 'Notification' in window);
+  const [notificationPermission, setNotificationPermission] = useState<string>(() => 
+    typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'unsupported'
+  );
 
   useEffect(() => {
     const handleOnline = () => {
@@ -131,9 +135,14 @@ export default function Lab7DemoPage() {
   };
 
   const requestNotificationPermission = async () => {
+    if (!notificationSupported) {
+      toast({ title: "Not Supported", description: "Notifications are not supported in this browser", variant: "destructive" });
+      return;
+    }
     setLoading(prev => ({ ...prev, notification: true }));
     try {
       const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
       if (permission === 'granted') {
         new Notification('PWA Notifications Enabled!', {
           body: 'You will now receive push notifications',
@@ -352,23 +361,23 @@ export default function Lab7DemoPage() {
                   <span className="font-medium">Permission: </span>
                   <Badge 
                     variant={
-                      Notification.permission === 'granted' ? 'default' :
-                      Notification.permission === 'denied' ? 'destructive' : 'secondary'
+                      notificationPermission === 'granted' ? 'default' :
+                      notificationPermission === 'denied' ? 'destructive' : 'secondary'
                     }
                     data-testid="badge-notification-permission"
                   >
-                    {Notification.permission}
+                    {notificationPermission}
                   </Badge>
                 </p>
               </div>
               <Button 
                 onClick={requestNotificationPermission}
-                disabled={loading.notification || Notification.permission === 'granted'}
+                disabled={loading.notification || notificationPermission === 'granted' || !notificationSupported}
                 className="w-full"
                 data-testid="button-enable-notifications"
               >
                 {loading.notification ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Bell className="h-4 w-4 mr-2" />}
-                {Notification.permission === 'granted' ? 'Notifications Enabled' : 'Enable Notifications'}
+                {!notificationSupported ? 'Not Supported' : notificationPermission === 'granted' ? 'Notifications Enabled' : 'Enable Notifications'}
               </Button>
             </CardContent>
           </Card>
