@@ -130,7 +130,7 @@ Live Project: [Your PythonAnywhere Link]`,
 
   mini_q1: `I added several significant features to enhance the Learning Journal beyond the core requirements:
 
-1. **Memory Match Game**: A fun card-matching game where players flip cards to find matching pairs. Features include three difficulty levels (Easy with 6 pairs, Medium with 8 pairs, Hard with 12 pairs), move counter, timer, best score tracking stored in localStorage, and satisfying animations when cards match. The game uses React state management and demonstrates event handling, conditional rendering, and local storage APIs.
+1. **Celestial Memory Game**: A visually stunning space-themed card matching game with unique mechanics. Features include: (a) Constellation Quest System - cards grouped into constellations (Orion, Cassiopeia, Ursa Major, Andromeda) that grant power-ups when completed, (b) Wild Comet Cards - special cards that match anything, adding strategy, (c) Power-Up System - Reveal (show matching pair) and Freeze Time (pause timer) unlocked by completing constellations, (d) Four unlockable visual themes (Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare) earned through wins, (e) Three game modes (Zen, Challenge with combo multipliers, Constellation Quest), (f) Memory Echo - ghost silhouettes briefly visible after mismatches, (g) Constellation lines connecting matched pairs, (h) Animated starfield with shooting stars, (i) 3D card flips and particle explosions, (j) Score system with streak-based combo multipliers up to 5x.
 
 2. **Analytics Dashboard**: A comprehensive analytics page showing learning streaks, weekly entry trends using Recharts visualizations, tag clouds for topic analysis, and activity heatmaps similar to GitHub's contribution graph.
 
@@ -142,33 +142,48 @@ Live Project: [Your PythonAnywhere Link]`,
 
 6. **PWA Enhancements**: Comprehensive offline support, install prompts, network status indicators, and service worker management interface.`,
 
-  mini_q2: `I chose to create the Memory Match card game as my mini project for several strategic reasons:
+  mini_q2: `I chose to create the Celestial Memory game as my mini project for several strategic reasons:
 
-**Simplicity with Depth**: Memory games are easy to understand but engaging to play. The rules are simple (flip two cards, find matches) but the gameplay requires concentration and memory skills.
+**Unique Theme and Identity**: Rather than a generic memory game, I created a cohesive "space exploration" experience. The celestial theme (stars, moons, planets, nebulae) gives the game a distinct identity that sets it apart from typical card games.
 
-**Technical Demonstration**: The game demonstrates key React concepts: useState for managing card states (flipped, matched), useEffect for timer functionality, event handling for card clicks, and conditional rendering based on game state. It's a clean example of component-based UI development.
+**Visual Polish and Premium Feel**: I implemented glassmorphism effects (frosted glass cards, backdrop blur), animated starfield backgrounds, 3D card flip animations, and particle effects on matches. These details create a premium, polished experience that demonstrates attention to visual design.
 
-**User Engagement**: Games add entertainment value to the learning journal, making users more likely to return to the app regularly. Taking a mental break with a quick memory game can actually improve focus for learning.
+**Multiple Game Modes**: Zen mode for relaxed play and Challenge mode with streak bonuses demonstrates designing for different user preferences and adding meaningful gameplay variety.
 
-**Multiple Difficulty Levels**: Implementing Easy (6 pairs), Medium (8 pairs), and Hard (12 pairs) modes demonstrates dynamic grid rendering and scalable game logic.
+**Advanced React Patterns**: The game showcases: useState for complex state (cards, flipped, matches, streaks), useEffect for timers, useCallback for memoized functions, useRef for DOM access, and conditional rendering. The streak system and hint feature add non-trivial state logic.
 
-**LocalStorage Integration**: Best score tracking demonstrates browser storage APIs - the game remembers your best performance even after closing the browser.
+**CSS Animation Skills**: 3D card flips using CSS transforms, particle animations, pulsing glows, and smooth transitions demonstrate strong CSS animation capabilities - skills valuable for creating engaging user interfaces.
 
-**Portfolio Value**: A polished, responsive game shows I can build complete interactive features with good UX, proper state management, and attention to visual design.`,
+**Portfolio Value**: A visually stunning, unique game with thoughtful UX demonstrates ability to build complete, polished features from concept to implementation.
 
-  mini_q3: `I faced several technical challenges during the Memory Game development:
+**Unique Mechanics That Set It Apart**:
+1. Constellation System - cards belong to constellations; complete a constellation to unlock powers
+2. Wild Comet Cards - strategic element where some cards match anything
+3. Power-ups earned through gameplay (Reveal matching pairs, Freeze timer)
+4. Unlockable themes create long-term progression (win games to unlock new visual styles)
+5. Memory Echo - ghost images appear after mismatches, aiding memory
+6. Visual constellation lines connecting matched pairs
+7. Score multipliers that reward consecutive matches up to 5x bonus`,
 
-**Card Flip Timing**: Managing the timing of card flips was tricky - players shouldn't be able to flip more than two cards at once, and non-matching cards need time to be seen before flipping back. I solved this with an isChecking state that temporarily disables card clicks, and setTimeout to control the reveal duration.
+  mini_q3: `I faced several technical challenges during the Celestial Memory development:
 
-**Match Detection**: When two cards are flipped, comparing them correctly required tracking flipped card IDs and looking up their icon types. I stored both the card ID and iconIndex in state, using the iconIndex to determine matches while the ID uniquely identifies each card instance.
+**3D Card Flip Animation**: Creating convincing 3D card flips required CSS 3D transforms with perspective, transform-style: preserve-3d, and backface-visibility. I had to carefully position both the front (question mark) and back (icon) faces and rotate them correctly when flipping.
 
-**Preventing Double-Clicks**: Users could click the same card twice, causing bugs. I added checks to prevent re-flipping already flipped or matched cards by checking card.isFlipped and card.isMatched before processing clicks.
+**Particle Effects System**: Implementing particle bursts on matches required dynamically creating particle elements, positioning them relative to the game board, animating them with CSS, and cleaning them up after animation completes to prevent memory leaks.
 
-**Grid Layout Responsiveness**: Making the card grid look good on all screen sizes required careful CSS. I used dynamic grid-template-columns based on difficulty level and responsive card sizes with Tailwind breakpoints (w-16 h-16 md:w-20 md:h-20).
+**Streak Bonus Logic**: The challenge mode tracks consecutive matches (streaks) and displays encouraging messages. Managing this state alongside the main game state required careful coordination to reset streaks on mismatches while preserving the max streak for the final score.
 
-**Best Score Persistence**: Storing and retrieving best scores for each difficulty level from localStorage required careful JSON serialization and null checks for first-time players.
+**Hint System**: Implementing hints that briefly reveal a matching pair required: (a) finding unmatched pairs in state, (b) temporarily highlighting them with a CSS class, (c) removing the highlight after a timeout, (d) limiting hint usage. This added complexity to the state management.
 
-**Animation Smoothness**: Creating satisfying flip and match animations required CSS transitions with proper transform properties and timing functions. I used Tailwind's transition classes combined with conditional className application.`,
+**Glassmorphism on Various Backgrounds**: Making glassmorphism cards look good required careful tuning of backdrop-blur, background opacity, and border colors. The animated starfield background needed to be subtle enough not to distract from gameplay.
+
+**Responsive Grid for Different Difficulties**: Each difficulty has different card counts requiring different grid layouts. I used dynamic gridTemplateColumns with the config object and responsive card sizes (w-14 sm:w-16 md:w-20) to ensure the game looks good on all devices.
+
+**Constellation Tracking System**: Managing which cards belong to which constellations, tracking completion progress, and triggering power-up rewards required careful state design. Each constellation has associated card pairs and a power reward, and the system must detect when all pairs in a constellation are matched.
+
+**Wild Card Matching Logic**: Implementing cards that match anything required modifying the match detection to check for wild card status while ensuring wild cards work correctly with the constellation system.
+
+**Theme Unlock Progression**: Creating a system where winning games unlocks new visual themes required tracking total wins across sessions, persisting to localStorage, and dynamically updating the theme list's locked/unlocked states.`,
 
   mini_q4: `Given more time, I would implement these improvements:
 
@@ -198,7 +213,7 @@ Live Project: [Your PythonAnywhere Link]`,
 2. Project Tracking with tech stack tags
 3. Analytics Dashboard with visualizations
 4. Achievements and Gamification
-5. Memory Match Game (3 difficulty levels)
+5. Celestial Memory Game (space-themed with unique visual design)
 6. Drawing Canvas
 7. Offline-first Architecture
 8. PWA Installability
@@ -210,7 +225,7 @@ Live Project: [Your PythonAnywhere Link]`,
 - GET/PUT /api/profile - User profile
 
 **Appendix D: Screenshots**
-[Include screenshots of: Home Dashboard, Journal Entry Page, Analytics Charts, Memory Game, PWA Install Process, Offline Mode]`,
+[Include screenshots of: Home Dashboard, Journal Entry Page, Analytics Charts, Celestial Memory Game Menu, Celestial Memory Gameplay, PWA Install Process, Offline Mode]`,
 
   bibliography: `1. Mozilla Developer Network (MDN). (2024). Progressive Web Apps. https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps
 

@@ -1289,8 +1289,24 @@ I used Chrome DevTools' Application tab to: inspect service worker state, view c
 
 Beyond the core journal functionality required by the module, I added several significant features that demonstrate advanced web development skills and provide genuine user value.
 
-1. MEMORY MATCH GAME (Primary Mini Project):
-A fun and engaging card-matching game where players flip cards to find matching pairs. The game features: (a) Grid of face-down cards with colorful icons that can be flipped by clicking, (b) Three difficulty levels - Easy (6 pairs/12 cards), Medium (8 pairs/16 cards), Hard (12 pairs/24 cards), (c) Move counter tracking how many card pairs the player has attempted, (d) Timer showing elapsed time since game start, (e) Best score tracking for each difficulty level stored in localStorage, (f) Star rating based on performance (fewer moves = more stars), (g) Satisfying CSS animations for card flips and successful matches, (h) Dynamic grid layout that adjusts based on difficulty, (i) Responsive design that works on mobile and desktop, (j) Victory celebration modal with play again option.
+1. CELESTIAL MEMORY GAME (Primary Mini Project):
+A visually stunning, feature-rich space-themed card matching game with unique mechanics not found in typical memory games. Key features include:
+
+CONSTELLATION QUEST SYSTEM: Cards are grouped into named constellations (Orion, Cassiopeia, Ursa Major, Andromeda). Completing all pairs in a constellation triggers a celebration animation and unlocks a power-up. This adds strategy and progression beyond simple matching.
+
+WILD COMET CARDS: Special cards marked with a wand icon can match ANY other card. These add strategic depth - do you use them early for guaranteed matches or save them for difficult pairs?
+
+POWER-UP SYSTEM: Two cosmic powers earned through constellation completion: (a) Reveal Power - briefly shows a matching pair location, (b) Freeze Time - pauses the timer for 10 seconds. Powers create meaningful choices during gameplay.
+
+UNLOCKABLE THEMES: Four visual themes (Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare) that unlock progressively as players win games. This creates long-term engagement and replay value.
+
+THREE GAME MODES: (a) Zen - relaxed play without pressure, (b) Challenge - combo multipliers reward consecutive matches with up to 5x score bonus, (c) Constellation Quest - full experience with power-ups and constellation tracking.
+
+MEMORY ECHO: After mismatches, cards briefly show ghost silhouettes of their icons before flipping back - a unique visual aid that helps memory while adding polish.
+
+CONSTELLATION LINES: SVG lines visually connect matched pairs, creating a growing constellation map as you play.
+
+VISUAL EXCELLENCE: Animated starfield with shooting stars, 3D card flip animations with perspective, particle burst effects, glassmorphism UI, and responsive design that looks stunning on all devices.
 
 2. ANALYTICS DASHBOARD:
 A comprehensive analytics page that visualizes learning progress: (a) Weekly entry charts using Recharts library showing journal activity trends, (b) Tag cloud visualization displaying frequently used topics, (c) Learning streaks tracking consecutive days of journaling, (d) Activity heatmap similar to GitHub's contribution graph, (e) Statistics cards showing total entries, words written, and projects completed.
@@ -1312,30 +1328,39 @@ Interactive demonstration of all PWA capabilities as detailed in Lab 7.`,
       doc.font('Helvetica-Bold').text('9.2 Why did you choose your mini project idea?');
       doc.moveDown(0.3);
       doc.font('Helvetica').text(
-        `STRATEGIC RATIONALE FOR MEMORY MATCH GAME:
+        `STRATEGIC RATIONALE FOR CELESTIAL MEMORY GAME:
 
-Choosing the right mini project required balancing simplicity, educational value, and user enjoyment. The Memory Match game satisfied all three criteria excellently.
+Choosing the right mini project required balancing visual impact, technical demonstration, and user engagement. The Celestial Memory game excels in all three areas.
 
-SIMPLICITY WITH DEPTH:
-Memory games are universally understood - flip cards, find pairs. This simplicity makes the game immediately accessible to any user, yet the gameplay is engaging and tests cognitive skills. Unlike complex games that require tutorials, users can start playing instantly.
+UNIQUE THEME AND IDENTITY:
+Rather than a generic card game, I created a cohesive "space exploration" experience. The celestial theme (stars, moons, planets, nebulae, cosmic phenomena) gives the game a distinct identity that sets it apart from typical memory games. The theme creates emotional connection and makes the game memorable.
 
-TECHNICAL DEMONSTRATION - REACT FUNDAMENTALS:
-The Memory Match game is an ideal showcase of core React concepts: (1) useState for managing card states (flipped, matched, selected), (2) useEffect for timer functionality and localStorage integration, (3) Event handling for card click interactions, (4) Conditional rendering based on game state, (5) Array manipulation for shuffling cards and tracking matches, (6) Component-based UI with reusable card components. These are fundamental skills for any React developer.
+VISUAL POLISH AND PREMIUM FEEL:
+I implemented modern UI techniques including: (1) Glassmorphism effects with frosted glass cards and backdrop blur, (2) Animated starfield background that subtly twinkles, (3) 3D card flip animations using CSS transforms with perspective, (4) Particle burst effects on successful matches, (5) Gradient backgrounds and glowing borders that respond to game state. These details create a premium, polished experience that demonstrates attention to visual design - a valuable skill for frontend development.
 
-MULTIPLE DIFFICULTY LEVELS:
-Implementing Easy (6 pairs), Medium (8 pairs), and Hard (12 pairs) modes demonstrates: (a) Dynamic grid rendering based on configuration, (b) Scalable game logic that works with any number of pairs, (c) Responsive layout adjustments for different grid sizes.
+MULTIPLE GAME MODES:
+Zen mode for relaxed play and Challenge mode with streak bonuses demonstrates designing for different user preferences. The streak system adds meaningful gameplay variety and rewards skilled play, while hints provide accessibility for players who get stuck.
 
-BROWSER STORAGE INTEGRATION:
-Best score tracking for each difficulty level demonstrates localStorage APIs - a key browser capability. The game remembers your performance even after closing the browser, showing understanding of client-side persistence.
+ADVANCED REACT PATTERNS:
+The game showcases: (1) useState for complex multi-property state (cards, flipped, matches, streaks, hints), (2) useEffect for timers and localStorage sync, (3) useCallback for memoized event handlers, (4) useRef for DOM element access (particle positioning), (5) Conditional rendering based on game state, (6) Dynamic styling based on card states and game mode.
 
-USER ENGAGEMENT:
-Games provide a mental break that can actually improve learning focus. Having a quick Memory Match game available encourages users to return to the app, where they might then write a journal entry.
-
-CLEAN, MAINTAINABLE CODE:
-The game's straightforward logic results in clean, readable code that's easy to understand and maintain - an important software engineering principle. Unlike complex games with hundreds of edge cases, Memory Match has clear, testable logic.
+CSS ANIMATION SKILLS:
+3D transforms, keyframe animations, particle effects, and smooth transitions demonstrate strong CSS animation capabilities - skills valuable for creating engaging, interactive user interfaces across any web application.
 
 PORTFOLIO VALUE:
-A polished, responsive game with good animations shows: (a) Attention to user experience, (b) CSS animation skills, (c) Proper state management, (d) Complete feature implementation from start to finish.`,
+A visually stunning, unique game with thoughtful UX demonstrates the ability to build complete, polished features from concept to implementation.
+
+UNIQUE MECHANICS SUMMARY - What sets Celestial Memory apart from generic memory games:
+1. Constellation grouping system with completion rewards
+2. Wild cards that match anything, adding strategic choices
+3. Power-ups earned through gameplay (Reveal pairs, Freeze time)
+4. Theme unlocking through wins creates long-term progression
+5. Memory Echo ghost silhouettes on mismatches
+6. Visual constellation lines connecting matched pairs
+7. Score multipliers rewarding consecutive matches (up to 5x)
+8. Three distinct game modes for different play styles
+
+These features transform a simple memory game into a rich, engaging experience with depth, strategy, and visual polish that demonstrates advanced frontend development skills.`,
         { width: contentWidth }
       );
       
