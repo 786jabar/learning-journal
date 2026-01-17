@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { Navbar } from "@/components/Navbar";
+import { BottomNav } from "@/components/BottomNav";
 import { Footer } from "@/components/Footer";
 import { useSyncQueue } from "@/hooks/useSyncQueue";
 import { useAuth } from "@/hooks/useAuth";
@@ -72,10 +73,11 @@ function AppContent() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 pb-20 md:pb-0">
         <Router />
       </main>
       <Footer />
+      <BottomNav />
     </div>
   );
 }

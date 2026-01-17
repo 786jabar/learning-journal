@@ -82,24 +82,6 @@ export function Navbar() {
             </Button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        <div className="md:hidden pb-3 flex gap-2 overflow-x-auto">
-          {navItems.map((item) => (
-            <Link 
-              key={item.path} 
-              href={item.path}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-colors hover-elevate active-elevate-2 ${
-                location === item.path
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground"
-              }`}
-              data-testid={`link-nav-mobile-${item.label.toLowerCase()}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
       </div>
     </nav>
   );
