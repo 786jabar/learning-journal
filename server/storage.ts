@@ -41,6 +41,20 @@ export interface IStorage {
 }
 
 export class DbStorage implements IStorage {
+  // Ensure device-based user exists in database
+  private async ensureUserExists(userId: string): Promise<void> {
+    const existingUser = await this.getUser(userId);
+    if (!existingUser) {
+      // Auto-create user for device-based IDs
+      await db.insert(users).values({
+        id: userId,
+        email: `${userId}@device.local`,
+        firstName: "Device",
+        lastName: "User",
+      }).onConflictDoNothing();
+    }
+  }
+
   // User operations for authentication
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -116,6 +130,9 @@ export class DbStorage implements IStorage {
   }
 
   async createJournal(insertJournal: InsertJournalEntry & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<JournalEntry> {
+    // Ensure user exists before creating journal
+    await this.ensureUserExists(userId);
+    
     const id = insertJournal.id || randomUUID();
     const now = new Date();
     
@@ -177,6 +194,9 @@ export class DbStorage implements IStorage {
   }
 
   async createProject(insertProject: InsertProject & { id?: string; createdAt?: Date; updatedAt?: Date }, userId: string): Promise<Project> {
+    // Ensure user exists before creating project
+    await this.ensureUserExists(userId);
+    
     const id = insertProject.id || randomUUID();
     const now = new Date();
     
