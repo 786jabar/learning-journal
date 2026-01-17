@@ -28,6 +28,10 @@ import PortfolioPage from "@/pages/PortfolioPage";
 import AchievementsPage from "@/pages/AchievementsPage";
 import MemoryGamePage from "@/pages/MemoryGamePage";
 import CanvasPage from "@/pages/CanvasPage";
+import MenuPage from "@/pages/MenuPage";
+import OptionsPage from "@/pages/OptionsPage";
+import SettingsPage from "@/pages/SettingsPage";
+import ExplorePage from "@/pages/ExplorePage";
 
 function Router() {
   // All routes are now public - no authentication required
@@ -51,6 +55,10 @@ function Router() {
       <Route path="/achievements" component={AchievementsPage} />
       <Route path="/memory-game" component={MemoryGamePage} />
       <Route path="/canvas" component={CanvasPage} />
+      <Route path="/menu" component={MenuPage} />
+      <Route path="/options" component={OptionsPage} />
+      <Route path="/settings" component={SettingsPage} />
+      <Route path="/explore" component={ExplorePage} />
       <Route path="/about" component={AboutPage} />
       <Route component={NotFound} />
     </Switch>

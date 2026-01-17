@@ -24,6 +24,10 @@ export function Navbar() {
     { path: "/achievements", label: "Achievements" },
     { path: "/memory-game", label: "Memory Game" },
     { path: "/canvas", label: "Canvas" },
+    { path: "/menu", label: "Menu" },
+    { path: "/options", label: "Options" },
+    { path: "/settings", label: "Settings" },
+    { path: "/explore", label: "Explore" },
     { path: "/about", label: "About" },
   ];
 
