@@ -250,7 +250,7 @@ export default function MemoryGamePage() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const audioNodesRef = useRef<{ oscillators: OscillatorNode[]; gains: GainNode[] } | null>(null);
+  const audioNodesRef = useRef<{ oscillators: OscillatorNode[]; gains: GainNode[]; melodyInterval?: ReturnType<typeof setInterval> } | null>(null);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showCardBackSelector, setShowCardBackSelector] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -295,7 +295,7 @@ export default function MemoryGamePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Ambient space music generator
+  // Sweet melodic music generator - gentle chimes and soft pads
   const startAmbientMusic = useCallback(() => {
     if (audioContextRef.current) return;
     
@@ -303,81 +303,73 @@ export default function MemoryGamePage() {
     audioContextRef.current = ctx;
     
     const masterGain = ctx.createGain();
-    masterGain.gain.value = 0.15;
+    masterGain.gain.value = 0.12;
     masterGain.connect(ctx.destination);
     
     const oscillators: OscillatorNode[] = [];
     const gains: GainNode[] = [];
     
-    // Deep bass drone
-    const bassOsc = ctx.createOscillator();
-    const bassGain = ctx.createGain();
-    bassOsc.type = "sine";
-    bassOsc.frequency.value = 55; // A1
-    bassGain.gain.value = 0.3;
-    bassOsc.connect(bassGain);
-    bassGain.connect(masterGain);
-    bassOsc.start();
-    oscillators.push(bassOsc);
-    gains.push(bassGain);
-    
-    // Harmonic layers
-    const harmonics = [110, 165, 220, 330]; // A2, E3, A3, E4
-    harmonics.forEach((freq, i) => {
+    // Soft pad chord - C major 7 (warm and sweet)
+    const padNotes = [261.63, 329.63, 392.00, 493.88]; // C4, E4, G4, B4
+    padNotes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
       osc.frequency.value = freq;
-      gain.gain.value = 0.1 - i * 0.02;
+      gain.gain.value = 0.08 - i * 0.01;
       osc.connect(gain);
       gain.connect(masterGain);
       osc.start();
       oscillators.push(osc);
       gains.push(gain);
-      
-      // Gentle frequency modulation for shimmer
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-      lfo.type = "sine";
-      lfo.frequency.value = 0.1 + i * 0.05;
-      lfoGain.gain.value = 2;
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc.frequency);
-      lfo.start();
-      oscillators.push(lfo);
     });
     
-    // High ethereal pad
-    const padOsc = ctx.createOscillator();
-    const padGain = ctx.createGain();
-    padOsc.type = "triangle";
-    padOsc.frequency.value = 440;
-    padGain.gain.value = 0.05;
-    padOsc.connect(padGain);
-    padGain.connect(masterGain);
-    padOsc.start();
-    oscillators.push(padOsc);
-    gains.push(padGain);
+    // Gentle melody chimes that play randomly
+    const melodyNotes = [523.25, 587.33, 659.25, 783.99, 880.00, 987.77]; // C5, D5, E5, G5, A5, B5
+    let melodyInterval: ReturnType<typeof setInterval>;
     
-    // Slow modulation on pad
-    const padLfo = ctx.createOscillator();
-    const padLfoGain = ctx.createGain();
-    padLfo.type = "sine";
-    padLfo.frequency.value = 0.05;
-    padLfoGain.gain.value = 50;
-    padLfo.connect(padLfoGain);
-    padLfoGain.connect(padOsc.frequency);
-    padLfo.start();
-    oscillators.push(padLfo);
+    const playChime = () => {
+      const noteFreq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+      const chimeOsc = ctx.createOscillator();
+      const chimeGain = ctx.createGain();
+      
+      chimeOsc.type = "sine";
+      chimeOsc.frequency.value = noteFreq;
+      chimeGain.gain.value = 0;
+      
+      chimeOsc.connect(chimeGain);
+      chimeGain.connect(masterGain);
+      
+      // Soft attack and decay envelope
+      const now = ctx.currentTime;
+      chimeGain.gain.setValueAtTime(0, now);
+      chimeGain.gain.linearRampToValueAtTime(0.15, now + 0.05);
+      chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 2);
+      
+      chimeOsc.start(now);
+      chimeOsc.stop(now + 2.1);
+    };
     
-    audioNodesRef.current = { oscillators, gains };
+    // Play initial chime and set interval for random chimes
+    playChime();
+    melodyInterval = setInterval(() => {
+      if (Math.random() > 0.3) playChime();
+    }, 2000);
+    
+    // Store all references for cleanup
+    audioNodesRef.current = { oscillators, gains, melodyInterval };
   }, []);
 
   const stopAmbientMusic = useCallback(() => {
     if (audioNodesRef.current) {
+      // Stop all oscillators
       audioNodesRef.current.oscillators.forEach(osc => {
         try { osc.stop(); } catch {}
       });
+      // Clear melody interval
+      if (audioNodesRef.current.melodyInterval) {
+        clearInterval(audioNodesRef.current.melodyInterval);
+      }
       audioNodesRef.current = null;
     }
     if (audioContextRef.current) {
