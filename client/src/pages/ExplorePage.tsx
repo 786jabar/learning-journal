@@ -49,8 +49,7 @@ const quickLinks = [
   { path: "/lab5-demo", label: "Service Worker Demo", icon: Code },
   { path: "/lab6-demo", label: "API Integration Demo", icon: Code },
   { path: "/lab7-demo", label: "PWA Features Demo", icon: Code },
-  { path: "/portfolio", label: "Academic Portfolio", icon: Target },
-  { path: "/analytics", label: "Analytics Dashboard", icon: Zap },
+    { path: "/analytics", label: "Analytics Dashboard", icon: Zap },
   { path: "/projects", label: "Project Tracker", icon: Rocket },
 ];
 

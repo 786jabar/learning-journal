@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { 
   BookOpen, FolderKanban, BarChart3, Beaker, Trophy, 
   Gamepad2, Palette, User, Settings, Compass, Home,
-  FileText, Sparkles
+  Sparkles
 } from "lucide-react";
 
 const menuSections = [
@@ -38,7 +38,6 @@ const menuSections = [
   {
     title: "Profile & Settings",
     items: [
-      { path: "/portfolio", label: "Portfolio", icon: FileText, description: "Academic portfolio" },
       { path: "/achievements", label: "Achievements", icon: Trophy, description: "Your progress" },
       { path: "/settings", label: "Settings", icon: Settings, description: "App preferences" },
       { path: "/about", label: "About", icon: User, description: "App information" },
