@@ -42,7 +42,23 @@ import {
   Medal,
   Gift,
   ChevronRight,
-  Layers
+  Layers,
+  Anchor,
+  Bird,
+  Feather,
+  Flower2,
+  Leaf,
+  Mountain,
+  Shell,
+  Waves,
+  TreePine,
+  CircleDot,
+  Hexagon,
+  Pentagon,
+  Triangle,
+  Dice5,
+  Clover,
+  Palmtree
 } from "lucide-react";
 
 type Difficulty = "easy" | "medium" | "hard";
@@ -124,22 +140,36 @@ interface Achievement {
 }
 
 const CELESTIAL_ICONS = [
-  { icon: Moon, name: "Luna", gradient: "from-slate-300 to-indigo-400" },
-  { icon: Sun, name: "Sol", gradient: "from-amber-300 to-orange-500" },
-  { icon: Star, name: "Polaris", gradient: "from-yellow-300 to-amber-500" },
-  { icon: Sparkles, name: "Nebula", gradient: "from-pink-400 to-purple-600" },
-  { icon: CloudLightning, name: "Storm", gradient: "from-cyan-400 to-blue-600" },
-  { icon: Flame, name: "Nova", gradient: "from-orange-400 to-red-600" },
-  { icon: Droplets, name: "Hydra", gradient: "from-blue-400 to-cyan-500" },
-  { icon: Wind, name: "Zephyr", gradient: "from-teal-300 to-emerald-500" },
-  { icon: Snowflake, name: "Cryo", gradient: "from-blue-200 to-indigo-400" },
-  { icon: Heart, name: "Pulsar", gradient: "from-rose-400 to-pink-600" },
-  { icon: Diamond, name: "Crystal", gradient: "from-violet-300 to-purple-500" },
-  { icon: Crown, name: "Corona", gradient: "from-yellow-400 to-amber-600" },
-  { icon: Gem, name: "Stardust", gradient: "from-fuchsia-400 to-pink-500" },
-  { icon: Rocket, name: "Voyager", gradient: "from-slate-400 to-zinc-600" },
-  { icon: Globe, name: "Terra", gradient: "from-emerald-400 to-teal-600" },
-  { icon: Orbit, name: "Eclipse", gradient: "from-indigo-400 to-violet-600" },
+  { icon: Moon, name: "Luna", gradient: "from-slate-200 via-blue-300 to-indigo-400" },
+  { icon: Sun, name: "Sol", gradient: "from-yellow-300 via-amber-400 to-orange-500" },
+  { icon: Star, name: "Polaris", gradient: "from-yellow-200 via-amber-300 to-yellow-500" },
+  { icon: Sparkles, name: "Nebula", gradient: "from-pink-300 via-purple-400 to-violet-600" },
+  { icon: CloudLightning, name: "Storm", gradient: "from-sky-300 via-cyan-400 to-blue-600" },
+  { icon: Flame, name: "Nova", gradient: "from-amber-400 via-orange-500 to-red-600" },
+  { icon: Droplets, name: "Hydra", gradient: "from-cyan-300 via-blue-400 to-indigo-500" },
+  { icon: Wind, name: "Zephyr", gradient: "from-emerald-300 via-teal-400 to-cyan-500" },
+  { icon: Snowflake, name: "Cryo", gradient: "from-white via-blue-200 to-indigo-400" },
+  { icon: Heart, name: "Pulsar", gradient: "from-pink-300 via-rose-400 to-red-500" },
+  { icon: Diamond, name: "Crystal", gradient: "from-violet-200 via-purple-400 to-fuchsia-500" },
+  { icon: Crown, name: "Corona", gradient: "from-amber-300 via-yellow-400 to-orange-500" },
+  { icon: Gem, name: "Stardust", gradient: "from-pink-300 via-fuchsia-400 to-purple-500" },
+  { icon: Rocket, name: "Voyager", gradient: "from-slate-300 via-gray-400 to-zinc-600" },
+  { icon: Globe, name: "Terra", gradient: "from-emerald-300 via-green-400 to-teal-600" },
+  { icon: Orbit, name: "Eclipse", gradient: "from-indigo-300 via-violet-400 to-purple-600" },
+  { icon: Bird, name: "Phoenix", gradient: "from-orange-300 via-red-400 to-rose-600" },
+  { icon: Feather, name: "Zephyra", gradient: "from-sky-200 via-cyan-300 to-teal-500" },
+  { icon: Flower2, name: "Blossom", gradient: "from-pink-200 via-rose-400 to-fuchsia-500" },
+  { icon: Leaf, name: "Verdant", gradient: "from-lime-300 via-green-400 to-emerald-600" },
+  { icon: Mountain, name: "Titan", gradient: "from-stone-300 via-slate-400 to-gray-600" },
+  { icon: Shell, name: "Nautilus", gradient: "from-amber-200 via-orange-300 to-rose-400" },
+  { icon: Waves, name: "Oceanus", gradient: "from-blue-300 via-cyan-400 to-teal-500" },
+  { icon: TreePine, name: "Evergreen", gradient: "from-green-300 via-emerald-400 to-green-600" },
+  { icon: Hexagon, name: "Prism", gradient: "from-violet-300 via-indigo-400 to-blue-500" },
+  { icon: Triangle, name: "Delta", gradient: "from-cyan-300 via-sky-400 to-blue-500" },
+  { icon: Clover, name: "Fortune", gradient: "from-lime-300 via-emerald-400 to-green-500" },
+  { icon: Anchor, name: "Harbor", gradient: "from-slate-300 via-blue-400 to-indigo-500" },
+  { icon: Compass, name: "Navigator", gradient: "from-amber-300 via-yellow-400 to-lime-500" },
+  { icon: Eye, name: "Oracle", gradient: "from-violet-300 via-purple-400 to-indigo-600" },
 ];
 
 const CONSTELLATIONS = [
@@ -218,6 +248,9 @@ export default function MemoryGamePage() {
   const [dailyChallengesCompleted, setDailyChallengesCompleted] = useState(0);
   const [lastDailyDate, setLastDailyDate] = useState<string>("");
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [musicEnabled, setMusicEnabled] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioNodesRef = useRef<{ oscillators: OscillatorNode[]; gains: GainNode[] } | null>(null);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showCardBackSelector, setShowCardBackSelector] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -261,6 +294,115 @@ export default function MemoryGamePage() {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  // Ambient space music generator
+  const startAmbientMusic = useCallback(() => {
+    if (audioContextRef.current) return;
+    
+    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    audioContextRef.current = ctx;
+    
+    const masterGain = ctx.createGain();
+    masterGain.gain.value = 0.15;
+    masterGain.connect(ctx.destination);
+    
+    const oscillators: OscillatorNode[] = [];
+    const gains: GainNode[] = [];
+    
+    // Deep bass drone
+    const bassOsc = ctx.createOscillator();
+    const bassGain = ctx.createGain();
+    bassOsc.type = "sine";
+    bassOsc.frequency.value = 55; // A1
+    bassGain.gain.value = 0.3;
+    bassOsc.connect(bassGain);
+    bassGain.connect(masterGain);
+    bassOsc.start();
+    oscillators.push(bassOsc);
+    gains.push(bassGain);
+    
+    // Harmonic layers
+    const harmonics = [110, 165, 220, 330]; // A2, E3, A3, E4
+    harmonics.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.value = 0.1 - i * 0.02;
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start();
+      oscillators.push(osc);
+      gains.push(gain);
+      
+      // Gentle frequency modulation for shimmer
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.type = "sine";
+      lfo.frequency.value = 0.1 + i * 0.05;
+      lfoGain.gain.value = 2;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start();
+      oscillators.push(lfo);
+    });
+    
+    // High ethereal pad
+    const padOsc = ctx.createOscillator();
+    const padGain = ctx.createGain();
+    padOsc.type = "triangle";
+    padOsc.frequency.value = 440;
+    padGain.gain.value = 0.05;
+    padOsc.connect(padGain);
+    padGain.connect(masterGain);
+    padOsc.start();
+    oscillators.push(padOsc);
+    gains.push(padGain);
+    
+    // Slow modulation on pad
+    const padLfo = ctx.createOscillator();
+    const padLfoGain = ctx.createGain();
+    padLfo.type = "sine";
+    padLfo.frequency.value = 0.05;
+    padLfoGain.gain.value = 50;
+    padLfo.connect(padLfoGain);
+    padLfoGain.connect(padOsc.frequency);
+    padLfo.start();
+    oscillators.push(padLfo);
+    
+    audioNodesRef.current = { oscillators, gains };
+  }, []);
+
+  const stopAmbientMusic = useCallback(() => {
+    if (audioNodesRef.current) {
+      audioNodesRef.current.oscillators.forEach(osc => {
+        try { osc.stop(); } catch {}
+      });
+      audioNodesRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+  }, []);
+
+  // Toggle music on/off
+  const toggleMusic = useCallback(() => {
+    if (musicEnabled) {
+      stopAmbientMusic();
+      setMusicEnabled(false);
+    } else {
+      startAmbientMusic();
+      setMusicEnabled(true);
+    }
+  }, [musicEnabled, startAmbientMusic, stopAmbientMusic]);
+
+  // Cleanup music on unmount
+  useEffect(() => {
+    return () => {
+      stopAmbientMusic();
+    };
+  }, [stopAmbientMusic]);
 
   useEffect(() => {
     const saved = localStorage.getItem("celestial-memory-data");
@@ -840,6 +982,16 @@ export default function MemoryGamePage() {
                 <Award className="w-4 h-4 mr-1" />
                 {achievements.filter(a => a.unlocked).length}/{achievements.length}
               </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMusic}
+                className={`${musicEnabled ? 'text-emerald-400 bg-emerald-500/20' : 'text-indigo-200'} hover:text-white`}
+                data-testid="button-menu-music"
+              >
+                <span className="mr-1">♪</span>
+                {musicEnabled ? "On" : "Off"}
+              </Button>
             </div>
           </div>
 
@@ -1230,8 +1382,23 @@ export default function MemoryGamePage() {
             <Button
               variant="ghost"
               size="icon"
+              onClick={toggleMusic}
+              className={`h-8 w-8 ${musicEnabled ? 'text-emerald-400 bg-emerald-500/20' : 'text-indigo-200'} hover:text-white hover:bg-white/10`}
+              data-testid="button-music-toggle"
+              title={musicEnabled ? "Music On" : "Music Off"}
+            >
+              {musicEnabled ? (
+                <span className="text-xs font-bold">♪</span>
+              ) : (
+                <span className="text-xs font-bold opacity-50">♪</span>
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="text-indigo-200 hover:text-white hover:bg-white/10 h-8 w-8"
+              data-testid="button-sound-toggle"
             >
               {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
             </Button>
