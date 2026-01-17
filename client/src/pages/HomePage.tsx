@@ -85,7 +85,7 @@ export default function HomePage() {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-accent/20 rounded-full blur-3xl animate-spin-slow"></div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-[calc(env(safe-area-inset-top,0px)+3rem)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section - Glass Card */}
         <div className="glass-card rounded-3xl p-8 mb-12 animate-pulse-glow">
           <h1 className="text-5xl font-bold mb-4" data-testid="text-welcome">

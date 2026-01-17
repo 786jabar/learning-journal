@@ -17,7 +17,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full glass-card border-b">
+    <nav className="sticky top-0 z-50 w-full glass-card border-b pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
