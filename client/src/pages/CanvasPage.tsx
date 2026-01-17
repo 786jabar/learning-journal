@@ -149,9 +149,12 @@ export default function CanvasPage() {
     const scaleY = canvasHeight / rect.height;
     
     if ("touches" in e) {
+      // Use touches for touchstart/touchmove, changedTouches for touchend
+      const touch = e.touches[0] || e.changedTouches?.[0];
+      if (!touch) return { x: 0, y: 0 };
       return {
-        x: (e.touches[0].clientX - rect.left) * scaleX,
-        y: (e.touches[0].clientY - rect.top) * scaleY,
+        x: (touch.clientX - rect.left) * scaleX,
+        y: (touch.clientY - rect.top) * scaleY,
       };
     }
     
