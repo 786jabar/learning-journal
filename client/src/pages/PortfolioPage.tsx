@@ -962,15 +962,22 @@ export default function PortfolioPage() {
   }) => (
     <button
       onClick={() => toggleSection(id)}
-      className="w-full flex items-center justify-between gap-2 p-4 text-left hover-elevate rounded-t-lg border-b"
+      className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover-elevate rounded-t-lg"
       data-testid={`button-section-${id}`}
     >
       <div className="flex items-center gap-3">
-        {Icon && <Icon className="h-5 w-5 text-primary" />}
-        <h3 className="text-base font-semibold">{title}</h3>
-        {wordCount && <WordCountBadge {...wordCount} />}
+        <h3 className="text-lg font-medium text-foreground">{title}</h3>
+        {wordCount && viewMode === "edit" && (
+          <span className={`text-xs px-2 py-0.5 rounded-full ${
+            getWordCountStatus(wordCount.current, wordCount.min, wordCount.max) === "good" 
+              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" 
+              : "bg-muted text-muted-foreground"
+          }`}>
+            {wordCount.current} words
+          </span>
+        )}
       </div>
-      {expanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expanded ? "rotate-180" : ""}`} />
     </button>
   );
 
@@ -1001,25 +1008,25 @@ export default function PortfolioPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex flex-col lg:flex-row">
-        <aside className="hidden lg:block w-64 shrink-0 border-r bg-card/50 h-screen sticky top-0 overflow-y-auto">
-          <div className="p-4 border-b">
-            <h2 className="font-bold text-lg">Portfolio Contents</h2>
-            <p className="text-xs text-muted-foreground mt-1">FGCT6021 Mobile Application Development</p>
+      <div className="flex">
+        <aside className="hidden lg:block w-56 shrink-0 border-r h-screen sticky top-0">
+          <div className="p-5 border-b">
+            <h2 className="font-semibold text-sm text-foreground">Contents</h2>
           </div>
-          <ScrollArea className="h-[calc(100vh-120px)]">
-            <nav className="p-2">
+          <ScrollArea className="h-[calc(100vh-65px)]">
+            <nav className="p-3 space-y-0.5">
               {tocItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-left hover-elevate ${
-                    activeSection === item.id ? "bg-primary/10 text-primary font-medium" : ""
+                  className={`w-full px-3 py-2 text-sm rounded-md text-left hover-elevate ${
+                    activeSection === item.id 
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-muted-foreground"
                   }`}
                   data-testid={`toc-${item.id}`}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span className="truncate">{item.label}</span>
+                  {item.label}
                 </button>
               ))}
             </nav>
@@ -1027,49 +1034,52 @@ export default function PortfolioPage() {
         </aside>
 
         <main className="flex-1 min-w-0">
-          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b p-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold" data-testid="heading-portfolio">FGCT6021 Portfolio</h1>
-                  <p className="text-sm text-muted-foreground">January 2026</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button onClick={() => setViewMode(viewMode === "edit" ? "preview" : "edit")} variant="outline" size="sm">
-                    {viewMode === "edit" ? <Eye className="h-4 w-4 mr-1" /> : <EyeOff className="h-4 w-4 mr-1" />}
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
+            <div className="max-w-3xl mx-auto px-6 py-4">
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <h1 className="text-lg font-semibold text-foreground" data-testid="heading-portfolio">
+                  FGCT6021 Portfolio
+                </h1>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button onClick={loadTemplate} variant="ghost" size="sm" data-testid="button-load-template">
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                  <Button onClick={clearAll} variant="ghost" size="sm" data-testid="button-clear-all">
+                    Clear
+                  </Button>
+                  <Button onClick={expandAll} variant="ghost" size="sm" data-testid="button-expand-all">
+                    Expand
+                  </Button>
+                  <Button onClick={collapseAll} variant="ghost" size="sm" data-testid="button-collapse-all">
+                    Collapse
+                  </Button>
+                  <Button 
+                    onClick={() => setViewMode(viewMode === "edit" ? "preview" : "edit")} 
+                    variant="ghost" 
+                    size="sm"
+                    data-testid="button-toggle-view"
+                  >
                     {viewMode === "edit" ? "Preview" : "Edit"}
                   </Button>
                   <Button onClick={saveData} disabled={saving} variant="outline" size="sm" data-testid="button-save-portfolio">
-                    {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
-                    Save
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   </Button>
-                  <Button onClick={generatePDF} disabled={generating} size="sm" data-testid="button-download-pdf">
-                    {generating ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Download className="h-4 w-4 mr-1" />}
-                    Download PDF
+                  <Button 
+                    onClick={generatePDF} 
+                    disabled={generating} 
+                    size="sm" 
+                    data-testid="button-download-pdf"
+                  >
+                    {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
                   </Button>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <Button onClick={loadTemplate} variant="ghost" size="sm" data-testid="button-load-template">
-                  <RotateCcw className="h-3 w-3 mr-1" />
-                  Load Template
-                </Button>
-                <Button onClick={clearAll} variant="ghost" size="sm" data-testid="button-clear-all">
-                  Clear All
-                </Button>
-                <Button onClick={expandAll} variant="ghost" size="sm" data-testid="button-expand-all">
-                  Expand All
-                </Button>
-                <Button onClick={collapseAll} variant="ghost" size="sm" data-testid="button-collapse-all">
-                  Collapse All
-                </Button>
               </div>
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-4">
-            <Card ref={(el) => { sectionRefs.current.cover = el; }} data-testid="section-cover">
-              <SectionHeader id="cover" title="Cover Page & Student Information" expanded={expandedSections.cover} icon={GraduationCap} />
+          <div className="max-w-3xl mx-auto px-6 py-8 space-y-3">
+            <Card ref={(el) => { sectionRefs.current.cover = el; }} className="border shadow-none" data-testid="section-cover">
+              <SectionHeader id="cover" title="Cover Page" expanded={expandedSections.cover} icon={GraduationCap} />
               {expandedSections.cover && (
                 <CardContent className="pt-4 space-y-6">
                   <div className="text-center py-8 px-4 bg-gradient-to-b from-primary/5 to-transparent rounded-lg border">
@@ -1156,7 +1166,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.intro = el; }} data-testid="section-intro">
+            <Card ref={(el) => { sectionRefs.current.intro = el; }} className="border shadow-none" data-testid="section-intro">
               <SectionHeader 
                 id="intro" 
                 title="1. Introduction" 
@@ -1165,17 +1175,13 @@ export default function PortfolioPage() {
                 wordCount={{ current: totalIntroWords, min: 100, max: 250 }}
               />
               {expandedSections.intro && (
-                <CardContent className="pt-4">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Provide an overview of your project, including its purpose and main objectives. Explain the aim of this portfolio and what it documents. 
-                    Reflect on your overall experience during the project, highlighting key learning points, skills developed, and any challenges you faced along the way.
-                  </p>
+                <CardContent className="px-6 pb-6 pt-0">
                   {viewMode === "edit" ? (
                     <Textarea 
                       value={data.introduction}
                       onChange={(e) => updateField("introduction", e.target.value)}
-                      placeholder="Write your introduction here (100-250 words)..."
-                      className="min-h-[200px]"
+                      placeholder="Write your introduction here..."
+                      className="min-h-[180px]"
                       data-testid="textarea-introduction"
                     />
                   ) : (
@@ -1187,7 +1193,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab1 = el; }} data-testid="section-lab1">
+            <Card ref={(el) => { sectionRefs.current.lab1 = el; }} className="border shadow-none" data-testid="section-lab1">
               <SectionHeader 
                 id="lab1" 
                 title="2. Lab 1 – Introduction to Mobile App" 
@@ -1196,18 +1202,13 @@ export default function PortfolioPage() {
                 wordCount={{ current: totalLab1Words, min: 250, max: 400 }}
               />
               {expandedSections.lab1 && (
-                <CardContent className="pt-4">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Write a short reflection on the steps you have followed using GitHub, VS Code, PythonAnywhere, Android Studio, PWA, and Kotlin code. 
-                    You may include screenshots and should describe any challenges you faced while running the code.
-                    Include the links to your GitHub repository and your live project on PythonAnywhere.
-                  </p>
+                <CardContent className="px-6 pb-6 pt-0">
                   {viewMode === "edit" ? (
                     <Textarea 
                       value={data.lab1}
                       onChange={(e) => updateField("lab1", e.target.value)}
-                      placeholder="Write your Lab 1 reflection here (250-400 words)..."
-                      className="min-h-[250px]"
+                      placeholder="Write your Lab 1 reflection here..."
+                      className="min-h-[200px]"
                       data-testid="textarea-lab1"
                     />
                   ) : (
@@ -1219,7 +1220,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab2 = el; }} data-testid="section-lab2">
+            <Card ref={(el) => { sectionRefs.current.lab2 = el; }} className="border shadow-none" data-testid="section-lab2">
               <SectionHeader 
                 id="lab2" 
                 title="3. Lab 2 – Frontend Fundamentals" 
@@ -1228,10 +1229,7 @@ export default function PortfolioPage() {
                 wordCount={{ current: totalLab2Words, min: 150, max: 300 }}
               />
               {expandedSections.lab2 && (
-                <CardContent className="pt-4 space-y-6">
-                  <p className="text-sm text-muted-foreground">
-                    Answer each question in 50–100 words (150–300 words total). Include examples, screenshots or code if relevant.
-                  </p>
+                <CardContent className="px-6 pb-6 pt-0 space-y-5">
                   
                   <div>
                     <Label className="text-sm font-medium">3.1 How did you approach mobile-first design?</Label>
@@ -1281,7 +1279,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab3 = el; }} data-testid="section-lab3">
+            <Card ref={(el) => { sectionRefs.current.lab3 = el; }} className="border shadow-none" data-testid="section-lab3">
               <SectionHeader 
                 id="lab3" 
                 title="4. Lab 3 – JavaScript & DOM Manipulation" 
@@ -1343,7 +1341,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab4 = el; }} data-testid="section-lab4">
+            <Card ref={(el) => { sectionRefs.current.lab4 = el; }} className="border shadow-none" data-testid="section-lab4">
               <SectionHeader 
                 id="lab4" 
                 title="5. Lab 4 – API" 
@@ -1420,7 +1418,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab5 = el; }} data-testid="section-lab5">
+            <Card ref={(el) => { sectionRefs.current.lab5 = el; }} className="border shadow-none" data-testid="section-lab5">
               <SectionHeader 
                 id="lab5" 
                 title="6. Lab 5 – Python & JSON" 
@@ -1497,7 +1495,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab6 = el; }} data-testid="section-lab6">
+            <Card ref={(el) => { sectionRefs.current.lab6 = el; }} className="border shadow-none" data-testid="section-lab6">
               <SectionHeader 
                 id="lab6" 
                 title="7. Lab 6 – Frontend & Backend" 
@@ -1589,7 +1587,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.lab7 = el; }} data-testid="section-lab7">
+            <Card ref={(el) => { sectionRefs.current.lab7 = el; }} className="border shadow-none" data-testid="section-lab7">
               <SectionHeader 
                 id="lab7" 
                 title="8. Lab 7 – PWA" 
@@ -1666,7 +1664,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.mini = el; }} data-testid="section-mini">
+            <Card ref={(el) => { sectionRefs.current.mini = el; }} className="border shadow-none" data-testid="section-mini">
               <SectionHeader 
                 id="mini" 
                 title="9. Mini Project" 
@@ -1755,7 +1753,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.appendix = el; }} data-testid="section-appendix">
+            <Card ref={(el) => { sectionRefs.current.appendix = el; }} className="border shadow-none" data-testid="section-appendix">
               <SectionHeader 
                 id="appendix" 
                 title="Appendices" 
@@ -1784,7 +1782,7 @@ export default function PortfolioPage() {
               )}
             </Card>
 
-            <Card ref={(el) => { sectionRefs.current.bibliography = el; }} data-testid="section-bibliography">
+            <Card ref={(el) => { sectionRefs.current.bibliography = el; }} className="border shadow-none" data-testid="section-bibliography">
               <SectionHeader 
                 id="bibliography" 
                 title="Bibliography" 
