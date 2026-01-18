@@ -3,609 +3,582 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learning Journal PWA - Presentation Notes</title>
+  <title>Learning Journal PWA - Download Resources</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
       padding: 20px;
-      line-height: 1.6;
+      color: #fff;
     }
-    .container { max-width: 900px; margin: 0 auto; }
-    h1 { color: #333; margin-bottom: 10px; }
-    .subtitle { color: #666; margin-bottom: 30px; }
-    .download-section {
-      background: white;
-      border-radius: 12px;
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { 
+      font-size: 2rem; 
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #a855f7, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: #94a3b8; margin-bottom: 30px; }
+    
+    .section {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
       padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
     }
-    h2 { color: #333; margin-bottom: 15px; font-size: 1.3rem; }
+    .section-title {
+      font-size: 1.25rem;
+      color: #a855f7;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc { color: #94a3b8; margin-bottom: 20px; font-size: 0.95rem; }
+    
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .download-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .download-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+    .download-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: #e2e8f0;
+    }
+    .download-card p {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 12px;
+    }
+    
     .btn {
-      display: inline-block;
-      background: #2563eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
       color: white;
-      padding: 12px 24px;
+      padding: 10px 18px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 500;
-      margin-right: 10px;
-      margin-bottom: 10px;
+      font-size: 0.9rem;
       cursor: pointer;
       border: none;
-      font-size: 14px;
+      transition: all 0.2s;
     }
-    .btn:hover { background: #1d4ed8; }
+    .btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+    }
     .btn-secondary {
-      background: #6b7280;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
     }
-    .btn-secondary:hover { background: #4b5563; }
-    .content-box {
-      background: #f8f9fa;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 15px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 13px;
-      white-space: pre-wrap;
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+      box-shadow: none;
     }
-    .copy-notice {
-      color: #059669;
+    
+    .badge {
+      display: inline-block;
+      background: rgba(168, 85, 247, 0.2);
+      color: #c084fc;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
       font-weight: 500;
-      display: none;
-      margin-left: 10px;
     }
-    .instructions {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-radius: 8px;
-      padding: 16px;
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #94a3b8;
+      text-decoration: none;
       margin-bottom: 20px;
+      font-size: 0.9rem;
     }
-    .instructions h3 { color: #92400e; margin-bottom: 8px; }
-    .instructions p { color: #78350f; }
+    .back-link:hover { color: #fff; }
+    
+    .generating {
+      opacity: 0.6;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Learning Journal PWA</h1>
-    <p class="subtitle">Video Presentation Notes & Templates</p>
+    <a href="/" class="back-link">← Back to App</a>
+    
+    <h1>Download Resources</h1>
+    <p class="subtitle">Presentation notes, scripts, and lab templates for your video recording</p>
 
-    <div class="instructions">
-      <h3>How to Download</h3>
-      <p>Click any "Download" button below, or click "Copy to Clipboard" and paste into Google Docs, Word, or Notes app.</p>
+    <!-- PRESENTATION PDF SECTION -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Video Presentation PDF
+      </h2>
+      <p class="section-desc">Complete presentation guide with detailed speaking points for each section of your demo video.</p>
+      
+      <div class="download-grid">
+        <div class="download-card">
+          <h3>Full Presentation Script</h3>
+          <p>25-30 minute video guide with intro, all features, technical explanations, and closing</p>
+          <span class="badge">PDF</span>
+          <br><br>
+          <button class="btn" onclick="generateFullPresentationPDF()" id="btn-full-pdf">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+          </button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Quick Reference Card</h3>
+          <p>Short bullet points to keep visible during recording - key phrases and checklist</p>
+          <span class="badge">PDF</span>
+          <br><br>
+          <button class="btn" onclick="generateQuickReferencePDF()" id="btn-quick-pdf">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="download-section">
-      <h2>Quick Reference Card</h2>
-      <p>Short bullet points to keep visible during recording</p>
-      <button class="btn" onclick="downloadFile('quick-reference')">Download .txt</button>
-      <button class="btn btn-secondary" onclick="copyContent('quick-reference')">Copy to Clipboard</button>
-      <span id="copy-notice-quick" class="copy-notice">Copied!</span>
-      <div class="content-box" id="quick-reference"># Quick Reference Card - Keep This Visible During Recording
-
----
-
-## INTRO (Say This First)
-"I'm [NAME], student ID [ID], presenting my Learning Journal PWA for FGCT6021 Mobile Application Development."
-
----
-
-## PAGE-BY-PAGE BULLET POINTS
-
-### HOME/DASHBOARD
-- Statistics cards (entries, projects, streak)
-- Recent activity feed
-- Mobile-first responsive design
-
-### JOURNAL
-- Markdown editor with formatting
-- Tags for categorization
-- Search and filter
-- Works offline
-
-### PROJECTS
-- Name, description, tech stack
-- Progress tracking
-- GitHub links
-- Status badges
-
-### ANALYTICS
-- Calendar heatmap (like GitHub)
-- Activity charts
-- Tag distribution
-- Streak counter
-
-### LABS (Quick Overview)
-- Lab 3: DOM manipulation
-- Lab 4: Weather API, Clipboard, Notifications
-- Lab 5: localStorage vs IndexedDB
-- Lab 6: PostgreSQL CRUD
-- Lab 7: Service Worker cache
-
-### MEMORY GAME
-- Space theme, 3D flip animations
-- Web Audio API - music generated with code (no audio files!)
-- Oscillators create C major 7 chord
-- Multiple difficulty levels
-- Star rating system
-
-### CREATIVE CANVAS
-- Drawing tools: pencil, brush, eraser, shapes
-- LAYER SYSTEM like Photoshop
-- Undo/redo history
-- Export as PNG
-- Touch gestures for mobile
-
-### PORTFOLIO
-- All sections from university template
-- Markdown editing
-- Preview mode
-- PDF export
-- Word count tracking
-
-### PWA FEATURES (Demo Offline!)
-- Installable as app
-- Works completely offline
-- Service worker caches assets
-- IndexedDB stores data locally
-- Syncs when back online
-
----
-
-## KEY TECH STACK (Mention These)
-
-| Frontend | Backend | Database | PWA |
-|----------|---------|----------|-----|
-| React 18 | Express.js | PostgreSQL | Service Worker |
-| TypeScript | Node.js | Drizzle ORM | IndexedDB |
-| Tailwind CSS | REST API | Neon | Web App Manifest |
-| TanStack Query | | | Background Sync |
-
----
-
-## IMPRESSIVE PHRASES TO USE
-
-- "Mobile-first responsive design"
-- "Offline-first architecture"
-- "Procedurally generated audio using Web Audio API"
-- "Non-destructive layer-based editing"
-- "Full-stack TypeScript application"
-- "Optimistic updates with background sync"
-- "WCAG accessibility guidelines"
-
----
-
-## DEMO CHECKLIST
-
-Before recording:
-- App running and responsive
-- Sample journal entries exist
-- At least one project created
-- Memory Game works with sound
-- Canvas draws properly
-- Portfolio has some content
-- Offline mode tested
-
-During recording:
-- Speak slowly and clearly
-- Pause when pages load
-- Show mobile responsiveness
-- Demo offline mode
-- Play Memory Game briefly
-- Draw something on Canvas
-- Export PDF from Portfolio
-
----
-
-## IF SOMETHING BREAKS
-
-Stay calm! Say:
-- "Let me refresh that..."
-- "As you can see, this is a development environment..."
-- "The important thing to note here is..."
-
-Then continue with the demo.
-
----
-
-## CLOSING (Say This Last)
-
-"This PWA demonstrates modern React development, full-stack architecture with Express and PostgreSQL, offline-first PWA capabilities, multiple API integrations, and creative extensions like the Memory Game and Canvas. Thank you for watching."
-
----
-
-## TOTAL TIME: ~25-30 minutes</div>
+    <!-- LAB TEMPLATES TEXT FILES -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        Lab Content Templates
+      </h2>
+      <p class="section-desc">Pre-written content for each lab section. Download as text files to edit in Word, Google Docs, or any text editor.</p>
+      
+      <div class="download-grid">
+        <div class="download-card">
+          <h3>Lab 1: Development Environment</h3>
+          <p>GitHub, VS Code, PythonAnywhere, Android Studio setup</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(1)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 2: Mobile-First CSS</h3>
+          <p>Responsive design, Flexbox, CSS Grid, challenges</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(2)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 3: JavaScript & DOM</h3>
+          <p>DOM selection, event handling, debugging</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(3)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 4: APIs & Storage</h3>
+          <p>IndexedDB, Weather API, Clipboard, Notifications</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(4)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 5: Server-Side JSON</h3>
+          <p>JSON vs browser storage, Python scripts, Flask API</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(5)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 6: Database Integration</h3>
+          <p>PostgreSQL, CRUD operations, security</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(6)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Lab 7: PWA & Service Workers</h3>
+          <p>Service worker, offline, manifest, installation</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate(7)">Download</button>
+        </div>
+        
+        <div class="download-card">
+          <h3>Mini Project: Game & Canvas</h3>
+          <p>Celestial Memory Game, Creative Canvas, Web Audio API</p>
+          <span class="badge">TXT</span>
+          <br><br>
+          <button class="btn btn-secondary" onclick="downloadLabTemplate('mini')">Download</button>
+        </div>
+      </div>
     </div>
 
-    <div class="download-section">
-      <h2>Full Video Script</h2>
-      <p>Detailed speaking points for each section of your demo</p>
-      <button class="btn" onclick="downloadFile('full-script')">Download .txt</button>
-      <button class="btn btn-secondary" onclick="copyContent('full-script')">Copy to Clipboard</button>
-      <span id="copy-notice-full" class="copy-notice">Copied!</span>
-      <div class="content-box" id="full-script"># Learning Journal PWA - Video Presentation Script
-
-## Pre-Recording Checklist
-- Clear browser cache and test the app is working
-- Have some sample journal entries ready
-- Test offline mode works
-- Prepare the Memory Game
-- Open Creative Canvas
-- Have portfolio page ready
-
----
-
-## INTRODUCTION (1-2 minutes)
-
-### Opening Statement
-"Hello, my name is [Your Name], student ID [Your ID], and I'm presenting my Learning Journal Progressive Web Application developed for the FGCT6021 Mobile Application Development module."
-
-### Project Overview
-"This application is a comprehensive full-stack PWA built with:
-- React 18 with TypeScript for the frontend
-- Express.js for the backend API
-- PostgreSQL with Drizzle ORM for database
-- Complete offline-first architecture with service workers
-
-The main purpose is to help users track their learning journey through journal entries, project management, and interactive learning tools."
-
----
-
-## SECTION 1: HOME/DASHBOARD (1-2 minutes)
-
-### What to Show
-- Navigate to the home page
-- Point out the statistics cards
-- Show the recent activity section
-
-### Speaking Points
-"The dashboard provides an at-a-glance view of learning progress:
-- Total journal entries written
-- Active projects being tracked
-- Learning streak - consecutive days of activity
-- Recent activity showing latest entries and updates
-
-The design follows mobile-first principles - notice how it works perfectly on any screen size."
-
----
-
-## SECTION 2: JOURNAL ENTRIES (2-3 minutes)
-
-### What to Show
-- Navigate to Journal page
-- Create a new entry
-- Show markdown editor
-- Demonstrate tags
-- Show filtering/search
-
-### Speaking Points
-"The Journal is the core feature of this application:
-
-Creating an Entry:
-- Click 'New Entry' to open the editor
-- The markdown editor supports rich formatting - headings, bold, lists, code blocks
-- I can add tags to categorize entries like 'JavaScript', 'React', 'PWA'
-- The word count helps track writing progress
-
-Features:
-- Full-text search across all entries
-- Filter by tags or date range
-- Each entry saves automatically
-- Works completely offline - I'll demonstrate this later
-
-Technical Implementation:
-- Uses React Hook Form with Zod validation
-- TanStack Query for server state management
-- Markdown rendering with react-markdown
-- Stored in PostgreSQL and synced to IndexedDB for offline access"
-
----
-
-## SECTION 3: PROJECTS (1-2 minutes)
-
-### What to Show
-- Navigate to Projects page
-- Show project cards
-- Open a project detail
-- Demonstrate progress tracking
-
-### Speaking Points
-"The Projects section helps track ongoing development work:
-
-- Each project has a name, description, and tech stack
-- Progress bar shows completion percentage
-- Status badges indicate if it's active, completed, or paused
-- Links to GitHub repositories and live demos
-
-This is useful for documenting what technologies I'm learning and tracking my portfolio projects."
-
----
-
-## SECTION 4: ANALYTICS DASHBOARD (1-2 minutes)
-
-### What to Show
-- Navigate to Analytics page
-- Show charts and statistics
-- Point out the calendar heatmap
-- Show streak information
-
-### Speaking Points
-"The Analytics dashboard visualizes learning patterns:
-
-- Activity Calendar shows a GitHub-style heatmap of daily activity
-- Entry Statistics chart shows writing trends over time
-- Tag Distribution shows which topics I focus on most
-- Streak Counter encourages consistent daily learning
-
-This data helps identify learning patterns and stay motivated with visual progress tracking."
-
----
-
-## SECTION 5: LAB DEMONSTRATIONS (2-3 minutes)
-
-### What to Show
-- Navigate to Labs section
-- Briefly show Labs 3-7 demos
-
-### Speaking Points
-"The Labs section demonstrates various web APIs we studied:
-
-Lab 3 - DOM Manipulation:
-- Interactive examples of getElementById, querySelector
-- Event handling demonstrations
-
-Lab 4 - Browser APIs:
-- Weather widget using Open-Meteo API (free, no key required)
-- Geolocation for local weather
-- Clipboard API for copy functionality
-- Browser notifications
-
-Lab 5 - Storage:
-- Comparison between localStorage and IndexedDB
-- JSON data management
-
-Lab 6 - Database:
-- PostgreSQL integration
-- CRUD operations demonstration
-
-Lab 7 - Service Workers:
-- Cache status display
-- Offline capability testing"
-
----
-
-## SECTION 6: CELESTIAL MEMORY GAME (2-3 minutes)
-
-### What to Show
-- Navigate to Memory Game
-- Start a new game
-- Play a few moves
-- Show the scoring system
-- Toggle the ambient music
-
-### Speaking Points
-"The Celestial Memory Game is one of my mini project extensions:
-
-Visual Design:
-- Space-themed cards with celestial objects
-- Animated star background
-- Smooth 3D flip animations using CSS transforms
-
-Gameplay:
-- Classic memory matching mechanic
-- Multiple difficulty levels - 4x3, 4x4, 6x4 grids
-- Move counter and timer
-- Star rating based on performance
-
-Web Audio API Integration:
-- [Toggle music on] This ambient background music is procedurally generated using the Web Audio API
-- No audio files are used - oscillators generate C major 7 chord tones
-- Sound effects play when cards match or don't match
-- The audio only starts after user interaction, respecting browser autoplay policies
-
-Technical Highlights:
-- Fisher-Yates shuffle algorithm for card randomization
-- AudioContext with oscillators and gain nodes
-- Touch-friendly for mobile devices"
-
----
-
-## SECTION 7: CREATIVE CANVAS (2-3 minutes)
-
-### What to Show
-- Navigate to Creative Canvas
-- Draw something simple
-- Switch between tools
-- Demonstrate layers
-- Show undo/redo
-- Export an image
-
-### Speaking Points
-"The Professional Creative Canvas is a full-featured drawing application:
-
-Tool Palette:
-- Pencil for freehand drawing
-- Brush with adjustable size
-- Eraser tool
-- Shape tools - rectangle, circle, line
-- Text tool
-- Color picker with custom colors
-
-Layer System:
-[Create a new layer]
-- Multiple transparent layers like Photoshop
-- Layers can be reordered, hidden, or merged
-- Non-destructive editing - work on one layer without affecting others
-
-Additional Features:
-- Undo/redo history
-- Export as PNG or JPEG
-- Touch support for mobile and tablet
-- Pinch-to-zoom and pan gestures
-
-Technical Implementation:
-- HTML5 Canvas API
-- Pointer Events for unified mouse/touch handling
-- ImageData manipulation for layer compositing
-- requestAnimationFrame for smooth drawing performance"
-
----
-
-## SECTION 8: PORTFOLIO PAGE (2-3 minutes)
-
-### What to Show
-- Navigate to Portfolio page
-- Show the sidebar navigation
-- Expand/collapse sections
-- Toggle between Edit and Preview mode
-- Show PDF export
-
-### Speaking Points
-"The Portfolio page is where I document my learning for this module:
-
-Structure:
-- Follows the university template with all required sections
-- Introduction, Labs 1-7, Mini Project, Appendices, Bibliography
-- Each section has word count tracking
-
-Editing Features:
-- Markdown editor for each section
-- Expand/collapse individual sections
-- 'Expand All' and 'Collapse All' for convenience
-- Preview mode to see formatted output
-
-Export Functionality:
-[Click Download PDF]
-- Exports the complete portfolio as a PDF
-- Formatted with proper headings and sections
-- Ready for submission
-
-Data Persistence:
-- Auto-saves to the database
-- Works offline with local storage backup"
-
----
-
-## SECTION 9: PWA FEATURES (2-3 minutes)
-
-### What to Show
-- Show the install prompt (if available)
-- Demonstrate offline mode
-- Show service worker in DevTools
-
-### Speaking Points
-"This is a fully-featured Progressive Web App:
-
-Installation:
-- Can be installed on desktop or mobile
-- Appears as a native app with its own icon
-- Launches in standalone mode without browser chrome
-
-Offline Functionality:
-[Turn off network in DevTools]
-- Watch - I'm now offline, but the app still works perfectly
-- I can view all my entries, create new ones, navigate everywhere
-- Changes are queued and sync when I'm back online
-[Turn network back on]
-- Now it's syncing my offline changes to the server
-
-Service Worker:
-- Caches essential assets for instant loading
-- Network-first strategy for API calls
-- Background sync for offline writes
-
-Technical Details:
-- Custom service worker in sw.js
-- IndexedDB via localforage for offline data
-- Sync queue for pending operations
-- Web App Manifest for installability"
-
----
-
-## SECTION 10: RESPONSIVE DESIGN (1 minute)
-
-### What to Show
-- Resize the browser to mobile size
-- Show mobile navigation
-- Demonstrate touch-friendly interface
-
-### Speaking Points
-"The entire application is mobile-first responsive:
-
-- Cards stack vertically on mobile, grid on desktop
-- Touch-friendly 44x44 pixel tap targets
-- Bottom navigation on mobile for easy thumb access
-- Swipe gestures work throughout
-- Tested on Chrome, Firefox, Safari, and Edge"
-
----
-
-## CONCLUSION (1 minute)
-
-### Closing Statement
-"To summarize, this Learning Journal PWA demonstrates:
-
-1. Modern React development with TypeScript and hooks
-2. Full-stack architecture with Express and PostgreSQL
-3. Offline-first PWA with service workers and IndexedDB
-4. Multiple API integrations - Weather, GitHub, Web Audio
-5. Creative features - Memory Game and Canvas tool
-6. Academic documentation through the Portfolio system
-
-Thank you for watching. The source code is available on GitHub, and the live application is deployed and accessible at the project URL.
-
-Any questions can be directed to [your email]."
-
----
-
-## TIMING GUIDE
-
-| Section | Duration | Running Total |
-|---------|----------|---------------|
-| Introduction | 1-2 min | 2 min |
-| Dashboard | 1-2 min | 4 min |
-| Journal | 2-3 min | 7 min |
-| Projects | 1-2 min | 9 min |
-| Analytics | 1-2 min | 11 min |
-| Labs | 2-3 min | 14 min |
-| Memory Game | 2-3 min | 17 min |
-| Canvas | 2-3 min | 20 min |
-| Portfolio | 2-3 min | 23 min |
-| PWA Features | 2-3 min | 26 min |
-| Responsive | 1 min | 27 min |
-| Conclusion | 1 min | 28 min |
-
-Total Estimated Time: 25-30 minutes
-
----
-
-## TIPS FOR RECORDING
-
-1. Speak slowly and clearly - viewers may be non-native English speakers
-2. Pause briefly when navigating to let the page load
-3. Move your mouse smoothly - jerky movements are distracting
-4. Zoom in on important UI elements if needed
-5. Have sample data ready - empty screens look unprofessional
-6. Test everything before recording - nothing worse than a bug mid-demo
-7. Use keyboard shortcuts where possible - looks more professional
-8. Mention file names/locations when discussing code
-9. Stay positive even if something goes wrong - just explain and move on
-10. End confidently - summarize key points and thank the viewer</div>
+    <!-- ALL FILES -->
+    <div class="section">
+      <h2 class="section-title">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Download All
+      </h2>
+      <p class="section-desc">Get everything in one click - all PDFs and text templates.</p>
+      
+      <button class="btn" onclick="downloadAll()" id="btn-all" style="margin-right: 10px;">
+        Download All Files
+      </button>
     </div>
-
   </div>
 
   <script>
-    function downloadFile(type) {
-      const content = document.getElementById(type === 'quick-reference' ? 'quick-reference' : 'full-script').textContent;
-      const filename = type === 'quick-reference' ? 'Quick-Reference-Card.txt' : 'Video-Presentation-Script.txt';
-      
+    const { jsPDF } = window.jspdf;
+
+    // Lab content templates
+    const labTemplates = {
+      1: `LAB 1: DEVELOPMENT ENVIRONMENT SETUP
+=====================================
+
+OVERVIEW
+--------
+This lab establishes the foundational development environment for the Learning Journal PWA.
+
+CONTENT (400-600 words)
+-----------------------
+In Lab 1, I established the foundational development environment for the Learning Journal PWA, a critical first step that would support all subsequent development work. I began by creating a comprehensive GitHub repository to manage version control throughout the project lifecycle. Understanding the importance of maintaining a clean commit history, I ensured all code changes were tracked with meaningful, descriptive commit messages following conventional commit standards (e.g., "feat: add journal entry component", "fix: resolve offline sync issue"). Using Visual Studio Code as my primary Integrated Development Environment (IDE), I configured essential extensions including ESLint for code linting and error detection, Prettier for consistent code formatting, and the TypeScript compiler for static type checking and improved code quality.
+
+I thoroughly explored PythonAnywhere as a potential deployment platform, gaining hands-on experience with hosting Flask applications and serving static files. This involved understanding the platform's file structure, virtual environment setup, and WSGI configuration. While my final deployment architecture uses a different approach with Node.js and Express, this experience proved invaluable for understanding fundamental web hosting concepts including domain configuration, SSL certificates, and server logs.
+
+For Android development exploration, I installed Android Studio and conducted a comprehensive examination of how PWAs can be packaged as native Android applications using Trusted Web Activities (TWA). This involved running sample Kotlin code to understand the basics of native Android development, including activity lifecycle, XML layouts, and Gradle build configurations. I compared native approaches with web-based development, noting that PWAs offer significant advantages in terms of cross-platform compatibility and deployment simplicity while native apps provide deeper device integration.
+
+The PWA concepts I mastered during this lab included understanding the critical role of manifest.webmanifest files for app installability (including icons, theme colors, display modes, and start URLs), service workers for sophisticated offline caching strategies (cache-first, network-first, stale-while-revalidate), and the app shell architecture pattern for instant loading. These foundational concepts formed the architectural backbone for later labs.
+
+Challenges I faced included correctly configuring Git credentials across multiple environments and understanding the complex relationship between local development branches and remote repository tracking. I resolved these issues by carefully studying the official Git documentation, implementing SSH key authentication for secure passwordless access, and creating a personal workflow that includes regular commits, feature branches, and pull request reviews.
+
+KEY TOPICS
+----------
+- GitHub repository setup and version control
+- Visual Studio Code configuration with extensions
+- PythonAnywhere deployment exploration
+- Android Studio and TWA concepts
+- PWA fundamentals (manifest, service workers, app shell)
+
+WORD COUNT TARGET: 400-600 words`,
+
+      2: `LAB 2: MOBILE-FIRST DESIGN AND CSS
+===================================
+
+QUESTION 1: MOBILE-FIRST APPROACH (200-300 words)
+-------------------------------------------------
+I approached mobile-first design methodology by systematically starting with the smallest viewport (320px mobile) and progressively enhancing the interface for larger screens. This approach ensures that the core functionality and content are accessible on all devices, with enhanced layouts unlocked as screen real estate increases. Using Tailwind CSS, I implemented a comprehensive responsive breakpoint system (sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px) to adjust layouts dynamically.
+
+For example, the main navigation implements horizontal scroll with touch-friendly swipe gestures on mobile devices, transitioning to a full horizontal navbar with hover states on desktop viewports. Content cards stack vertically in a single column on mobile for optimal readability, then display in responsive grids (2 columns on tablet, 3-4 columns on desktop) on larger screens using Tailwind's grid utilities. Following WCAG accessibility guidelines, I ensured all touch targets were at least 44x44 pixels for comfortable finger tapping, with adequate spacing between interactive elements to prevent accidental taps.
+
+
+QUESTION 2: CSS CONCEPTS APPLIED (200-300 words)
+------------------------------------------------
+The most transformative CSS concepts I applied were Flexbox combined with CSS Grid for creating sophisticated responsive layouts that adapt seamlessly across devices. Flexbox proved invaluable for easily centering content both horizontally and vertically, distributing space between elements with justify-content and align-items properties, and creating flexible navigation bars that wrap gracefully. I extensively used "flex-wrap: wrap" to handle content overflow gracefully on smaller screens.
+
+For the complex dashboard layout featuring statistics cards, charts, and activity feeds, CSS Grid enabled me to create intricate multi-column layouts with varying row heights that automatically adjust based on content and viewport. The grid-template-columns with auto-fill and minmax() functions allowed cards to flow naturally without explicit breakpoint adjustments. The "gap" property simplified spacing management significantly compared to traditional margin-based approaches.
+
+
+QUESTION 3: CHALLENGES AND SOLUTIONS (200-300 words)
+----------------------------------------------------
+The most challenging aspect was achieving pixel-perfect consistent styling across different browsers (Chrome, Firefox, Safari, Edge) and understanding the nuanced rules of CSS specificity and cascade. Initially, I struggled significantly with z-index stacking contexts, especially for sticky headers that needed to overlay content while modal overlays needed to overlay everything including the header.
+
+Understanding that z-index only works within stacking contexts, and that certain CSS properties (transform, opacity, filters) create new stacking contexts, was a breakthrough moment. I also found it confusing to manage responsive images that maintain their intrinsic aspect ratios while fitting their parent containers without distortion or overflow. The object-fit property (cover, contain) and aspect-ratio CSS property became essential tools.
+
+I overcame these challenges by leveraging Tailwind's utility classes which abstract away many browser inconsistencies with built-in prefixes and normalizations, carefully planning my component hierarchy to minimize z-index values needed, and implementing a consistent naming convention for custom utility classes.
+
+KEY TOPICS: Mobile-first responsive design, Flexbox and CSS Grid, Tailwind CSS breakpoint system, Cross-browser compatibility, Z-index and stacking contexts
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      3: `LAB 3: JAVASCRIPT AND DOM MANIPULATION
+=======================================
+
+QUESTION 1: DOM SELECTION METHODS (200-300 words)
+-------------------------------------------------
+I strategically employed multiple DOM selection methods based on their specific strengths and use cases. I primarily used document.getElementById() for accessing unique elements such as the theme toggle button, date display containers, and modal roots, as it provides the fastest, most direct access to specific elements with O(1) lookup time.
+
+For collections of similar elements like journal entry cards, navigation links, and form inputs, I used document.querySelectorAll() which returns a static NodeList that I could iterate over using forEach(), map with Array.from(), or for...of loops. I also extensively used querySelector() for CSS selector-based selection when I needed more complex targeting with attribute selectors, pseudo-classes, or descendant combinators (e.g., 'button[data-action="save"]', '.card:not(.archived)').
+
+In React components, I leveraged useRef hooks for direct DOM access when needed (e.g., for canvas elements, focus management, and scroll position), which provides a stable reference across re-renders.
+
+
+QUESTION 2: EVENT HANDLING CHALLENGES (200-300 words)
+-----------------------------------------------------
+The most challenging part was managing event listeners and ensuring they were properly attached after DOM elements were rendered in React's virtual DOM lifecycle. Initially, my JavaScript event handlers executed before the HTML fully loaded, causing frustrating null reference errors that were difficult to debug.
+
+In vanilla JavaScript contexts, I solved this by either placing scripts at the end of the body element or wrapping initialization code in DOMContentLoaded event listeners to ensure the DOM was fully parsed. In React, I learned to use useEffect hooks with proper dependency arrays to attach event listeners after component mounting, and crucially, to implement cleanup functions to remove listeners on unmount to prevent memory leaks.
+
+Another significant challenge was understanding event propagation (bubbling and capturing phases) when implementing click handlers on nested elements like cards containing buttons. I used event.stopPropagation() strategically to prevent unwanted bubbling.
+
+
+QUESTION 3: TESTING AND DEBUGGING (200-300 words)
+-------------------------------------------------
+I employed a comprehensive testing and debugging strategy using browser developer tools, primarily Chrome DevTools which offers an extensive suite of debugging capabilities. The Console tab served as my primary output for logging variable values, tracking execution flow with console.group() for organized output, and catching runtime errors with detailed stack traces.
+
+I used console.log(), console.table() for array/object visualization, and console.time()/timeEnd() for performance measurement extensively. For complex debugging scenarios, I set breakpoints in the Sources tab to pause execution and step through code line by line, inspecting the call stack, local variables, and closure scopes at each step.
+
+I implemented robust try-catch blocks throughout the codebase to handle potential errors gracefully and display meaningful, user-friendly error messages through the toast notification system. Chrome DevTools' Network tab was essential for verifying API calls, and the Application tab helped me debug IndexedDB storage and service worker registration.
+
+KEY TOPICS: DOM selection methods, Event handling and propagation, React useRef and useEffect hooks, Chrome DevTools debugging, Error handling with try-catch
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      4: `LAB 4: APIs AND BROWSER STORAGE
+================================
+
+QUESTION 1: APIs USED (200-300 words)
+-------------------------------------
+For Storage APIs, I strategically chose IndexedDB via the localforage library for persistent offline storage of journal entries, projects, and application state. IndexedDB provides significantly larger storage capacity (potentially gigabytes versus 5-10MB for localStorage), supports structured data with indexes for efficient querying, and handles asynchronous operations without blocking the main thread. I also utilized localStorage for simple key-value pairs like user preferences and theme settings.
+
+For Browser APIs, I integrated multiple modern web APIs: the Clipboard API for seamless copy-to-clipboard functionality on journal entries and code snippets, the Notifications API for configurable study reminders and achievement alerts with user permission handling, the Geolocation API to optionally record location data with entries for contextual awareness, and the Web Audio API for generating ambient background music in the Celestial Memory Game using oscillators and gain nodes.
+
+For Third-Party APIs, I integrated the Open-Meteo Weather API (completely free, no API key required) for displaying current weather conditions based on geolocation, and the GitHub REST API using Octokit for displaying user profiles and repository statistics.
+
+
+QUESTION 2: DOM MANIPULATION WITH API DATA (200-300 words)
+----------------------------------------------------------
+Each API integration required thoughtful DOM manipulation strategies to display results elegantly and handle loading/error states. For the Weather API, I implemented asynchronous data fetching using the Fetch API with async/await syntax, parsed the JSON response to extract temperature, humidity, wind speed, and weather codes, and dynamically created React components with Tailwind styling to display the information.
+
+The GitHub API integration updates user profile cards by populating image src attributes for avatars using the GitHub avatar URL, textContent for repository counts and follower statistics. Clipboard API integration attached event listeners to copy buttons that utilize navigator.clipboard.writeText() to write journal content to the clipboard, with visual feedback updating button states (showing checkmarks on success).
+
+I implemented comprehensive loading states using skeleton components and Loader2 spinners from lucide-react while data is being fetched.
+
+
+QUESTION 3: CHALLENGES WITH APIs (200-300 words)
+------------------------------------------------
+The main challenges were handling API errors gracefully across various failure modes and managing complex asynchronous operations with proper state synchronization. Network failures could crash the entire application or leave users with stale data, so I implemented comprehensive try-catch blocks with user-friendly error messages.
+
+CORS (Cross-Origin Resource Sharing) issues arose with some APIs that didn't include permissive Access-Control-Allow-Origin headers, which I resolved by either using CORS proxy services for development or selecting APIs with properly configured CORS headers. Rate limiting on the GitHub API (60 requests/hour for unauthenticated requests) required implementing intelligent caching of responses in localStorage with timestamp-based expiration.
+
+The Web Audio API required understanding audio context lifecycle, especially regarding browser autoplay policies that require user interaction before audio can play.
+
+
+QUESTION 4: HOW APIs IMPROVED THE PWA (200-300 words)
+-----------------------------------------------------
+These APIs significantly improved my PWA by enabling robust offline functionality, deep personalization, and real-time contextual data that transforms the user experience. IndexedDB allows users to create, read, update, and delete journal entries completely offline, with all changes queued and synchronized when connectivity returns.
+
+The Weather API adds valuable contextual information to entries, showing what the weather conditions were during study sessions. Browser notifications keep users engaged with configurable study reminders. The GitHub API creates a connected developer experience by displaying the user's coding activity. The Web Audio API enables the Celestial Memory Game's ambient soundscape with dynamically generated C major 7 chords and gentle chimes.
+
+KEY TOPICS: IndexedDB and localStorage, Weather/GitHub/Clipboard APIs, Fetch API and async/await, CORS and rate limiting, Error handling strategies
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      5: `LAB 5: SERVER-SIDE STORAGE WITH JSON
+=====================================
+
+QUESTION 1: JSON VS BROWSER STORAGE (200-300 words)
+---------------------------------------------------
+JSON file storage differs fundamentally from browser storage in several architectural and functional aspects. JSON files are stored on the server filesystem, making data inherently accessible across different devices, browsers, and sessions - a user can start journaling on their laptop and continue on their phone seamlessly. In contrast, localStorage and IndexedDB are strictly client-side storage mechanisms that are device-specific and browser-specific.
+
+JSON files can be easily backed up using standard file system tools, version-controlled with Git for complete change history and rollback capabilities, and shared between users or exported for data portability. However, browser storage offers significantly faster read/write operations since it doesn't require network round-trips to a server - IndexedDB operations complete in milliseconds locally versus hundreds of milliseconds for server requests.
+
+For my PWA architecture, I strategically use both approaches: IndexedDB serves as the primary data store for instant offline access and responsive user experience, while server-side storage (PostgreSQL/JSON) provides cross-device synchronization and data backup.
+
+
+QUESTION 2: PYTHON SCRIPTS FOR JSON (200-300 words)
+---------------------------------------------------
+I created comprehensive Python scripts that manage JSON file operations using the built-in json module for serialization and deserialization. The script workflow begins by reading the existing JSON file from the filesystem using open() with 'r' mode, parsing the JSON string into a Python dictionary or list using json.load(), modifying the data structure as needed (adding new entries, updating existing records, or deleting specified entries), then writing the updated data structure back to the file using json.dump() with indentation for readability.
+
+I exposed these operations as Flask RESTful API endpoints following proper HTTP semantics. For example, a POST request to /api/reflections triggers the script to read the current reflections array, append a new reflection object with an auto-incremented ID, add server-generated timestamps, validate required fields, and atomically save the file. Comprehensive error handling with try-except blocks ensures the file is properly closed even if an exception occurs during processing.
+
+
+QUESTION 3: LOCAL VS DEPLOYED DATA (200-300 words)
+--------------------------------------------------
+Locally, my PWA shows data from both IndexedDB (providing offline-first instant access) and the server API (providing synced, authoritative data). When the application loads, users see their locally-cached entries immediately from IndexedDB - this happens in milliseconds, providing a perception of instant loading. Simultaneously, a background fetch retrieves the latest data from the server API, merging any updates seamlessly.
+
+On GitHub Pages (a static hosting platform), users would see only the static JSON file content that was included at the time of deployment - the data is essentially frozen and cannot be dynamically updated after deployment. This fundamental limitation exists because GitHub Pages serves only static files; there is no server-side execution environment to process write requests.
+
+For dynamic functionality requiring persistent user data, I deploy the backend to platforms like PythonAnywhere (for Flask), Replit (for Node.js/Express), or similar services where server-side code can handle read/write operations.
+
+
+QUESTION 4: REFLECTIONS FEATURE (200-300 words)
+-----------------------------------------------
+I added a comprehensive reflections feature that allows users to write daily learning reflections categorized by customizable topics. These reflections are stored in a well-structured JSON file (and synced to PostgreSQL) and can be filtered by category, searched by keyword, sorted by date, and exported in multiple formats.
+
+The JSON structure follows a consistent schema including: unique ID for identification, author name for multi-user scenarios, reflection text content with markdown support for formatting, category/tag for organization, created_at and updated_at timestamps for temporal tracking, and optional metadata like mood indicators.
+
+This feature strategically complements the main journal entries by providing a quick-capture option for brief thoughts, insights, and "aha moments" that don't warrant a full journal entry. The API endpoints return appropriate HTTP status codes (200 OK, 201 Created, 404 Not Found, 500 Internal Server Error).
+
+KEY TOPICS: JSON file storage vs browser storage, Python/Flask REST API development, File I/O operations, Static vs dynamic hosting, Data synchronization strategies
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      6: `LAB 6: DATABASE INTEGRATION
+============================
+
+QUESTION 1: DATABASE SETUP (200-300 words)
+------------------------------------------
+I integrated PostgreSQL as the primary relational database for persistent server-side storage, replacing the file-based JSON approach for improved scalability, concurrent access handling, and data integrity. Using Drizzle ORM with TypeScript, I defined strongly-typed database schemas that provide compile-time type checking and autocompletion.
+
+The schema includes tables for journal entries (id, title, content, tags, created_at, updated_at, device_id), projects (id, name, description, tech_stack, status, progress, github_url), and user preferences (theme, notification settings, sync preferences). I established the database connection using the @neondatabase/serverless package which provides a PostgreSQL-compatible interface optimized for serverless environments with connection pooling.
+
+The DATABASE_URL environment variable securely stores connection credentials, keeping sensitive information out of the codebase. Schema migrations are handled through Drizzle Kit's push command (npm run db:push).
+
+
+QUESTION 2: CRUD OPERATIONS (200-300 words)
+-------------------------------------------
+I implemented comprehensive Create, Read, Update, Delete (CRUD) operations through a clean storage interface abstraction that separates data access logic from route handlers. CREATE operations use Drizzle's insert() method with returning() to insert new records and return the created entity with its auto-generated ID and timestamps.
+
+READ operations utilize select() with optional where() clauses for filtering by device_id, category, date ranges, or search terms, supporting both single-record retrieval (findFirst) and collection queries (findMany) with orderBy for sorting. UPDATE operations employ update().set().where() chains to modify specific fields of existing records. DELETE operations use delete().where() to remove records, with soft-delete patterns available for recoverable deletion.
+
+All operations are wrapped in try-catch blocks with appropriate error handling, returning meaningful HTTP status codes (200 OK, 201 Created, 204 No Content, 404 Not Found, 500 Internal Server Error).
+
+
+QUESTION 3: FRONTEND-BACKEND COMMUNICATION (200-300 words)
+----------------------------------------------------------
+The frontend communicates with the database through RESTful API endpoints defined in the Express.js backend using the Fetch API wrapped in TanStack Query for intelligent caching, automatic refetching, and optimistic updates. GET requests to endpoints like /api/entries retrieve data that TanStack Query caches by query key, preventing redundant network requests.
+
+POST, PUT, and DELETE requests use the apiRequest helper function which handles JSON serialization, error responses, and authentication headers. After mutations, queryClient.invalidateQueries() triggers automatic refetching of affected data.
+
+The offline-first architecture layers IndexedDB on top of this flow: when online, data is fetched from the server and cached locally; when offline, data is read from IndexedDB and write operations are queued in a sync queue.
+
+
+QUESTION 4: SECURITY CONSIDERATIONS (200-300 words)
+---------------------------------------------------
+I implemented multiple security measures to protect database operations and user data. Input validation using Zod schemas on both client and server ensures all data meets expected formats before reaching the database, preventing malformed data and type coercion attacks. Parameterized queries through Drizzle ORM's query builder prevent SQL injection attacks.
+
+The device_id-based data isolation ensures users can only access their own data without requiring full authentication, with all queries including WHERE clauses filtering by the requesting device's ID. Environment variables store database credentials (DATABASE_URL), never committed to version control. HTTPS is enforced in production to encrypt data in transit.
+
+Rate limiting on API endpoints prevents abuse and denial-of-service attacks. Error messages returned to clients are sanitized to avoid leaking database structure or internal implementation details.
+
+
+QUESTION 5: QUERY OPTIMIZATION (200-300 words)
+----------------------------------------------
+I optimized database queries and implemented caching strategies to ensure responsive performance even with large datasets. Database indexes are defined on frequently-queried columns: device_id for user isolation, created_at for chronological sorting, and category for filtered views.
+
+Pagination using limit and offset prevents loading entire tables into memory. Query results are cached at multiple levels: TanStack Query caches API responses client-side with configurable stale times, IndexedDB provides persistent local cache surviving page reloads, and server-side caching reduces database load for frequently-accessed data.
+
+Selective field retrieval using Drizzle's partial select syntax fetches only needed columns. Batch operations combine multiple inserts or updates into single database transactions, reducing round-trips.
+
+KEY TOPICS: PostgreSQL with Drizzle ORM, CRUD operations, RESTful API design, Frontend-backend communication, Security and SQL injection prevention, Query optimization and caching
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      7: `LAB 7: PWA FEATURES AND SERVICE WORKERS
+========================================
+
+QUESTION 1: SERVICE WORKER IMPLEMENTATION (200-300 words)
+---------------------------------------------------------
+I implemented a comprehensive service worker (sw.js) that intercepts network requests and implements sophisticated caching strategies for offline functionality. The service worker lifecycle begins with the 'install' event where I pre-cache essential app shell resources (HTML, CSS, JavaScript bundles, icons, fonts) using the Cache API, ensuring the application loads instantly on repeat visits.
+
+During the 'activate' event, old caches are cleaned up to prevent storage bloat, with cache versioning enabling smooth updates. For fetch event handling, I implemented a cache-first strategy for static assets (returning cached versions immediately for fast performance, updating cache in background), network-first for API calls (ensuring fresh data when online, falling back to cached responses offline), and stale-while-revalidate for semi-dynamic content.
+
+The Background Sync API queues failed POST/PUT/DELETE requests when offline, automatically retrying them when connectivity returns. Push notification support enables server-triggered notifications for reminders and updates.
+
+
+QUESTION 2: OFFLINE FUNCTIONALITY (200-300 words)
+-------------------------------------------------
+The PWA provides complete offline functionality through a layered caching architecture combining the service worker cache and IndexedDB. When offline, users can view all previously-loaded journal entries, projects, and analytics from IndexedDB - the app appears fully functional. New entries and edits are saved to IndexedDB immediately, providing instant feedback, and simultaneously queued in a sync queue array stored in localStorage.
+
+Visual indicators (a subtle offline badge in the header) inform users of their connectivity status without being intrusive. When the network returns, the 'online' event triggers the sync queue processor which iterates through pending operations, sending each to the server API in order.
+
+Conflict resolution uses timestamp comparison: if the server's version is newer than the queued change, the user is prompted to choose which version to keep. The entire process is invisible to users who simply see their changes "just work" regardless of connectivity.
+
+
+QUESTION 3: PWA INSTALLATION EXPERIENCE (200-300 words)
+-------------------------------------------------------
+I optimized the PWA installation experience through a carefully crafted manifest.json (manifest.webmanifest) and user-friendly install prompts. The manifest defines essential metadata: name and short_name for display, start_url for the entry point, display: "standalone" for fullscreen app-like experience without browser chrome, theme_color and background_color for native-feeling splash screens, and a comprehensive icon set (192x192 and 512x512 in PNG format with maskable variants).
+
+The 'beforeinstallprompt' event is captured and deferred, allowing me to display a custom, contextual install button rather than relying on the browser's generic prompt. This custom prompt appears after the user has engaged with the app, increasing installation likelihood.
+
+For iOS Safari (which doesn't support beforeinstallprompt), I detect the platform and display instructions for "Add to Home Screen" via the share menu. Post-installation, the 'appinstalled' event triggers analytics and hides the install prompt.
+
+
+QUESTION 4: PWA TESTING AND DEBUGGING (200-300 words)
+-----------------------------------------------------
+I employed Chrome DevTools' Application panel extensively for PWA testing and debugging. The Service Workers section displays registration status, allows manual updates and unregistration, and enables offline simulation for testing cache behavior. I used "Update on reload" during development to ensure the latest service worker code was always active.
+
+The Cache Storage section shows all cached resources, enabling verification that critical assets are pre-cached. The Manifest section validates manifest.json parsing, displays installability status with specific error messages for any issues. Lighthouse PWA audits provided comprehensive scoring across installability, PWA-optimized criteria, and best practices.
+
+I tested offline scenarios by toggling "Offline" mode in the Network panel, verifying the app remained functional and displayed appropriate offline indicators. IndexedDB contents were inspected and modified directly in the Storage section for debugging data sync issues.
+
+KEY TOPICS: Service worker lifecycle (install, activate, fetch), Caching strategies (cache-first, network-first, stale-while-revalidate), Background Sync API, Web App Manifest configuration, Installation experience optimization, PWA testing with Chrome DevTools and Lighthouse
+
+WORD COUNT TARGET: Each question 200-300 words`,
+
+      mini: `MINI PROJECT: EXTENDED FEATURES
+================================
+
+QUESTION 1: CELESTIAL MEMORY GAME (300-400 words)
+-------------------------------------------------
+For my mini project extension, I developed a sophisticated Celestial Memory Game that demonstrates advanced JavaScript capabilities, creative UI design, and integration of the Web Audio API for procedurally generated ambient music. The game features a space-themed visual design with animated stars, gradient backgrounds transitioning between deep purples and cosmic blues, and cards depicting celestial objects (planets, stars, galaxies, constellations) with smooth flip animations using CSS 3D transforms.
+
+The game logic implements the classic memory matching mechanic with enhanced features: cards are shuffled using the Fisher-Yates algorithm for true randomization, players flip two cards at a time with a brief delay for viewing before non-matching pairs flip back, matched pairs remain visible with a celebratory particle animation effect. I implemented multiple difficulty levels (4x3, 4x4, 6x4 grids) that adjust both the number of cards and the complexity of matching. A comprehensive scoring system tracks moves (fewer is better), time elapsed, and calculates a star rating (1-3 stars) based on performance relative to the optimal solution.
+
+The most innovative feature is the Web Audio API integration that generates ambient background music procedurally without requiring audio files. Using the AudioContext, I create oscillators with sine and triangle waveforms playing notes from a C major 7 chord (C4, E4, G4, B4) with gentle attack and release envelopes controlled by GainNode for smooth volume transitions. Additional ambient layers include subtle white noise filtered through a low-pass filter for a "space atmosphere" effect, and occasional random "chime" sounds using higher-pitched oscillators when cards are matched.
+
+The audio responds to game events: matching pairs trigger harmonious chords, while mismatches play discordant tones. Users can toggle the audio on/off respecting browser autoplay policies (requiring user interaction before audio starts). This procedural audio approach demonstrates understanding of digital signal processing concepts, the Web Audio API's node-based architecture, and creates a unique, non-repetitive soundscape that enhances immersion.
+
+
+QUESTION 2: PROFESSIONAL CREATIVE CANVAS (300-400 words)
+--------------------------------------------------------
+The Professional Creative Canvas is a sophisticated drawing application built entirely with the HTML5 Canvas API and advanced JavaScript, featuring a professional-grade tool suite and unique overlay architecture. The tool palette includes: pencil for freehand drawing with pressure-sensitive stroke width (using Pointer Events), brush with soft edges achieved through radial gradients, eraser that draws with the background color or uses destination-out compositing for true transparency, shapes (rectangle, ellipse, line, polygon) with both stroke and fill options, text tool with font family/size selection, and a color picker with both preset swatches and custom RGB/HSL input.
+
+The overlay architecture is the canvas's most distinctive feature, enabling non-destructive editing similar to professional tools like Photoshop. Multiple transparent layers can be created, reordered, hidden, and merged. Each layer maintains its own ImageData, and the visible canvas composites all visible layers in order using globalCompositeOperation. Users can work on any layer without affecting others, enable layer locking to prevent accidental edits, and adjust layer opacity for watermark effects or sketching overlays.
+
+Undo/redo functionality maintains a history stack of canvas states, with each significant action (stroke complete, shape placed, layer merge) pushing a snapshot to the stack. The history is limited to prevent memory issues, with older states being discarded using a sliding window approach. Save functionality exports the composited canvas as PNG or JPEG using canvas.toDataURL(), while a "Save Project" option serializes layer data and history to JSON for later restoration.
+
+The canvas supports touch input with multi-touch gestures: pinch-to-zoom using touch point distance calculations, two-finger pan for navigation, and single-finger drawing. Performance optimization includes dirty rectangle tracking (only re-rendering changed regions), requestAnimationFrame for smooth drawing, and off-screen canvas buffering for complex operations.
+
+
+QUESTION 3: TECHNICAL CHALLENGES AND SOLUTIONS (200-300 words)
+--------------------------------------------------------------
+Developing the mini project features presented several significant technical challenges requiring creative problem-solving. The Web Audio API's autoplay restrictions initially prevented background music from starting automatically; I solved this by creating the AudioContext on the first user interaction (card click) and implementing a "Start Game" button that explicitly begins audio playback.
+
+Managing audio node connections proved complex, especially cleaning up oscillators after they finished playing to prevent memory leaks; I implemented a node pooling system that stops and disconnects nodes properly, reusing them for subsequent sounds.
+
+The Creative Canvas overlay system required careful management of multiple canvas elements and their z-index stacking. Initially, drawing on upper layers would obscure the composite view; I resolved this by using a single visible canvas that continuously composites all layers, with drawing operations targeting an off-screen canvas for the active layer.
+
+Touch and mouse input normalization required abstracting event handling to work with both pointer types seamlessly, using Pointer Events API where available with fallbacks to touch/mouse events.
+
+
+QUESTION 4: LEARNING OUTCOMES AND REFLECTIONS (200-300 words)
+-------------------------------------------------------------
+The mini project significantly deepened my understanding of advanced web technologies and creative programming. Implementing the Web Audio API taught me about digital audio fundamentals: sample rates, oscillator frequencies, waveforms, and the mathematical relationships between musical notes (frequency doubling per octave).
+
+The Canvas API implementation reinforced coordinate system management, transformation matrices for scaling/rotation, and the importance of the save()/restore() pattern for isolating drawing state. Building the overlay system taught me about composite operations (source-over, destination-out, multiply) and their visual effects.
+
+These features directly complement my Learning Journal by demonstrating practical application of the concepts learned throughout the module. The Memory Game could be extended into a study tool with customizable card content (flashcards for vocabulary, concept matching), while the Canvas could serve as a visual note-taking tool for diagrams and sketches.
+
+If I were to enhance these features further, I would add: multiplayer mode for the Memory Game using WebSockets for real-time competition, brush texture support in the Canvas using pattern fills, and integration between tools (e.g., saving Canvas creations as journal entry attachments).
+
+KEY TOPICS: Web Audio API (oscillators, gain nodes, filters), HTML5 Canvas API, Procedural audio generation, Layer-based drawing architecture, Touch and pointer event handling, Performance optimization techniques
+
+WORD COUNT TARGET: Questions 1-2: 300-400 words each, Questions 3-4: 200-300 words each`
+    };
+
+    function downloadLabTemplate(labNum) {
+      const content = labTemplates[labNum];
+      const filename = labNum === 'mini' ? 'Mini-Project-Template.txt' : `Lab-${labNum}-Template.txt`;
+      downloadTextFile(content, filename);
+    }
+
+    function downloadTextFile(content, filename) {
       const blob = new Blob([content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -617,13 +590,736 @@ Total Estimated Time: 25-30 minutes
       URL.revokeObjectURL(url);
     }
 
-    function copyContent(type) {
-      const content = document.getElementById(type === 'quick-reference' ? 'quick-reference' : 'full-script').textContent;
-      navigator.clipboard.writeText(content).then(() => {
-        const notice = document.getElementById(type === 'quick-reference' ? 'copy-notice-quick' : 'copy-notice-full');
-        notice.style.display = 'inline';
-        setTimeout(() => { notice.style.display = 'none'; }, 2000);
-      });
+    function generateFullPresentationPDF() {
+      const btn = document.getElementById('btn-full-pdf');
+      btn.classList.add('generating');
+      btn.innerHTML = 'Generating...';
+
+      setTimeout(() => {
+        const doc = new jsPDF();
+        let y = 20;
+        const pageHeight = 280;
+        const margin = 20;
+        const lineHeight = 7;
+
+        function checkNewPage(neededSpace) {
+          if (y + neededSpace > pageHeight) {
+            doc.addPage();
+            y = 20;
+          }
+        }
+
+        function addTitle(text) {
+          checkNewPage(20);
+          doc.setFontSize(18);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(102, 51, 153);
+          doc.text(text, margin, y);
+          y += 12;
+        }
+
+        function addSection(title) {
+          checkNewPage(25);
+          y += 5;
+          doc.setFontSize(14);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(51, 51, 51);
+          doc.text(title, margin, y);
+          y += 8;
+        }
+
+        function addSubsection(title) {
+          checkNewPage(15);
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(80, 80, 80);
+          doc.text(title, margin, y);
+          y += 6;
+        }
+
+        function addText(text) {
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          const lines = doc.splitTextToSize(text, 170);
+          lines.forEach(line => {
+            checkNewPage(lineHeight);
+            doc.text(line, margin, y);
+            y += lineHeight;
+          });
+        }
+
+        function addBullet(text) {
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          const lines = doc.splitTextToSize(text, 165);
+          lines.forEach((line, i) => {
+            checkNewPage(lineHeight);
+            if (i === 0) {
+              doc.text('•', margin, y);
+              doc.text(line, margin + 5, y);
+            } else {
+              doc.text(line, margin + 5, y);
+            }
+            y += lineHeight;
+          });
+        }
+
+        // Title Page
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(102, 51, 153);
+        doc.text('Learning Journal PWA', margin, 60);
+        
+        doc.setFontSize(16);
+        doc.setTextColor(80, 80, 80);
+        doc.text('Video Presentation Script', margin, 75);
+        
+        doc.setFontSize(12);
+        doc.text('FGCT6021 Mobile Application Development', margin, 95);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(120, 120, 120);
+        doc.text('Estimated Duration: 25-30 minutes', margin, 115);
+        doc.text('Total Sections: 10 + Introduction + Conclusion', margin, 125);
+
+        // Contents
+        doc.addPage();
+        y = 20;
+        addTitle('Table of Contents');
+        y += 5;
+
+        const sections = [
+          '1. Introduction (1-2 min)',
+          '2. Home/Dashboard (1-2 min)',
+          '3. Journal Entries (2-3 min)',
+          '4. Projects (1-2 min)',
+          '5. Analytics Dashboard (1-2 min)',
+          '6. Lab Demonstrations (2-3 min)',
+          '7. Celestial Memory Game (2-3 min)',
+          '8. Creative Canvas (2-3 min)',
+          '9. Portfolio Page (2-3 min)',
+          '10. PWA Features & Offline (2-3 min)',
+          '11. Responsive Design (1 min)',
+          '12. Conclusion (1 min)'
+        ];
+        sections.forEach(s => addBullet(s));
+
+        // Introduction
+        doc.addPage();
+        y = 20;
+        addTitle('INTRODUCTION');
+        addSubsection('Opening Statement');
+        addText('"Hello, my name is [Your Name], student ID [Your ID], and I\'m presenting my Learning Journal Progressive Web Application developed for the FGCT6021 Mobile Application Development module."');
+        y += 5;
+
+        addSubsection('Project Overview');
+        addText('"This application is a comprehensive full-stack PWA built with:"');
+        addBullet('React 18 with TypeScript for the frontend');
+        addBullet('Express.js for the backend API');
+        addBullet('PostgreSQL with Drizzle ORM for database');
+        addBullet('Complete offline-first architecture with service workers');
+        y += 3;
+        addText('"The main purpose is to help users track their learning journey through journal entries, project management, and interactive learning tools."');
+
+        // Dashboard
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 1: HOME/DASHBOARD');
+        addSubsection('What to Show');
+        addBullet('Navigate to the home page');
+        addBullet('Point out the statistics cards');
+        addBullet('Show the recent activity section');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The dashboard provides an at-a-glance view of learning progress:"');
+        addBullet('Total journal entries written');
+        addBullet('Active projects being tracked');
+        addBullet('Learning streak - consecutive days of activity');
+        addBullet('Recent activity showing latest entries and updates');
+        y += 3;
+        addText('"The design follows mobile-first principles - notice how it works perfectly on any screen size."');
+
+        // Journal
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 2: JOURNAL ENTRIES');
+        addSubsection('What to Show');
+        addBullet('Navigate to Journal page');
+        addBullet('Create a new entry');
+        addBullet('Show markdown editor');
+        addBullet('Demonstrate tags');
+        addBullet('Show filtering/search');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Journal is the core feature of this application:"');
+        y += 3;
+        addText('Creating an Entry:');
+        addBullet('Click \'New Entry\' to open the editor');
+        addBullet('The markdown editor supports rich formatting - headings, bold, lists, code blocks');
+        addBullet('I can add tags to categorize entries like \'JavaScript\', \'React\', \'PWA\'');
+        addBullet('The word count helps track writing progress');
+        y += 3;
+        addText('Features:');
+        addBullet('Full-text search across all entries');
+        addBullet('Filter by tags or date range');
+        addBullet('Each entry saves automatically');
+        addBullet('Works completely offline - I\'ll demonstrate this later');
+        y += 3;
+        addText('Technical Implementation:');
+        addBullet('Uses React Hook Form with Zod validation');
+        addBullet('TanStack Query for server state management');
+        addBullet('Markdown rendering with react-markdown');
+        addBullet('Stored in PostgreSQL and synced to IndexedDB for offline access');
+
+        // Projects
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 3: PROJECTS');
+        addSubsection('What to Show');
+        addBullet('Navigate to Projects page');
+        addBullet('Show project cards');
+        addBullet('Open a project detail');
+        addBullet('Demonstrate progress tracking');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Projects section helps track ongoing development work:"');
+        addBullet('Each project has a name, description, and tech stack');
+        addBullet('Progress bar shows completion percentage');
+        addBullet('Status badges indicate if it\'s active, completed, or paused');
+        addBullet('Links to GitHub repositories and live demos');
+        y += 3;
+        addText('"This is useful for documenting what technologies I\'m learning and tracking my portfolio projects."');
+
+        // Analytics
+        addSection('SECTION 4: ANALYTICS DASHBOARD');
+        addSubsection('What to Show');
+        addBullet('Navigate to Analytics page');
+        addBullet('Show charts and statistics');
+        addBullet('Point out the calendar heatmap');
+        addBullet('Show streak information');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Analytics dashboard visualizes learning patterns:"');
+        addBullet('Activity Calendar shows a GitHub-style heatmap of daily activity');
+        addBullet('Entry Statistics chart shows writing trends over time');
+        addBullet('Tag Distribution shows which topics I focus on most');
+        addBullet('Streak Counter encourages consistent daily learning');
+        addText('"This data helps identify learning patterns and stay motivated with visual progress tracking."');
+
+        // Labs
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 5: LAB DEMONSTRATIONS');
+        addSubsection('Speaking Points');
+        addText('"The Labs section demonstrates various web APIs we studied:"');
+        y += 3;
+        addText('Lab 3 - DOM Manipulation:');
+        addBullet('Interactive examples of getElementById, querySelector');
+        addBullet('Event handling demonstrations');
+        y += 3;
+        addText('Lab 4 - Browser APIs:');
+        addBullet('Weather widget using Open-Meteo API (free, no key required)');
+        addBullet('Geolocation for local weather');
+        addBullet('Clipboard API for copy functionality');
+        addBullet('Browser notifications');
+        y += 3;
+        addText('Lab 5 - Storage:');
+        addBullet('Comparison between localStorage and IndexedDB');
+        addBullet('JSON data management');
+        y += 3;
+        addText('Lab 6 - Database:');
+        addBullet('PostgreSQL integration');
+        addBullet('CRUD operations demonstration');
+        y += 3;
+        addText('Lab 7 - Service Workers:');
+        addBullet('Cache status display');
+        addBullet('Offline capability testing');
+
+        // Memory Game
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 6: CELESTIAL MEMORY GAME');
+        addSubsection('What to Show');
+        addBullet('Navigate to Memory Game');
+        addBullet('Start a new game');
+        addBullet('Play a few moves');
+        addBullet('Show the scoring system');
+        addBullet('Toggle the ambient music');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Celestial Memory Game is one of my mini project extensions:"');
+        y += 3;
+        addText('Visual Design:');
+        addBullet('Space-themed cards with celestial objects');
+        addBullet('Animated star background');
+        addBullet('Smooth 3D flip animations using CSS transforms');
+        y += 3;
+        addText('Gameplay:');
+        addBullet('Classic memory matching mechanic');
+        addBullet('Multiple difficulty levels - 4x3, 4x4, 6x4 grids');
+        addBullet('Move counter and timer');
+        addBullet('Star rating based on performance');
+        y += 3;
+        addText('Web Audio API Integration:');
+        addBullet('[Toggle music on] This ambient background music is procedurally generated using the Web Audio API');
+        addBullet('No audio files are used - oscillators generate C major 7 chord tones');
+        addBullet('Sound effects play when cards match or don\'t match');
+        addBullet('The audio only starts after user interaction, respecting browser autoplay policies');
+        y += 3;
+        addText('Technical Highlights:');
+        addBullet('Fisher-Yates shuffle algorithm for card randomization');
+        addBullet('AudioContext with oscillators and gain nodes');
+        addBullet('Touch-friendly for mobile devices');
+
+        // Canvas
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 7: CREATIVE CANVAS');
+        addSubsection('What to Show');
+        addBullet('Navigate to Creative Canvas');
+        addBullet('Draw something simple');
+        addBullet('Switch between tools');
+        addBullet('Demonstrate layers');
+        addBullet('Show undo/redo');
+        addBullet('Export an image');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Professional Creative Canvas is a full-featured drawing application:"');
+        y += 3;
+        addText('Tool Palette:');
+        addBullet('Pencil for freehand drawing');
+        addBullet('Brush with adjustable size');
+        addBullet('Eraser tool');
+        addBullet('Shape tools - rectangle, circle, line');
+        addBullet('Text tool');
+        addBullet('Color picker with custom colors');
+        y += 3;
+        addText('Layer System:');
+        addBullet('[Create a new layer]');
+        addBullet('Multiple transparent layers like Photoshop');
+        addBullet('Layers can be reordered, hidden, or merged');
+        addBullet('Non-destructive editing - work on one layer without affecting others');
+        y += 3;
+        addText('Additional Features:');
+        addBullet('Undo/redo history');
+        addBullet('Export as PNG or JPEG');
+        addBullet('Touch support for mobile and tablet');
+        addBullet('Pinch-to-zoom and pan gestures');
+        y += 3;
+        addText('Technical Implementation:');
+        addBullet('HTML5 Canvas API');
+        addBullet('Pointer Events for unified mouse/touch handling');
+        addBullet('ImageData manipulation for layer compositing');
+        addBullet('requestAnimationFrame for smooth drawing performance');
+
+        // Portfolio
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 8: PORTFOLIO PAGE');
+        addSubsection('What to Show');
+        addBullet('Navigate to Portfolio page');
+        addBullet('Show the sidebar navigation');
+        addBullet('Expand/collapse sections');
+        addBullet('Toggle between Edit and Preview mode');
+        addBullet('Show PDF export');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The Portfolio page is where I document my learning for this module:"');
+        y += 3;
+        addText('Structure:');
+        addBullet('Follows the university template with all required sections');
+        addBullet('Introduction, Labs 1-7, Mini Project, Appendices, Bibliography');
+        addBullet('Each section has word count tracking');
+        y += 3;
+        addText('Editing Features:');
+        addBullet('Markdown editor for each section');
+        addBullet('Expand/collapse individual sections');
+        addBullet('\'Expand All\' and \'Collapse All\' for convenience');
+        addBullet('Preview mode to see formatted output');
+        y += 3;
+        addText('Export Functionality:');
+        addBullet('[Click Download PDF]');
+        addBullet('Exports the complete portfolio as a PDF');
+        addBullet('Formatted with proper headings and sections');
+        addBullet('Ready for submission');
+        y += 3;
+        addText('Data Persistence:');
+        addBullet('Auto-saves to the database');
+        addBullet('Works offline with local storage backup');
+
+        // PWA Features
+        doc.addPage();
+        y = 20;
+        addTitle('SECTION 9: PWA FEATURES');
+        addSubsection('What to Show');
+        addBullet('Show the install prompt (if available)');
+        addBullet('Demonstrate offline mode');
+        addBullet('Show service worker in DevTools');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"This is a fully-featured Progressive Web App:"');
+        y += 3;
+        addText('Installation:');
+        addBullet('Can be installed on desktop or mobile');
+        addBullet('Appears as a native app with its own icon');
+        addBullet('Launches in standalone mode without browser chrome');
+        y += 3;
+        addText('Offline Functionality:');
+        addBullet('[Turn off network in DevTools]');
+        addBullet('Watch - I\'m now offline, but the app still works perfectly');
+        addBullet('I can view all my entries, create new ones, navigate everywhere');
+        addBullet('Changes are queued and sync when I\'m back online');
+        addBullet('[Turn network back on]');
+        addBullet('Now it\'s syncing my offline changes to the server');
+        y += 3;
+        addText('Service Worker:');
+        addBullet('Caches essential assets for instant loading');
+        addBullet('Network-first strategy for API calls');
+        addBullet('Background sync for offline writes');
+        y += 3;
+        addText('Technical Details:');
+        addBullet('Custom service worker in sw.js');
+        addBullet('IndexedDB via localforage for offline data');
+        addBullet('Sync queue for pending operations');
+        addBullet('Web App Manifest for installability');
+
+        // Responsive
+        addSection('SECTION 10: RESPONSIVE DESIGN');
+        addSubsection('What to Show');
+        addBullet('Resize the browser to mobile size');
+        addBullet('Show mobile navigation');
+        addBullet('Demonstrate touch-friendly interface');
+        y += 5;
+
+        addSubsection('Speaking Points');
+        addText('"The entire application is mobile-first responsive:"');
+        addBullet('Cards stack vertically on mobile, grid on desktop');
+        addBullet('Touch-friendly 44x44 pixel tap targets');
+        addBullet('Bottom navigation on mobile for easy thumb access');
+        addBullet('Swipe gestures work throughout');
+        addBullet('Tested on Chrome, Firefox, Safari, and Edge');
+
+        // Conclusion
+        doc.addPage();
+        y = 20;
+        addTitle('CONCLUSION');
+        addSubsection('Closing Statement');
+        addText('"To summarize, this Learning Journal PWA demonstrates:"');
+        y += 3;
+        addBullet('1. Modern React development with TypeScript and hooks');
+        addBullet('2. Full-stack architecture with Express and PostgreSQL');
+        addBullet('3. Offline-first PWA with service workers and IndexedDB');
+        addBullet('4. Multiple API integrations - Weather, GitHub, Web Audio');
+        addBullet('5. Creative features - Memory Game and Canvas tool');
+        addBullet('6. Academic documentation through the Portfolio system');
+        y += 5;
+        addText('"Thank you for watching. The source code is available on GitHub, and the live application is deployed and accessible at the project URL."');
+        y += 5;
+        addText('"Any questions can be directed to [your email]."');
+
+        // Timing Guide
+        doc.addPage();
+        y = 20;
+        addTitle('TIMING GUIDE');
+        
+        const timingData = [
+          ['Section', 'Duration', 'Running Total'],
+          ['Introduction', '1-2 min', '2 min'],
+          ['Dashboard', '1-2 min', '4 min'],
+          ['Journal', '2-3 min', '7 min'],
+          ['Projects', '1-2 min', '9 min'],
+          ['Analytics', '1-2 min', '11 min'],
+          ['Labs', '2-3 min', '14 min'],
+          ['Memory Game', '2-3 min', '17 min'],
+          ['Canvas', '2-3 min', '20 min'],
+          ['Portfolio', '2-3 min', '23 min'],
+          ['PWA Features', '2-3 min', '26 min'],
+          ['Responsive', '1 min', '27 min'],
+          ['Conclusion', '1 min', '28 min'],
+        ];
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        timingData[0].forEach((cell, i) => {
+          doc.text(cell, margin + (i * 55), y);
+        });
+        y += 8;
+        doc.setFont('helvetica', 'normal');
+        timingData.slice(1).forEach(row => {
+          row.forEach((cell, i) => {
+            doc.text(cell, margin + (i * 55), y);
+          });
+          y += 7;
+        });
+        y += 5;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Total Estimated Time: 25-30 minutes', margin, y);
+
+        // Tips
+        y += 15;
+        addSection('TIPS FOR RECORDING');
+        addBullet('Speak slowly and clearly - viewers may be non-native English speakers');
+        addBullet('Pause briefly when navigating to let the page load');
+        addBullet('Move your mouse smoothly - jerky movements are distracting');
+        addBullet('Zoom in on important UI elements if needed');
+        addBullet('Have sample data ready - empty screens look unprofessional');
+        addBullet('Test everything before recording');
+        addBullet('Stay positive even if something goes wrong');
+        addBullet('End confidently - summarize key points and thank the viewer');
+
+        doc.save('Video-Presentation-Script.pdf');
+
+        btn.classList.remove('generating');
+        btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF';
+      }, 100);
+    }
+
+    function generateQuickReferencePDF() {
+      const btn = document.getElementById('btn-quick-pdf');
+      btn.classList.add('generating');
+      btn.innerHTML = 'Generating...';
+
+      setTimeout(() => {
+        const doc = new jsPDF();
+        let y = 20;
+        const margin = 15;
+        const lineHeight = 6;
+        const pageHeight = 280;
+
+        function checkNewPage(neededSpace) {
+          if (y + neededSpace > pageHeight) {
+            doc.addPage();
+            y = 20;
+          }
+        }
+
+        function addTitle(text) {
+          checkNewPage(15);
+          doc.setFontSize(14);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(102, 51, 153);
+          doc.text(text, margin, y);
+          y += 10;
+        }
+
+        function addBullet(text, indent = 0) {
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          checkNewPage(lineHeight);
+          doc.text('•', margin + indent, y);
+          doc.text(text, margin + indent + 4, y);
+          y += lineHeight;
+        }
+
+        // Header
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(102, 51, 153);
+        doc.text('Quick Reference Card', margin, y);
+        y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Keep this visible during recording', margin, y);
+        y += 12;
+
+        // Intro
+        doc.setFillColor(240, 240, 255);
+        doc.rect(margin, y - 3, 180, 18, 'F');
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(60, 60, 60);
+        doc.text('INTRO (Say This First):', margin + 3, y + 3);
+        doc.setFont('helvetica', 'normal');
+        doc.text('"I\'m [NAME], student ID [ID], presenting my Learning Journal PWA', margin + 3, y + 10);
+        doc.text('for FGCT6021 Mobile Application Development."', margin + 3, y + 16);
+        y += 25;
+
+        // Page sections
+        addTitle('PAGE-BY-PAGE BULLET POINTS');
+        
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('HOME/DASHBOARD', margin, y); y += 6;
+        addBullet('Statistics cards (entries, projects, streak)');
+        addBullet('Recent activity feed');
+        addBullet('Mobile-first responsive design');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('JOURNAL', margin, y); y += 6;
+        addBullet('Markdown editor with formatting');
+        addBullet('Tags for categorization');
+        addBullet('Search and filter');
+        addBullet('Works offline');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('PROJECTS', margin, y); y += 6;
+        addBullet('Name, description, tech stack');
+        addBullet('Progress tracking');
+        addBullet('GitHub links, Status badges');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('ANALYTICS', margin, y); y += 6;
+        addBullet('Calendar heatmap (like GitHub)');
+        addBullet('Activity charts, Tag distribution');
+        addBullet('Streak counter');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('LABS (Quick Overview)', margin, y); y += 6;
+        addBullet('Lab 3: DOM manipulation');
+        addBullet('Lab 4: Weather API, Clipboard, Notifications');
+        addBullet('Lab 5: localStorage vs IndexedDB');
+        addBullet('Lab 6: PostgreSQL CRUD');
+        addBullet('Lab 7: Service Worker cache');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('MEMORY GAME', margin, y); y += 6;
+        addBullet('Space theme, 3D flip animations');
+        addBullet('Web Audio API - music generated with code!');
+        addBullet('Oscillators create C major 7 chord');
+        addBullet('Multiple difficulty levels');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('CREATIVE CANVAS', margin, y); y += 6;
+        addBullet('Drawing tools: pencil, brush, eraser, shapes');
+        addBullet('LAYER SYSTEM like Photoshop');
+        addBullet('Undo/redo history');
+        addBullet('Export as PNG, Touch gestures');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('PORTFOLIO', margin, y); y += 6;
+        addBullet('University template sections');
+        addBullet('Markdown editing, Preview mode');
+        addBullet('PDF export, Word count');
+        y += 3;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('PWA FEATURES (Demo Offline!)', margin, y); y += 6;
+        addBullet('Installable as app');
+        addBullet('Works completely offline');
+        addBullet('Service worker caches assets');
+        addBullet('Syncs when back online');
+
+        // Tech Stack
+        doc.addPage();
+        y = 20;
+        addTitle('KEY TECH STACK');
+        
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        const headers = ['Frontend', 'Backend', 'Database', 'PWA'];
+        const techData = [
+          ['React 18', 'Express.js', 'PostgreSQL', 'Service Worker'],
+          ['TypeScript', 'Node.js', 'Drizzle ORM', 'IndexedDB'],
+          ['Tailwind CSS', 'REST API', 'Neon', 'Web App Manifest'],
+          ['TanStack Query', '', '', 'Background Sync']
+        ];
+        
+        headers.forEach((h, i) => {
+          doc.text(h, margin + (i * 45), y);
+        });
+        y += 7;
+        doc.setFont('helvetica', 'normal');
+        techData.forEach(row => {
+          row.forEach((cell, i) => {
+            doc.text(cell, margin + (i * 45), y);
+          });
+          y += 6;
+        });
+
+        // Impressive Phrases
+        y += 8;
+        addTitle('IMPRESSIVE PHRASES TO USE');
+        addBullet('"Mobile-first responsive design"');
+        addBullet('"Offline-first architecture"');
+        addBullet('"Procedurally generated audio using Web Audio API"');
+        addBullet('"Non-destructive layer-based editing"');
+        addBullet('"Full-stack TypeScript application"');
+        addBullet('"Optimistic updates with background sync"');
+
+        // Demo Checklist
+        y += 8;
+        addTitle('DEMO CHECKLIST');
+        doc.setFont('helvetica', 'bold');
+        doc.text('Before recording:', margin, y); y += 6;
+        addBullet('App running and responsive');
+        addBullet('Sample journal entries exist');
+        addBullet('Memory Game works with sound');
+        addBullet('Canvas draws properly');
+        addBullet('Portfolio has some content');
+        addBullet('Offline mode tested');
+        y += 5;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('During recording:', margin, y); y += 6;
+        addBullet('Speak slowly and clearly');
+        addBullet('Pause when pages load');
+        addBullet('Show mobile responsiveness');
+        addBullet('Demo offline mode');
+        addBullet('Play Memory Game briefly');
+        addBullet('Draw something on Canvas');
+        addBullet('Export PDF from Portfolio');
+
+        // Closing
+        y += 10;
+        doc.setFillColor(240, 240, 255);
+        doc.rect(margin, y - 3, 180, 20, 'F');
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(60, 60, 60);
+        doc.text('CLOSING (Say This Last):', margin + 3, y + 3);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.text('"This PWA demonstrates modern React development, full-stack architecture', margin + 3, y + 10);
+        doc.text('with Express and PostgreSQL, offline-first PWA capabilities, multiple API', margin + 3, y + 16);
+        doc.text('integrations, and creative extensions. Thank you for watching."', margin + 3, y + 22);
+
+        doc.save('Quick-Reference-Card.pdf');
+
+        btn.classList.remove('generating');
+        btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF';
+      }, 100);
+    }
+
+    function downloadAll() {
+      const btn = document.getElementById('btn-all');
+      btn.classList.add('generating');
+      btn.innerHTML = 'Generating all files...';
+
+      // Generate PDFs
+      generateFullPresentationPDF();
+      setTimeout(() => {
+        generateQuickReferencePDF();
+      }, 500);
+
+      // Download all lab templates
+      setTimeout(() => {
+        [1, 2, 3, 4, 5, 6, 7, 'mini'].forEach((lab, index) => {
+          setTimeout(() => downloadLabTemplate(lab), index * 300);
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        btn.classList.remove('generating');
+        btn.innerHTML = 'Download All Files';
+      }, 4000);
     }
   </script>
 </body>
