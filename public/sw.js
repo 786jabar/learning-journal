@@ -1,6 +1,6 @@
-const CACHE_NAME = 'learning-journal-v2';
-const STATIC_CACHE = 'learning-journal-static-v2';
-const DYNAMIC_CACHE = 'learning-journal-dynamic-v2';
+const CACHE_NAME = 'learning-journal-v3';
+const STATIC_CACHE = 'learning-journal-static-v3';
+const DYNAMIC_CACHE = 'learning-journal-dynamic-v3';
 
 const urlsToCache = [
   '/',
@@ -52,7 +52,13 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache first for static assets
+  // Network first for HTML pages to always get fresh content
+  if (request.mode === 'navigate' || url.pathname === '/' || url.pathname.endsWith('.html')) {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+
+  // Cache first for static assets (JS, CSS, images)
   event.respondWith(cacheFirst(event.request));
 });
 
