@@ -70,6 +70,12 @@ app.use((req, res, next) => {
     res.sendFile(htmlPath);
   });
 
+  // Serve presentation notes download page (before Vite catch-all)
+  app.get("/presentation-notes.html", (_req, res) => {
+    const htmlPath = path.join(import.meta.dirname, "..", "public", "presentation-notes.html");
+    res.sendFile(htmlPath);
+  });
+
   // Serve vanilla JS modules from /public/js/
   app.use("/js", express.static(path.join(import.meta.dirname, "..", "public", "js")));
 
