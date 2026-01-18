@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { jsPDF } from "jspdf";
 import { 
@@ -13,12 +16,25 @@ import {
   Save,
   ChevronDown,
   ChevronUp,
-  RotateCcw
+  RotateCcw,
+  BookOpen,
+  GraduationCap,
+  Code,
+  Globe,
+  Server,
+  Smartphone,
+  Gamepad2,
+  Menu,
+  Eye,
+  EyeOff,
+  Check,
+  AlertCircle
 } from "lucide-react";
 import localforage from "localforage";
 
 interface PortfolioData {
   studentName: string;
+  studentId: string;
   programme: string;
   githubLink: string;
   liveProjectLink: string;
@@ -55,8 +71,15 @@ interface PortfolioData {
   bibliography: string;
 }
 
+interface WordCountInfo {
+  current: number;
+  min: number;
+  max: number;
+}
+
 const prefilledData: PortfolioData = {
   studentName: "Your Name",
+  studentId: "Student ID",
   programme: "BSc Computer Science",
   githubLink: "https://github.com/yourusername/learning-journal-pwa",
   liveProjectLink: "https://yourusername.pythonanywhere.com",
@@ -130,34 +153,11 @@ Live Project: [Your PythonAnywhere Link]`,
 
   mini_q1: `I added several significant features to enhance the Learning Journal beyond the core requirements:
 
-1. **Celestial Memory Game**: A visually stunning space-themed card matching game with extensive features:
-   - **30 Beautiful Celestial Icons**: Stars, moons, planets, nebulae, rockets, satellites, and more with stunning 3-color gradient effects
-   - **Ambient Background Music**: Sweet melodic music using Web Audio API with C major 7 chord foundation and gentle random chimes
-   - **Constellation Quest System**: Cards grouped into constellations (Orion, Cassiopeia, Ursa Major, Andromeda) that grant power-ups when completed
-   - **Wild Comet Cards**: Special cards that match anything, adding strategic depth
-   - **Power-Up System**: Reveal (show matching pair) and Freeze Time (pause timer) unlocked by completing constellations
-   - **Endless Mode**: Progressive difficulty that continues infinitely with achievement tracking
-   - **Four Unlockable Themes**: Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare earned through wins
-   - **Three Game Modes**: Zen, Challenge with combo multipliers, and Constellation Quest
-   - **Visual Effects**: 3D card flips, particle explosions, memory echo ghost silhouettes, constellation lines, animated starfield with shooting stars
-   - **Score System**: Streak-based combo multipliers up to 5x bonus
+1. **Celestial Memory Game**: A visually stunning space-themed card matching game with extensive features including 30 beautiful celestial icons with 3-color gradient effects, ambient background music using Web Audio API with C major 7 chord foundation and gentle random chimes, constellation quest system with power-ups, wild comet cards that match anything, four unlockable themes (Cosmic Night, Aurora Borealis, Pink Nebula, Solar Flare), three game modes (Zen, Challenge, Constellation Quest), and stunning visual effects like 3D card flips, particle explosions, and animated starfield backgrounds.
 
-2. **Professional Creative Canvas**: A full-featured drawing application with:
-   - **Multiple Drawing Tools**: Pen, Eraser, Line, Rectangle, Circle, Fill (flood fill)
-   - **Live Shape Preview**: Overlay canvas shows shapes as you draw before committing
-   - **Color System**: 10 preset colors plus custom color picker input
-   - **Brush Size Control**: Adjustable from 1-50 pixels with slider
-   - **History System**: Undo/Redo with up to 50 states using refs for proper state tracking
-   - **Gallery System**: Save drawings locally, view saved artwork, load and continue editing
-   - **Export Feature**: Download drawings as PNG files
-   - **Touch Support**: Full mobile/tablet drawing support with proper coordinate scaling
+2. **Professional Creative Canvas**: A complete drawing application featuring multiple drawing tools (pen, eraser, line, rectangle, circle, fill), live shape preview with overlay canvas architecture, color system with 10 presets plus custom picker, adjustable brush sizes (1-50px), history system with undo/redo (up to 50 states), gallery system for saving/loading artwork, PNG export functionality, and full mobile/tablet touch support.
 
-3. **Mobile App Navigation**: Complete app-like experience:
-   - **Bottom Navigation Bar**: Mobile-style tab bar with Home, Explore, Game, Canvas, More icons
-   - **Menu Page**: Organized hub with all features in categories (Core Features, Lab Demos, Creative & Fun, Profile & Settings)
-   - **Options Page**: User preferences for sound, notifications, animations, auto-save, font size, language
-   - **Settings Page**: Dark mode, storage management, device ID, PWA controls, data export
-   - **Explore Page**: Feature discovery with featured items, quick links, and pro tips
+3. **Mobile App Navigation System**: Complete app-like navigation with bottom navigation bar (mobile-style tabs), organized menu page with feature categories, options page for user preferences, settings page for system controls, and explore page for feature discovery.
 
 4. **Analytics Dashboard**: Comprehensive analytics with learning streaks, weekly trends using Recharts, tag clouds, and GitHub-style activity heatmaps.
 
@@ -169,45 +169,27 @@ Live Project: [Your PythonAnywhere Link]`,
 
   mini_q2: `I chose to create a comprehensive mini project with multiple components for several strategic reasons:
 
-**Celestial Memory Game - Unique Theme and Identity**: Rather than a generic memory game, I created a cohesive "space exploration" experience with 30 beautiful celestial icons featuring 3-color gradients. The space theme (stars, moons, planets, nebulae, rockets, satellites) gives the game a distinct identity.
+**Celestial Memory Game - Unique Theme and Identity**: Rather than a generic memory game, I created a cohesive "space exploration" experience with 30 beautiful celestial icons featuring 3-color gradients. The space theme gives the game a distinct identity that makes it memorable and engaging.
 
-**Ambient Audio Experience**: Implemented Web Audio API to generate sweet melodic background music using a C major 7 chord foundation (C4, E4, G4, B4) with gentle random chimes every 2 seconds. Users can toggle music on/off in both menu and gameplay.
+**Ambient Audio Experience**: Implemented Web Audio API to generate sweet melodic background music using a C major 7 chord foundation (C4, E4, G4, B4) with gentle random chimes every 2 seconds. This demonstrates advanced browser API integration.
 
-**Visual Polish and Premium Feel**: Glassmorphism effects (frosted glass cards, backdrop blur), animated starfield backgrounds, 3D card flip animations, and particle effects on matches create a premium, polished experience.
+**Visual Polish and Premium Feel**: Glassmorphism effects (frosted glass cards, backdrop blur), animated starfield backgrounds, 3D card flip animations, and particle effects on matches create a premium, polished experience that goes beyond basic requirements.
 
-**Professional Canvas Tool**: Built a complete drawing application demonstrating Canvas API mastery:
-- Multiple tools (pen, eraser, line, rectangle, circle, fill) with live preview
-- Overlay canvas architecture for non-destructive shape preview
-- History management using useRef to avoid stale closure issues
-- Touch event handling with proper coordinate scaling for mobile devices
-- Gallery system with localStorage persistence
+**Professional Canvas Tool**: Built a complete drawing application demonstrating Canvas API mastery with multiple tools, overlay canvas architecture for non-destructive shape preview, history management using useRef, and touch event handling for mobile devices.
 
-**Mobile App Navigation System**: Designed complete app-like navigation:
-- Bottom navigation bar (mobile-only) with icon + label tabs
-- Organized Menu page with feature categories
-- Options and Settings pages for user customization
-- Explore page for feature discovery
+**Mobile App Navigation System**: Designed complete app-like navigation with bottom navigation bar, organized menu, and settings pages to showcase modern app design patterns.
 
-**Advanced React Patterns**: The project showcases useState for complex state, useEffect for timers and audio, useCallback for memoized functions, useRef for DOM access and state tracking, conditional rendering, and functional state updates to avoid stale closures.
-
-**Technical Challenges Solved**:
-1. Achievement persistence with functional state updates to avoid stale closures
-2. Canvas coordinate scaling for proper drawing on responsive layouts
-3. Touch event handling for mobile drawing (using changedTouches for touchend)
-4. Web Audio API for dynamic music generation
-5. History undo/redo using refs to access current state`,
+**Advanced React Patterns**: The project showcases useState for complex state, useEffect for timers and audio, useCallback for memoized functions, useRef for DOM access and state tracking, and functional state updates to avoid stale closures.`,
 
   mini_q3: `I faced several technical challenges during development:
 
 **CELESTIAL MEMORY GAME CHALLENGES:**
 
-**3D Card Flip Animation**: Creating convincing 3D card flips required CSS 3D transforms with perspective, transform-style: preserve-3d, and backface-visibility. I had to carefully position both the front and back faces and rotate them correctly.
+**3D Card Flip Animation**: Creating convincing 3D card flips required CSS 3D transforms with perspective, transform-style: preserve-3d, and backface-visibility. I had to carefully position both front and back faces and rotate them correctly.
 
 **Web Audio API Music Generation**: Implementing ambient background music required understanding oscillators, gain nodes, and audio scheduling. I created a C major 7 chord using multiple oscillators tuned to C4, E4, G4, B4 frequencies with gentle random chimes played at intervals.
 
 **Achievement Persistence with Stale Closures**: Initially, achievements weren't saving correctly because state updates used stale closure values. I fixed this by using functional state updates (setAchievements(prev => ...)) and passing updatedCards directly to achievement checks instead of relying on state.
-
-**Endless Mode Achievement Tracking**: The endless mode achievements required tracking progress across multiple rounds. I solved this by using functional updates and immediate state calculations rather than depending on React's async state updates.
 
 **CREATIVE CANVAS CHALLENGES:**
 
@@ -215,15 +197,9 @@ Live Project: [Your PythonAnywhere Link]`,
 
 **Overlay Canvas for Live Preview**: Shape tools needed to show the shape while dragging before committing. I implemented a transparent overlay canvas that renders the preview and clears on mouse up while the final shape is drawn on the main canvas.
 
-**Undo/Redo with Refs**: The history system initially failed because saveToHistory and restoreFromHistory used stale state from closures. I solved this by storing history in useRef and syncing with useEffect, then reading from refs in the callback functions.
+**Undo/Redo with Refs**: The history system initially failed because saveToHistory and restoreFromHistory used stale state from closures. I solved this by storing history in useRef and syncing with useEffect.
 
-**Touch Event Handling**: Mobile drawing crashed because touchend has empty touches array. I fixed this by using e.changedTouches as fallback: const touch = e.touches[0] || e.changedTouches?.[0].
-
-**MOBILE NAVIGATION CHALLENGES:**
-
-**Bottom Navigation Bar**: Implementing mobile app-style navigation required conditional rendering based on screen size, proper z-index stacking, and adding bottom padding to main content to prevent overlap.
-
-**Responsive Layout**: Ensuring the app works well on all screen sizes required careful use of Tailwind responsive classes and testing across different viewports.`,
+**Touch Event Handling**: Mobile drawing crashed because touchend has empty touches array. I fixed this by using e.changedTouches as fallback.`,
 
   mini_q4: `Given more time, I would implement these improvements:
 
@@ -239,7 +215,7 @@ Live Project: [Your PythonAnywhere Link]`,
 
 **Voice Notes**: Add audio recording capabilities for voice journal entries, with speech-to-text transcription for searchability.
 
-**Accessibility Improvements**: Conduct thorough accessibility auditing and implement WCAG 2.1 AA compliance, including screen reader optimization and keyboard navigation.`,
+**Accessibility Improvements**: Conduct thorough accessibility auditing and implement WCAG 2.1 AA compliance, including screen reader optimization and keyboard navigation enhancements.`,
 
   appendices: `**Appendix A: Technology Stack**
 - Frontend: React 18, TypeScript, Tailwind CSS, shadcn/ui, Recharts
@@ -303,11 +279,16 @@ Live Project: [Your PythonAnywhere Link]`,
 
 11. jsPDF. (2024). PDF Generation Library. https://github.com/parallax/jsPDF
 
-12. Vite. (2024). Next Generation Frontend Tooling. https://vitejs.dev/`
+12. Vite. (2024). Next Generation Frontend Tooling. https://vitejs.dev/
+
+13. Web Audio API. (2024). Mozilla Developer Network. https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
+
+14. Canvas API. (2024). Mozilla Developer Network. https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API`
 };
 
 const emptyData: PortfolioData = {
   studentName: "",
+  studentId: "",
   programme: "BSc Computer Science",
   githubLink: "",
   liveProjectLink: "",
@@ -346,24 +327,42 @@ const emptyData: PortfolioData = {
 
 const STORAGE_KEY = "portfolio_data";
 
+const sectionRequirements: Record<string, { min: number; max: number }> = {
+  introduction: { min: 100, max: 250 },
+  lab1: { min: 250, max: 400 },
+  lab2: { min: 150, max: 300 },
+  lab3: { min: 150, max: 300 },
+  lab4: { min: 200, max: 400 },
+  lab5: { min: 200, max: 400 },
+  lab6: { min: 250, max: 500 },
+  lab7: { min: 200, max: 400 },
+  mini: { min: 600, max: 1000 }
+};
+
 export default function PortfolioPage() {
   const { toast } = useToast();
   const [data, setData] = useState<PortfolioData>(prefilledData);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [viewMode, setViewMode] = useState<"edit" | "preview">("edit");
+  const [activeSection, setActiveSection] = useState<string>("cover");
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    cover: true,
     info: true,
-    intro: false,
-    lab1: false,
-    lab2: false,
-    lab3: false,
-    lab4: false,
-    lab5: false,
-    lab6: false,
-    lab7: false,
-    mini: false,
-    appendix: false
+    intro: true,
+    lab1: true,
+    lab2: true,
+    lab3: true,
+    lab4: true,
+    lab5: true,
+    lab6: true,
+    lab7: true,
+    mini: true,
+    appendix: true,
+    bibliography: true
   });
+
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     localforage.getItem<PortfolioData>(STORAGE_KEY).then((saved) => {
@@ -380,35 +379,15 @@ export default function PortfolioPage() {
   };
 
   const expandAll = () => {
-    setExpandedSections({
-      info: true,
-      intro: true,
-      lab1: true,
-      lab2: true,
-      lab3: true,
-      lab4: true,
-      lab5: true,
-      lab6: true,
-      lab7: true,
-      mini: true,
-      appendix: true
-    });
+    const allExpanded: Record<string, boolean> = {};
+    Object.keys(expandedSections).forEach(key => { allExpanded[key] = true; });
+    setExpandedSections(allExpanded);
   };
 
   const collapseAll = () => {
-    setExpandedSections({
-      info: false,
-      intro: false,
-      lab1: false,
-      lab2: false,
-      lab3: false,
-      lab4: false,
-      lab5: false,
-      lab6: false,
-      lab7: false,
-      mini: false,
-      appendix: false
-    });
+    const allCollapsed: Record<string, boolean> = {};
+    Object.keys(expandedSections).forEach(key => { allCollapsed[key] = false; });
+    setExpandedSections(allCollapsed);
   };
 
   const loadTemplate = () => {
@@ -435,6 +414,23 @@ export default function PortfolioPage() {
 
   const countWords = (text: string): number => {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  };
+
+  const getWordCountStatus = (current: number, min: number, max: number): "under" | "good" | "over" => {
+    if (current < min) return "under";
+    if (current > max) return "over";
+    return "good";
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    setActiveSection(sectionId);
+    const element = sectionRefs.current[sectionId];
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    if (!expandedSections[sectionId]) {
+      setExpandedSections(prev => ({ ...prev, [sectionId]: true }));
+    }
   };
 
   const generatePDF = async () => {
@@ -548,18 +544,46 @@ export default function PortfolioPage() {
         "1   Introduction",
         "2   Lab 1 – Introduction to Mobile App",
         "3   Lab 2 – Frontend Fundamentals",
+        "    3.1 How did you approach mobile-first design?",
+        "    3.2 What was the most useful HTML or CSS concept you applied?",
+        "    3.3 What part of HTML or CSS did you find most challenging?",
         "4   Lab 3 – JavaScript & DOM Manipulation",
+        "    4.1 Which DOM selection methods did you use, and why?",
+        "    4.2 What was the most challenging part about linking JavaScript with HTML?",
+        "    4.3 How did you test and debug your JavaScript code?",
         "5   Lab 4 – API",
+        "    5.1 Which Storage, Browser, and Third-Party APIs did you choose?",
+        "    5.2 How did you integrate each API with DOM manipulation?",
+        "    5.3 What challenges did you encounter, and how did you solve them?",
+        "    5.4 In what ways do these APIs improve your Learning Journal PWA?",
         "6   Lab 5 – Python & JSON",
+        "    6.1 How is storing data in a JSON file different from browser storage?",
+        "    6.2 How did you use Python to create or update your JSON file?",
+        "    6.3 What does your PWA show locally vs on GitHub?",
+        "    6.4 What extra feature did you add using the JSON file?",
         "7   Lab 6 – Frontend & Backend",
+        "    7.1 Why is the frontend–backend connection important?",
+        "    7.2 Which HTTP methods did you use in Flask, and why?",
+        "    7.3 Flask vs browser for JSON data handling differences",
+        "    7.4 PythonAnywhere difficulties and solutions",
+        "    7.5 What extra feature did you build with Flask?",
         "8   Lab 7 – PWA",
+        "    8.1 Why enhance your Flask app with PWA features?",
+        "    8.2 What did you use for offline access and dynamic data?",
+        "    8.3 What extra feature did you add?",
+        "    8.4 Deployment challenges and solutions",
         "9   Mini Project",
+        "    9.1 What additional features did you add?",
+        "    9.2 Why did you choose your mini project idea?",
+        "    9.3 What technical challenges did you face?",
+        "    9.4 What would you improve given more time?",
         "Appendices",
         "Bibliography"
       ];
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       toc.forEach(item => {
+        checkPageBreak(6);
         doc.text(item, margin, yPos);
         yPos += 6;
       });
@@ -690,8 +714,8 @@ export default function PortfolioPage() {
         doc.text(`${i}`, pageWidth / 2, pageHeight - 10, { align: "center" });
       }
 
-      const fileName = data.studentName 
-        ? `${data.studentName.replace(/\s+/g, '_')}_Portfolio_FGCT6021.pdf`
+      const fileName = data.studentName && data.studentId
+        ? `${data.studentId}_${data.studentName.replace(/\s+/g, '_')}_report.pdf`
         : "Portfolio_FGCT6021.pdf";
       doc.save(fileName);
       
@@ -711,19 +735,46 @@ export default function PortfolioPage() {
     }
   };
 
-  const SectionHeader = ({ id, title, expanded, wordCount }: { id: string; title: string; expanded: boolean; wordCount?: number }) => (
+  const WordCountBadge = ({ current, min, max }: WordCountInfo) => {
+    const status = getWordCountStatus(current, min, max);
+    return (
+      <Badge 
+        variant={status === "good" ? "default" : "outline"}
+        className={`text-xs ${
+          status === "under" ? "border-amber-500 text-amber-600 dark:text-amber-400" : 
+          status === "over" ? "border-red-500 text-red-600 dark:text-red-400" : 
+          "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+        }`}
+      >
+        {status === "good" && <Check className="h-3 w-3 mr-1" />}
+        {status !== "good" && <AlertCircle className="h-3 w-3 mr-1" />}
+        {current}/{min}-{max} words
+      </Badge>
+    );
+  };
+
+  const SectionHeader = ({ 
+    id, 
+    title, 
+    expanded, 
+    icon: Icon,
+    wordCount 
+  }: { 
+    id: string; 
+    title: string; 
+    expanded: boolean; 
+    icon?: React.ComponentType<{ className?: string }>;
+    wordCount?: WordCountInfo;
+  }) => (
     <button
       onClick={() => toggleSection(id)}
-      className="w-full flex items-center justify-between gap-2 p-4 text-left hover-elevate rounded-t-lg"
+      className="w-full flex items-center justify-between gap-2 p-4 text-left hover-elevate rounded-t-lg border-b"
       data-testid={`button-section-${id}`}
     >
       <div className="flex items-center gap-3">
+        {Icon && <Icon className="h-5 w-5 text-primary" />}
         <h3 className="text-base font-semibold">{title}</h3>
-        {wordCount !== undefined && (
-          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-            {wordCount} words
-          </span>
-        )}
+        {wordCount && <WordCountBadge {...wordCount} />}
       </div>
       {expanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
     </button>
@@ -739,338 +790,858 @@ export default function PortfolioPage() {
   const totalLab7Words = countWords(data.lab7_q1) + countWords(data.lab7_q2) + countWords(data.lab7_q3) + countWords(data.lab7_q4);
   const totalMiniWords = countWords(data.mini_q1) + countWords(data.mini_q2) + countWords(data.mini_q3) + countWords(data.mini_q4);
 
+  const tocItems = [
+    { id: "cover", label: "Cover Page", icon: FileText },
+    { id: "intro", label: "1. Introduction", icon: BookOpen },
+    { id: "lab1", label: "2. Lab 1 - Introduction", icon: GraduationCap },
+    { id: "lab2", label: "3. Lab 2 - Frontend", icon: Code },
+    { id: "lab3", label: "4. Lab 3 - JavaScript & DOM", icon: Code },
+    { id: "lab4", label: "5. Lab 4 - API", icon: Globe },
+    { id: "lab5", label: "6. Lab 5 - Python & JSON", icon: Server },
+    { id: "lab6", label: "7. Lab 6 - Frontend & Backend", icon: Server },
+    { id: "lab7", label: "8. Lab 7 - PWA", icon: Smartphone },
+    { id: "mini", label: "9. Mini Project", icon: Gamepad2 },
+    { id: "appendix", label: "Appendices", icon: FileText },
+    { id: "bibliography", label: "Bibliography", icon: BookOpen },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2" data-testid="heading-portfolio">FGCT6021 Portfolio</h1>
-          <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
-            Complete portfolio with pre-filled content. Edit sections to personalize, then download your PDF.
-          </p>
-        </div>
+      <div className="flex flex-col lg:flex-row">
+        <aside className="hidden lg:block w-64 shrink-0 border-r bg-card/50 h-screen sticky top-0 overflow-y-auto">
+          <div className="p-4 border-b">
+            <h2 className="font-bold text-lg">Portfolio Contents</h2>
+            <p className="text-xs text-muted-foreground mt-1">FGCT6021 Mobile Application Development</p>
+          </div>
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <nav className="p-2">
+              {tocItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-left hover-elevate ${
+                    activeSection === item.id ? "bg-primary/10 text-primary font-medium" : ""
+                  }`}
+                  data-testid={`toc-${item.id}`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span className="truncate">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </ScrollArea>
+        </aside>
 
-        <Card className="mb-4" data-testid="card-portfolio-actions">
-          <CardContent className="pt-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-              <Button onClick={loadTemplate} variant="outline" size="sm" data-testid="button-load-template">
-                <RotateCcw className="h-4 w-4 mr-1" />
-                Load Template
-              </Button>
-              <Button onClick={clearAll} variant="outline" size="sm" data-testid="button-clear-all">
-                Clear All
-              </Button>
-              <Button onClick={expandAll} variant="outline" size="sm" data-testid="button-expand-all">
-                Expand All
-              </Button>
-              <Button onClick={collapseAll} variant="outline" size="sm" data-testid="button-collapse-all">
-                Collapse All
-              </Button>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button 
-                onClick={saveData} 
-                disabled={saving}
-                variant="outline"
-                className="flex-1"
-                data-testid="button-save-portfolio"
-              >
-                {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-                Save Progress
-              </Button>
-              <Button 
-                onClick={generatePDF} 
-                disabled={generating}
-                className="flex-1"
-                data-testid="button-download-pdf"
-              >
-                {generating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
-                Download Portfolio PDF
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mb-3" data-testid="card-student-info">
-          <SectionHeader id="info" title="Student Information" expanded={expandedSections.info} />
-          {expandedSections.info && (
-            <CardContent className="pt-0 space-y-3">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <main className="flex-1 min-w-0">
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b p-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
-                  <Label htmlFor="studentName" className="text-sm">Your Full Name</Label>
-                  <Input
-                    id="studentName"
-                    value={data.studentName}
-                    onChange={(e) => updateField("studentName", e.target.value)}
-                    placeholder="Enter your full name"
-                    data-testid="input-student-name"
-                  />
+                  <h1 className="text-xl sm:text-2xl font-bold" data-testid="heading-portfolio">FGCT6021 Portfolio</h1>
+                  <p className="text-sm text-muted-foreground">January 2026</p>
                 </div>
-                <div>
-                  <Label htmlFor="programme" className="text-sm">Programme</Label>
-                  <Input
-                    id="programme"
-                    value={data.programme}
-                    onChange={(e) => updateField("programme", e.target.value)}
-                    data-testid="input-programme"
-                  />
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button onClick={() => setViewMode(viewMode === "edit" ? "preview" : "edit")} variant="outline" size="sm">
+                    {viewMode === "edit" ? <Eye className="h-4 w-4 mr-1" /> : <EyeOff className="h-4 w-4 mr-1" />}
+                    {viewMode === "edit" ? "Preview" : "Edit"}
+                  </Button>
+                  <Button onClick={saveData} disabled={saving} variant="outline" size="sm" data-testid="button-save-portfolio">
+                    {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
+                    Save
+                  </Button>
+                  <Button onClick={generatePDF} disabled={generating} size="sm" data-testid="button-download-pdf">
+                    {generating ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Download className="h-4 w-4 mr-1" />}
+                    Download PDF
+                  </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="githubLink" className="text-sm">GitHub Repository URL</Label>
-                  <Input
-                    id="githubLink"
-                    value={data.githubLink}
-                    onChange={(e) => updateField("githubLink", e.target.value)}
-                    placeholder="https://github.com/..."
-                    data-testid="input-github-link"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="liveProjectLink" className="text-sm">Live Project URL (PythonAnywhere)</Label>
-                  <Input
-                    id="liveProjectLink"
-                    value={data.liveProjectLink}
-                    onChange={(e) => updateField("liveProjectLink", e.target.value)}
-                    placeholder="https://username.pythonanywhere.com"
-                    data-testid="input-live-link"
-                  />
-                </div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Button onClick={loadTemplate} variant="ghost" size="sm" data-testid="button-load-template">
+                  <RotateCcw className="h-3 w-3 mr-1" />
+                  Load Template
+                </Button>
+                <Button onClick={clearAll} variant="ghost" size="sm" data-testid="button-clear-all">
+                  Clear All
+                </Button>
+                <Button onClick={expandAll} variant="ghost" size="sm" data-testid="button-expand-all">
+                  Expand All
+                </Button>
+                <Button onClick={collapseAll} variant="ghost" size="sm" data-testid="button-collapse-all">
+                  Collapse All
+                </Button>
               </div>
-            </CardContent>
-          )}
-        </Card>
+            </div>
+          </div>
 
-        <Card className="mb-3" data-testid="card-introduction">
-          <SectionHeader id="intro" title="1. Introduction (100-250 words)" expanded={expandedSections.intro} wordCount={totalIntroWords} />
-          {expandedSections.intro && (
-            <CardContent className="pt-0">
-              <p className="text-xs text-muted-foreground mb-2">
-                Overview of project purpose, objectives, and your learning experience.
-              </p>
-              <Textarea
-                value={data.introduction}
-                onChange={(e) => updateField("introduction", e.target.value)}
-                className="min-h-[150px] text-sm"
-                data-testid="textarea-introduction"
+          <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-4">
+            <Card ref={(el) => { sectionRefs.current.cover = el; }} data-testid="section-cover">
+              <SectionHeader id="cover" title="Cover Page & Student Information" expanded={expandedSections.cover} icon={GraduationCap} />
+              {expandedSections.cover && (
+                <CardContent className="pt-4 space-y-6">
+                  <div className="text-center py-8 px-4 bg-gradient-to-b from-primary/5 to-transparent rounded-lg border">
+                    <p className="text-sm font-medium text-muted-foreground mb-4">UNIVERSITY FOR THE CREATIVE ARTS</p>
+                    <h2 className="text-3xl font-bold mb-2">Portfolio</h2>
+                    <p className="text-lg text-muted-foreground mb-8">FGCT6021 Mobile Application Development</p>
+                    {viewMode === "edit" ? (
+                      <div className="max-w-md mx-auto space-y-4">
+                        <div>
+                          <Label>Your Name</Label>
+                          <Input 
+                            value={data.studentName} 
+                            onChange={(e) => updateField("studentName", e.target.value)}
+                            placeholder="Enter your full name"
+                            className="text-center"
+                            data-testid="input-student-name"
+                          />
+                        </div>
+                        <div>
+                          <Label>Student ID</Label>
+                          <Input 
+                            value={data.studentId} 
+                            onChange={(e) => updateField("studentId", e.target.value)}
+                            placeholder="Enter your student ID"
+                            className="text-center"
+                            data-testid="input-student-id"
+                          />
+                        </div>
+                        <div>
+                          <Label>Programme</Label>
+                          <Input 
+                            value={data.programme} 
+                            onChange={(e) => updateField("programme", e.target.value)}
+                            placeholder="BSc Computer Science"
+                            className="text-center"
+                            data-testid="input-programme"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-2xl font-bold">{data.studentName || "Your Name"}</p>
+                        <p className="text-muted-foreground">{data.studentId || "Student ID"}</p>
+                        <p className="text-muted-foreground">{data.programme}</p>
+                      </div>
+                    )}
+                    <p className="mt-8 text-muted-foreground">January 2026</p>
+                  </div>
+
+                  <div className="p-4 bg-muted/30 rounded-lg text-sm">
+                    <p className="italic">
+                      I, <strong>{data.studentName || "Your Name"}</strong>, confirm that the work presented in this portfolio is my own. 
+                      ChatGPT (OpenAI) was used to paraphrase selected sentences and review grammar to improve the clarity of the writing. 
+                      Where information has been derived from other sources, I confirm that this has been indicated in the portfolio.
+                    </p>
+                    <p className="mt-4 text-muted-foreground">
+                      © 2026, {data.studentName || "Your Name"}<br />
+                      School of Games & Creative Technology<br />
+                      University for the Creative Arts
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>GitHub Repository Link</Label>
+                      <Input 
+                        value={data.githubLink} 
+                        onChange={(e) => updateField("githubLink", e.target.value)}
+                        placeholder="https://github.com/username/repo"
+                        data-testid="input-github-link"
+                      />
+                    </div>
+                    <div>
+                      <Label>Live Project Link (PythonAnywhere)</Label>
+                      <Input 
+                        value={data.liveProjectLink} 
+                        onChange={(e) => updateField("liveProjectLink", e.target.value)}
+                        placeholder="https://username.pythonanywhere.com"
+                        data-testid="input-live-link"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.intro = el; }} data-testid="section-intro">
+              <SectionHeader 
+                id="intro" 
+                title="1. Introduction" 
+                expanded={expandedSections.intro} 
+                icon={BookOpen}
+                wordCount={{ current: totalIntroWords, min: 100, max: 250 }}
               />
-            </CardContent>
-          )}
-        </Card>
+              {expandedSections.intro && (
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Provide an overview of your project, including its purpose and main objectives. Explain the aim of this portfolio and what it documents. 
+                    Reflect on your overall experience during the project, highlighting key learning points, skills developed, and any challenges you faced along the way.
+                  </p>
+                  {viewMode === "edit" ? (
+                    <Textarea 
+                      value={data.introduction}
+                      onChange={(e) => updateField("introduction", e.target.value)}
+                      placeholder="Write your introduction here (100-250 words)..."
+                      className="min-h-[200px]"
+                      data-testid="textarea-introduction"
+                    />
+                  ) : (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      {data.introduction.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                    </div>
+                  )}
+                </CardContent>
+              )}
+            </Card>
 
-        <Card className="mb-3" data-testid="card-lab1">
-          <SectionHeader id="lab1" title="2. Lab 1 – Introduction to Mobile App (250-400 words)" expanded={expandedSections.lab1} wordCount={totalLab1Words} />
-          {expandedSections.lab1 && (
-            <CardContent className="pt-0">
-              <p className="text-xs text-muted-foreground mb-2">
-                Reflection on GitHub, VS Code, PythonAnywhere, Android Studio, PWA, and Kotlin.
-              </p>
-              <Textarea
-                value={data.lab1}
-                onChange={(e) => updateField("lab1", e.target.value)}
-                className="min-h-[200px] text-sm"
-                data-testid="textarea-lab1"
+            <Card ref={(el) => { sectionRefs.current.lab1 = el; }} data-testid="section-lab1">
+              <SectionHeader 
+                id="lab1" 
+                title="2. Lab 1 – Introduction to Mobile App" 
+                expanded={expandedSections.lab1} 
+                icon={GraduationCap}
+                wordCount={{ current: totalLab1Words, min: 250, max: 400 }}
               />
-            </CardContent>
-          )}
-        </Card>
+              {expandedSections.lab1 && (
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Write a short reflection on the steps you have followed using GitHub, VS Code, PythonAnywhere, Android Studio, PWA, and Kotlin code. 
+                    You may include screenshots and should describe any challenges you faced while running the code.
+                    Include the links to your GitHub repository and your live project on PythonAnywhere.
+                  </p>
+                  {viewMode === "edit" ? (
+                    <Textarea 
+                      value={data.lab1}
+                      onChange={(e) => updateField("lab1", e.target.value)}
+                      placeholder="Write your Lab 1 reflection here (250-400 words)..."
+                      className="min-h-[250px]"
+                      data-testid="textarea-lab1"
+                    />
+                  ) : (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      {data.lab1.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                    </div>
+                  )}
+                </CardContent>
+              )}
+            </Card>
 
-        <Card className="mb-3" data-testid="card-lab2">
-          <SectionHeader id="lab2" title="3. Lab 2 – Frontend Fundamentals (150-300 words)" expanded={expandedSections.lab2} wordCount={totalLab2Words} />
-          {expandedSections.lab2 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">3.1 How did you approach mobile-first design?</Label>
-                <Textarea value={data.lab2_q1} onChange={(e) => updateField("lab2_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab2-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">3.2 What was the most useful HTML or CSS concept you applied?</Label>
-                <Textarea value={data.lab2_q2} onChange={(e) => updateField("lab2_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab2-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">3.3 What part of HTML or CSS did you find most challenging?</Label>
-                <Textarea value={data.lab2_q3} onChange={(e) => updateField("lab2_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab2-q3" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+            <Card ref={(el) => { sectionRefs.current.lab2 = el; }} data-testid="section-lab2">
+              <SectionHeader 
+                id="lab2" 
+                title="3. Lab 2 – Frontend Fundamentals" 
+                expanded={expandedSections.lab2} 
+                icon={Code}
+                wordCount={{ current: totalLab2Words, min: 150, max: 300 }}
+              />
+              {expandedSections.lab2 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (150–300 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">3.1 How did you approach mobile-first design?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab2_q1}
+                        onChange={(e) => updateField("lab2_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab2-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab2_q1}</p>
+                    )}
+                  </div>
 
-        <Card className="mb-3" data-testid="card-lab3">
-          <SectionHeader id="lab3" title="4. Lab 3 – JavaScript & DOM Manipulation (150-300 words)" expanded={expandedSections.lab3} wordCount={totalLab3Words} />
-          {expandedSections.lab3 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">4.1 Which DOM selection methods did you use, and why?</Label>
-                <Textarea value={data.lab3_q1} onChange={(e) => updateField("lab3_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab3-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">4.2 What was the most challenging part about linking JavaScript with HTML?</Label>
-                <Textarea value={data.lab3_q2} onChange={(e) => updateField("lab3_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab3-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">4.3 How did you test and debug your JavaScript code?</Label>
-                <Textarea value={data.lab3_q3} onChange={(e) => updateField("lab3_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab3-q3" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">3.2 What was the most useful HTML or CSS concept you applied this week?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab2_q2}
+                        onChange={(e) => updateField("lab2_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab2-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab2_q2}</p>
+                    )}
+                  </div>
 
-        <Card className="mb-3" data-testid="card-lab4">
-          <SectionHeader id="lab4" title="5. Lab 4 – API (200-400 words)" expanded={expandedSections.lab4} wordCount={totalLab4Words} />
-          {expandedSections.lab4 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">5.1 Which Storage, Browser, and Third-Party APIs did you choose, and why?</Label>
-                <Textarea value={data.lab4_q1} onChange={(e) => updateField("lab4_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab4-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">5.2 How did you integrate each API with DOM manipulation?</Label>
-                <Textarea value={data.lab4_q2} onChange={(e) => updateField("lab4_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab4-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">5.3 What challenges did you encounter, and how did you solve them?</Label>
-                <Textarea value={data.lab4_q3} onChange={(e) => updateField("lab4_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab4-q3" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">5.4 In what ways do these APIs improve your Learning Journal PWA?</Label>
-                <Textarea value={data.lab4_q4} onChange={(e) => updateField("lab4_q4", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab4-q4" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">3.3 What part of HTML or CSS did you find most challenging or confusing?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab2_q3}
+                        onChange={(e) => updateField("lab2_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab2-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab2_q3}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
 
-        <Card className="mb-3" data-testid="card-lab5">
-          <SectionHeader id="lab5" title="6. Lab 5 – Python & JSON (200-400 words)" expanded={expandedSections.lab5} wordCount={totalLab5Words} />
-          {expandedSections.lab5 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">6.1 How is storing data in a JSON file different from using browser storage?</Label>
-                <Textarea value={data.lab5_q1} onChange={(e) => updateField("lab5_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab5-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">6.2 How did you use Python to create or update your JSON file?</Label>
-                <Textarea value={data.lab5_q2} onChange={(e) => updateField("lab5_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab5-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">6.3 What does your PWA show locally vs. on GitHub? Are they the same?</Label>
-                <Textarea value={data.lab5_q3} onChange={(e) => updateField("lab5_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab5-q3" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">6.4 What extra feature did you add using the JSON file, and why?</Label>
-                <Textarea value={data.lab5_q4} onChange={(e) => updateField("lab5_q4", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab5-q4" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+            <Card ref={(el) => { sectionRefs.current.lab3 = el; }} data-testid="section-lab3">
+              <SectionHeader 
+                id="lab3" 
+                title="4. Lab 3 – JavaScript & DOM Manipulation" 
+                expanded={expandedSections.lab3} 
+                icon={Code}
+                wordCount={{ current: totalLab3Words, min: 150, max: 300 }}
+              />
+              {expandedSections.lab3 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (150–300 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">4.1 Which DOM selection methods did you use, and why did you choose them?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab3_q1}
+                        onChange={(e) => updateField("lab3_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab3-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab3_q1}</p>
+                    )}
+                  </div>
 
-        <Card className="mb-3" data-testid="card-lab6">
-          <SectionHeader id="lab6" title="7. Lab 6 – Frontend & Backend (250-500 words)" expanded={expandedSections.lab6} wordCount={totalLab6Words} />
-          {expandedSections.lab6 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">7.1 Why is the frontend–backend connection important?</Label>
-                <Textarea value={data.lab6_q1} onChange={(e) => updateField("lab6_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab6-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">7.2 Which HTTP methods did you use in Flask, and why?</Label>
-                <Textarea value={data.lab6_q2} onChange={(e) => updateField("lab6_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab6-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">7.3 What is the difference between Flask JSON handling vs. browser-based JSON reading?</Label>
-                <Textarea value={data.lab6_q3} onChange={(e) => updateField("lab6_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab6-q3" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">7.4 Did you face difficulties on PythonAnywhere? How did you handle them?</Label>
-                <Textarea value={data.lab6_q4} onChange={(e) => updateField("lab6_q4", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab6-q4" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">7.5 What extra feature did you build with Flask, and why?</Label>
-                <Textarea value={data.lab6_q5} onChange={(e) => updateField("lab6_q5", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab6-q5" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">4.2 What was the most challenging part about linking JavaScript with your HTML?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab3_q2}
+                        onChange={(e) => updateField("lab3_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab3-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab3_q2}</p>
+                    )}
+                  </div>
 
-        <Card className="mb-3" data-testid="card-lab7">
-          <SectionHeader id="lab7" title="8. Lab 7 – PWA (200-400 words)" expanded={expandedSections.lab7} wordCount={totalLab7Words} />
-          {expandedSections.lab7 && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">8.1 Why is it useful to enhance your Flask app with PWA features?</Label>
-                <Textarea value={data.lab7_q1} onChange={(e) => updateField("lab7_q1", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab7-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">8.2 What did you use to support offline access and dynamic data?</Label>
-                <Textarea value={data.lab7_q2} onChange={(e) => updateField("lab7_q2", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab7-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">8.3 What extra feature did you add, and why?</Label>
-                <Textarea value={data.lab7_q3} onChange={(e) => updateField("lab7_q3", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab7-q3" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">8.4 Did you face challenges deploying your PWA, and how did you solve them?</Label>
-                <Textarea value={data.lab7_q4} onChange={(e) => updateField("lab7_q4", e.target.value)} className="min-h-[80px] mt-1 text-sm" data-testid="textarea-lab7-q4" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">4.3 How did you test and debug your JavaScript code?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab3_q3}
+                        onChange={(e) => updateField("lab3_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab3-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab3_q3}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
 
-        <Card className="mb-3" data-testid="card-mini-project">
-          <SectionHeader id="mini" title="9. Mini Project (600-1000 words)" expanded={expandedSections.mini} wordCount={totalMiniWords} />
-          {expandedSections.mini && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">9.1 What additional features did you add to your Learning Journal?</Label>
-                <Textarea value={data.mini_q1} onChange={(e) => updateField("mini_q1", e.target.value)} className="min-h-[120px] mt-1 text-sm" data-testid="textarea-mini-q1" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">9.2 Why did you choose your mini project idea?</Label>
-                <Textarea value={data.mini_q2} onChange={(e) => updateField("mini_q2", e.target.value)} className="min-h-[120px] mt-1 text-sm" data-testid="textarea-mini-q2" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">9.3 What technical challenges did you face and how did you solve them?</Label>
-                <Textarea value={data.mini_q3} onChange={(e) => updateField("mini_q3", e.target.value)} className="min-h-[120px] mt-1 text-sm" data-testid="textarea-mini-q3" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">9.4 What would you improve if given more time?</Label>
-                <Textarea value={data.mini_q4} onChange={(e) => updateField("mini_q4", e.target.value)} className="min-h-[120px] mt-1 text-sm" data-testid="textarea-mini-q4" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+            <Card ref={(el) => { sectionRefs.current.lab4 = el; }} data-testid="section-lab4">
+              <SectionHeader 
+                id="lab4" 
+                title="5. Lab 4 – API" 
+                expanded={expandedSections.lab4} 
+                icon={Globe}
+                wordCount={{ current: totalLab4Words, min: 200, max: 400 }}
+              />
+              {expandedSections.lab4 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (200–400 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">5.1 Which Storage, Browser, and Third-Party APIs did you choose, and why?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab4_q1}
+                        onChange={(e) => updateField("lab4_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab4-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab4_q1}</p>
+                    )}
+                  </div>
 
-        <Card className="mb-3" data-testid="card-appendix">
-          <SectionHeader id="appendix" title="Appendices & Bibliography" expanded={expandedSections.appendix} />
-          {expandedSections.appendix && (
-            <CardContent className="pt-0 space-y-3">
-              <div>
-                <Label className="text-sm font-medium">Appendices</Label>
-                <p className="text-xs text-muted-foreground mb-1">Screenshots, code snippets, diagrams, supporting materials.</p>
-                <Textarea value={data.appendices} onChange={(e) => updateField("appendices", e.target.value)} className="min-h-[100px] text-sm" data-testid="textarea-appendices" />
-              </div>
-              <div>
-                <Label className="text-sm font-medium">Bibliography</Label>
-                <p className="text-xs text-muted-foreground mb-1">Resources, tutorials, documentation used (UCA referencing style).</p>
-                <Textarea value={data.bibliography} onChange={(e) => updateField("bibliography", e.target.value)} className="min-h-[100px] text-sm" data-testid="textarea-bibliography" />
-              </div>
-            </CardContent>
-          )}
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">5.2 How did you integrate each API with DOM manipulation?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab4_q2}
+                        onChange={(e) => updateField("lab4_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab4-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab4_q2}</p>
+                    )}
+                  </div>
 
-        <Card data-testid="card-final-download">
-          <CardContent className="pt-4">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button onClick={saveData} disabled={saving} variant="outline" className="flex-1" data-testid="button-save-final">
-                {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-                Save Progress
-              </Button>
-              <Button onClick={generatePDF} disabled={generating} className="flex-1" data-testid="button-download-final">
-                {generating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
-                Download Portfolio PDF
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                  <div>
+                    <Label className="text-sm font-medium">5.3 What challenges did you encounter, and how did you solve them?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab4_q3}
+                        onChange={(e) => updateField("lab4_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab4-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab4_q3}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">5.4 In what ways do these APIs improve your Learning Journal PWA?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab4_q4}
+                        onChange={(e) => updateField("lab4_q4", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab4-q4"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab4_q4}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.lab5 = el; }} data-testid="section-lab5">
+              <SectionHeader 
+                id="lab5" 
+                title="6. Lab 5 – Python & JSON" 
+                expanded={expandedSections.lab5} 
+                icon={Server}
+                wordCount={{ current: totalLab5Words, min: 200, max: 400 }}
+              />
+              {expandedSections.lab5 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (200–400 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">6.1 How is storing data in a JSON file different from using browser storage?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab5_q1}
+                        onChange={(e) => updateField("lab5_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab5-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab5_q1}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">6.2 How did you use Python to create or update your JSON file?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab5_q2}
+                        onChange={(e) => updateField("lab5_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab5-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab5_q2}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">6.3 What does your PWA show locally, and what will users see on GitHub? Are they the same? Why or why not?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab5_q3}
+                        onChange={(e) => updateField("lab5_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab5-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab5_q3}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">6.4 What extra feature did you add to your PWA using the JSON file, and why?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab5_q4}
+                        onChange={(e) => updateField("lab5_q4", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab5-q4"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab5_q4}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.lab6 = el; }} data-testid="section-lab6">
+              <SectionHeader 
+                id="lab6" 
+                title="7. Lab 6 – Frontend & Backend" 
+                expanded={expandedSections.lab6} 
+                icon={Server}
+                wordCount={{ current: totalLab6Words, min: 250, max: 500 }}
+              />
+              {expandedSections.lab6 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (250–500 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">7.1 Why is the frontend–backend connection important?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab6_q1}
+                        onChange={(e) => updateField("lab6_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab6-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab6_q1}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">7.2 Which HTTP methods did you use in Flask, and why?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab6_q2}
+                        onChange={(e) => updateField("lab6_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab6-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab6_q2}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">7.3 What is the difference between using Flask to store and load JSON data and reading JSON directly in the browser?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab6_q3}
+                        onChange={(e) => updateField("lab6_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab6-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab6_q3}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">7.4 Did you face any difficulties when running your project on PythonAnywhere? How did you handle them?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab6_q4}
+                        onChange={(e) => updateField("lab6_q4", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab6-q4"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab6_q4}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">7.5 What extra feature did you build into your PWA with Flask, and why did you add it?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab6_q5}
+                        onChange={(e) => updateField("lab6_q5", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab6-q5"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab6_q5}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.lab7 = el; }} data-testid="section-lab7">
+              <SectionHeader 
+                id="lab7" 
+                title="8. Lab 7 – PWA" 
+                expanded={expandedSections.lab7} 
+                icon={Smartphone}
+                wordCount={{ current: totalLab7Words, min: 200, max: 400 }}
+              />
+              {expandedSections.lab7 && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 50–100 words (200–400 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">8.1 Why is it useful to enhance your Flask app with PWA features?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab7_q1}
+                        onChange={(e) => updateField("lab7_q1", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab7-q1"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab7_q1}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">8.2 What did you use to support offline access and dynamic data?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab7_q2}
+                        onChange={(e) => updateField("lab7_q2", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab7-q2"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab7_q2}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">8.3 What extra feature did you add, and why?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab7_q3}
+                        onChange={(e) => updateField("lab7_q3", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab7-q3"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab7_q3}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">8.4 Did you face any challenges deploying your PWA, and how did you solve them?</Label>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.lab7_q4}
+                        onChange={(e) => updateField("lab7_q4", e.target.value)}
+                        placeholder="Your answer (50-100 words)..."
+                        className="mt-2 min-h-[100px]"
+                        data-testid="textarea-lab7-q4"
+                      />
+                    ) : (
+                      <p className="mt-2 text-sm">{data.lab7_q4}</p>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.mini = el; }} data-testid="section-mini">
+              <SectionHeader 
+                id="mini" 
+                title="9. Mini Project" 
+                expanded={expandedSections.mini} 
+                icon={Gamepad2}
+                wordCount={{ current: totalMiniWords, min: 600, max: 1000 }}
+              />
+              {expandedSections.mini && (
+                <CardContent className="pt-4 space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    Answer each question in 150–250 words (600–1000 words total). Include examples, screenshots or code if relevant.
+                  </p>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">9.1 What additional features did you add to your Learning Journal?</Label>
+                    <Badge variant="outline" className="ml-2 text-xs">150-250 words</Badge>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.mini_q1}
+                        onChange={(e) => updateField("mini_q1", e.target.value)}
+                        placeholder="Describe all the additional features you added..."
+                        className="mt-2 min-h-[200px]"
+                        data-testid="textarea-mini-q1"
+                      />
+                    ) : (
+                      <div className="mt-2 prose prose-sm dark:prose-invert max-w-none">
+                        {data.mini_q1.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">9.2 Why did you choose your mini project idea?</Label>
+                    <Badge variant="outline" className="ml-2 text-xs">150-250 words</Badge>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.mini_q2}
+                        onChange={(e) => updateField("mini_q2", e.target.value)}
+                        placeholder="Explain your reasoning for choosing this mini project..."
+                        className="mt-2 min-h-[200px]"
+                        data-testid="textarea-mini-q2"
+                      />
+                    ) : (
+                      <div className="mt-2 prose prose-sm dark:prose-invert max-w-none">
+                        {data.mini_q2.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">9.3 What technical challenges did you face and how did you solve them?</Label>
+                    <Badge variant="outline" className="ml-2 text-xs">150-250 words</Badge>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.mini_q3}
+                        onChange={(e) => updateField("mini_q3", e.target.value)}
+                        placeholder="Describe the technical challenges and solutions..."
+                        className="mt-2 min-h-[200px]"
+                        data-testid="textarea-mini-q3"
+                      />
+                    ) : (
+                      <div className="mt-2 prose prose-sm dark:prose-invert max-w-none">
+                        {data.mini_q3.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium">9.4 What would you improve if given more time?</Label>
+                    <Badge variant="outline" className="ml-2 text-xs">150-250 words</Badge>
+                    {viewMode === "edit" ? (
+                      <Textarea 
+                        value={data.mini_q4}
+                        onChange={(e) => updateField("mini_q4", e.target.value)}
+                        placeholder="List improvements you would make with more time..."
+                        className="mt-2 min-h-[200px]"
+                        data-testid="textarea-mini-q4"
+                      />
+                    ) : (
+                      <div className="mt-2 prose prose-sm dark:prose-invert max-w-none">
+                        {data.mini_q4.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.appendix = el; }} data-testid="section-appendix">
+              <SectionHeader 
+                id="appendix" 
+                title="Appendices" 
+                expanded={expandedSections.appendix} 
+                icon={FileText}
+              />
+              {expandedSections.appendix && (
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Include screenshots, code snippets, diagrams, or other supporting materials that are part of your work but too detailed to include in the main sections.
+                  </p>
+                  {viewMode === "edit" ? (
+                    <Textarea 
+                      value={data.appendices}
+                      onChange={(e) => updateField("appendices", e.target.value)}
+                      placeholder="Add your appendices content here..."
+                      className="min-h-[300px]"
+                      data-testid="textarea-appendices"
+                    />
+                  ) : (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      {data.appendices.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                    </div>
+                  )}
+                </CardContent>
+              )}
+            </Card>
+
+            <Card ref={(el) => { sectionRefs.current.bibliography = el; }} data-testid="section-bibliography">
+              <SectionHeader 
+                id="bibliography" 
+                title="Bibliography" 
+                expanded={expandedSections.bibliography} 
+                icon={BookOpen}
+              />
+              {expandedSections.bibliography && (
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    List any resources, tutorials, or documentation you used. Use a consistent referencing style for all sources. Refer to UCA Library Referencing.
+                  </p>
+                  {viewMode === "edit" ? (
+                    <Textarea 
+                      value={data.bibliography}
+                      onChange={(e) => updateField("bibliography", e.target.value)}
+                      placeholder="Add your bibliography here..."
+                      className="min-h-[300px]"
+                      data-testid="textarea-bibliography"
+                    />
+                  ) : (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      {data.bibliography.split('\n').map((p, i) => p.trim() && <p key={i}>{p}</p>)}
+                    </div>
+                  )}
+                </CardContent>
+              )}
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="pt-6">
+                <div className="text-center space-y-4">
+                  <h3 className="text-lg font-semibold">Ready to Submit?</h3>
+                  <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+                    Make sure you've filled in all sections with the required word counts. 
+                    Download your PDF and submit it along with your code and presentation.
+                  </p>
+                  <div className="flex flex-col sm:flex-row justify-center gap-3">
+                    <Button onClick={saveData} disabled={saving} variant="outline" size="lg" data-testid="button-save-final">
+                      {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                      Save Progress
+                    </Button>
+                    <Button onClick={generatePDF} disabled={generating} size="lg" data-testid="button-download-final">
+                      {generating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
+                      Download Portfolio PDF
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
     </div>
   );
