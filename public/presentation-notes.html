@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Journal PWA - Presentation Notes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #333; margin-bottom: 10px; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+    .download-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 { color: #333; margin-bottom: 15px; font-size: 1.3rem; }
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
+    }
+    .btn:hover { background: #1d4ed8; }
+    .btn-secondary {
+      background: #6b7280;
+    }
+    .btn-secondary:hover { background: #4b5563; }
+    .content-box {
+      background: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    .copy-notice {
+      color: #059669;
+      font-weight: 500;
+      display: none;
+      margin-left: 10px;
+    }
+    .instructions {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .instructions h3 { color: #92400e; margin-bottom: 8px; }
+    .instructions p { color: #78350f; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Learning Journal PWA</h1>
+    <p class="subtitle">Video Presentation Notes & Templates</p>
+
+    <div class="instructions">
+      <h3>How to Download</h3>
+      <p>Click any "Download" button below, or click "Copy to Clipboard" and paste into Google Docs, Word, or Notes app.</p>
+    </div>
+
+    <div class="download-section">
+      <h2>Quick Reference Card</h2>
+      <p>Short bullet points to keep visible during recording</p>
+      <button class="btn" onclick="downloadFile('quick-reference')">Download .txt</button>
+      <button class="btn btn-secondary" onclick="copyContent('quick-reference')">Copy to Clipboard</button>
+      <span id="copy-notice-quick" class="copy-notice">Copied!</span>
+      <div class="content-box" id="quick-reference"># Quick Reference Card - Keep This Visible During Recording
+
+---
+
+## INTRO (Say This First)
+"I'm [NAME], student ID [ID], presenting my Learning Journal PWA for FGCT6021 Mobile Application Development."
+
+---
+
+## PAGE-BY-PAGE BULLET POINTS
+
+### HOME/DASHBOARD
+- Statistics cards (entries, projects, streak)
+- Recent activity feed
+- Mobile-first responsive design
+
+### JOURNAL
+- Markdown editor with formatting
+- Tags for categorization
+- Search and filter
+- Works offline
+
+### PROJECTS
+- Name, description, tech stack
+- Progress tracking
+- GitHub links
+- Status badges
+
+### ANALYTICS
+- Calendar heatmap (like GitHub)
+- Activity charts
+- Tag distribution
+- Streak counter
+
+### LABS (Quick Overview)
+- Lab 3: DOM manipulation
+- Lab 4: Weather API, Clipboard, Notifications
+- Lab 5: localStorage vs IndexedDB
+- Lab 6: PostgreSQL CRUD
+- Lab 7: Service Worker cache
+
+### MEMORY GAME
+- Space theme, 3D flip animations
+- Web Audio API - music generated with code (no audio files!)
+- Oscillators create C major 7 chord
+- Multiple difficulty levels
+- Star rating system
+
+### CREATIVE CANVAS
+- Drawing tools: pencil, brush, eraser, shapes
+- LAYER SYSTEM like Photoshop
+- Undo/redo history
+- Export as PNG
+- Touch gestures for mobile
+
+### PORTFOLIO
+- All sections from university template
+- Markdown editing
+- Preview mode
+- PDF export
+- Word count tracking
+
+### PWA FEATURES (Demo Offline!)
+- Installable as app
+- Works completely offline
+- Service worker caches assets
+- IndexedDB stores data locally
+- Syncs when back online
+
+---
+
+## KEY TECH STACK (Mention These)
+
+| Frontend | Backend | Database | PWA |
+|----------|---------|----------|-----|
+| React 18 | Express.js | PostgreSQL | Service Worker |
+| TypeScript | Node.js | Drizzle ORM | IndexedDB |
+| Tailwind CSS | REST API | Neon | Web App Manifest |
+| TanStack Query | | | Background Sync |
+
+---
+
+## IMPRESSIVE PHRASES TO USE
+
+- "Mobile-first responsive design"
+- "Offline-first architecture"
+- "Procedurally generated audio using Web Audio API"
+- "Non-destructive layer-based editing"
+- "Full-stack TypeScript application"
+- "Optimistic updates with background sync"
+- "WCAG accessibility guidelines"
+
+---
+
+## DEMO CHECKLIST
+
+Before recording:
+- App running and responsive
+- Sample journal entries exist
+- At least one project created
+- Memory Game works with sound
+- Canvas draws properly
+- Portfolio has some content
+- Offline mode tested
+
+During recording:
+- Speak slowly and clearly
+- Pause when pages load
+- Show mobile responsiveness
+- Demo offline mode
+- Play Memory Game briefly
+- Draw something on Canvas
+- Export PDF from Portfolio
+
+---
+
+## IF SOMETHING BREAKS
+
+Stay calm! Say:
+- "Let me refresh that..."
+- "As you can see, this is a development environment..."
+- "The important thing to note here is..."
+
+Then continue with the demo.
+
+---
+
+## CLOSING (Say This Last)
+
+"This PWA demonstrates modern React development, full-stack architecture with Express and PostgreSQL, offline-first PWA capabilities, multiple API integrations, and creative extensions like the Memory Game and Canvas. Thank you for watching."
+
+---
+
+## TOTAL TIME: ~25-30 minutes</div>
+    </div>
+
+    <div class="download-section">
+      <h2>Full Video Script</h2>
+      <p>Detailed speaking points for each section of your demo</p>
+      <button class="btn" onclick="downloadFile('full-script')">Download .txt</button>
+      <button class="btn btn-secondary" onclick="copyContent('full-script')">Copy to Clipboard</button>
+      <span id="copy-notice-full" class="copy-notice">Copied!</span>
+      <div class="content-box" id="full-script"># Learning Journal PWA - Video Presentation Script
+
+## Pre-Recording Checklist
+- Clear browser cache and test the app is working
+- Have some sample journal entries ready
+- Test offline mode works
+- Prepare the Memory Game
+- Open Creative Canvas
+- Have portfolio page ready
+
+---
+
+## INTRODUCTION (1-2 minutes)
+
+### Opening Statement
+"Hello, my name is [Your Name], student ID [Your ID], and I'm presenting my Learning Journal Progressive Web Application developed for the FGCT6021 Mobile Application Development module."
+
+### Project Overview
+"This application is a comprehensive full-stack PWA built with:
+- React 18 with TypeScript for the frontend
+- Express.js for the backend API
+- PostgreSQL with Drizzle ORM for database
+- Complete offline-first architecture with service workers
+
+The main purpose is to help users track their learning journey through journal entries, project management, and interactive learning tools."
+
+---
+
+## SECTION 1: HOME/DASHBOARD (1-2 minutes)
+
+### What to Show
+- Navigate to the home page
+- Point out the statistics cards
+- Show the recent activity section
+
+### Speaking Points
+"The dashboard provides an at-a-glance view of learning progress:
+- Total journal entries written
+- Active projects being tracked
+- Learning streak - consecutive days of activity
+- Recent activity showing latest entries and updates
+
+The design follows mobile-first principles - notice how it works perfectly on any screen size."
+
+---
+
+## SECTION 2: JOURNAL ENTRIES (2-3 minutes)
+
+### What to Show
+- Navigate to Journal page
+- Create a new entry
+- Show markdown editor
+- Demonstrate tags
+- Show filtering/search
+
+### Speaking Points
+"The Journal is the core feature of this application:
+
+Creating an Entry:
+- Click 'New Entry' to open the editor
+- The markdown editor supports rich formatting - headings, bold, lists, code blocks
+- I can add tags to categorize entries like 'JavaScript', 'React', 'PWA'
+- The word count helps track writing progress
+
+Features:
+- Full-text search across all entries
+- Filter by tags or date range
+- Each entry saves automatically
+- Works completely offline - I'll demonstrate this later
+
+Technical Implementation:
+- Uses React Hook Form with Zod validation
+- TanStack Query for server state management
+- Markdown rendering with react-markdown
+- Stored in PostgreSQL and synced to IndexedDB for offline access"
+
+---
+
+## SECTION 3: PROJECTS (1-2 minutes)
+
+### What to Show
+- Navigate to Projects page
+- Show project cards
+- Open a project detail
+- Demonstrate progress tracking
+
+### Speaking Points
+"The Projects section helps track ongoing development work:
+
+- Each project has a name, description, and tech stack
+- Progress bar shows completion percentage
+- Status badges indicate if it's active, completed, or paused
+- Links to GitHub repositories and live demos
+
+This is useful for documenting what technologies I'm learning and tracking my portfolio projects."
+
+---
+
+## SECTION 4: ANALYTICS DASHBOARD (1-2 minutes)
+
+### What to Show
+- Navigate to Analytics page
+- Show charts and statistics
+- Point out the calendar heatmap
+- Show streak information
+
+### Speaking Points
+"The Analytics dashboard visualizes learning patterns:
+
+- Activity Calendar shows a GitHub-style heatmap of daily activity
+- Entry Statistics chart shows writing trends over time
+- Tag Distribution shows which topics I focus on most
+- Streak Counter encourages consistent daily learning
+
+This data helps identify learning patterns and stay motivated with visual progress tracking."
+
+---
+
+## SECTION 5: LAB DEMONSTRATIONS (2-3 minutes)
+
+### What to Show
+- Navigate to Labs section
+- Briefly show Labs 3-7 demos
+
+### Speaking Points
+"The Labs section demonstrates various web APIs we studied:
+
+Lab 3 - DOM Manipulation:
+- Interactive examples of getElementById, querySelector
+- Event handling demonstrations
+
+Lab 4 - Browser APIs:
+- Weather widget using Open-Meteo API (free, no key required)
+- Geolocation for local weather
+- Clipboard API for copy functionality
+- Browser notifications
+
+Lab 5 - Storage:
+- Comparison between localStorage and IndexedDB
+- JSON data management
+
+Lab 6 - Database:
+- PostgreSQL integration
+- CRUD operations demonstration
+
+Lab 7 - Service Workers:
+- Cache status display
+- Offline capability testing"
+
+---
+
+## SECTION 6: CELESTIAL MEMORY GAME (2-3 minutes)
+
+### What to Show
+- Navigate to Memory Game
+- Start a new game
+- Play a few moves
+- Show the scoring system
+- Toggle the ambient music
+
+### Speaking Points
+"The Celestial Memory Game is one of my mini project extensions:
+
+Visual Design:
+- Space-themed cards with celestial objects
+- Animated star background
+- Smooth 3D flip animations using CSS transforms
+
+Gameplay:
+- Classic memory matching mechanic
+- Multiple difficulty levels - 4x3, 4x4, 6x4 grids
+- Move counter and timer
+- Star rating based on performance
+
+Web Audio API Integration:
+- [Toggle music on] This ambient background music is procedurally generated using the Web Audio API
+- No audio files are used - oscillators generate C major 7 chord tones
+- Sound effects play when cards match or don't match
+- The audio only starts after user interaction, respecting browser autoplay policies
+
+Technical Highlights:
+- Fisher-Yates shuffle algorithm for card randomization
+- AudioContext with oscillators and gain nodes
+- Touch-friendly for mobile devices"
+
+---
+
+## SECTION 7: CREATIVE CANVAS (2-3 minutes)
+
+### What to Show
+- Navigate to Creative Canvas
+- Draw something simple
+- Switch between tools
+- Demonstrate layers
+- Show undo/redo
+- Export an image
+
+### Speaking Points
+"The Professional Creative Canvas is a full-featured drawing application:
+
+Tool Palette:
+- Pencil for freehand drawing
+- Brush with adjustable size
+- Eraser tool
+- Shape tools - rectangle, circle, line
+- Text tool
+- Color picker with custom colors
+
+Layer System:
+[Create a new layer]
+- Multiple transparent layers like Photoshop
+- Layers can be reordered, hidden, or merged
+- Non-destructive editing - work on one layer without affecting others
+
+Additional Features:
+- Undo/redo history
+- Export as PNG or JPEG
+- Touch support for mobile and tablet
+- Pinch-to-zoom and pan gestures
+
+Technical Implementation:
+- HTML5 Canvas API
+- Pointer Events for unified mouse/touch handling
+- ImageData manipulation for layer compositing
+- requestAnimationFrame for smooth drawing performance"
+
+---
+
+## SECTION 8: PORTFOLIO PAGE (2-3 minutes)
+
+### What to Show
+- Navigate to Portfolio page
+- Show the sidebar navigation
+- Expand/collapse sections
+- Toggle between Edit and Preview mode
+- Show PDF export
+
+### Speaking Points
+"The Portfolio page is where I document my learning for this module:
+
+Structure:
+- Follows the university template with all required sections
+- Introduction, Labs 1-7, Mini Project, Appendices, Bibliography
+- Each section has word count tracking
+
+Editing Features:
+- Markdown editor for each section
+- Expand/collapse individual sections
+- 'Expand All' and 'Collapse All' for convenience
+- Preview mode to see formatted output
+
+Export Functionality:
+[Click Download PDF]
+- Exports the complete portfolio as a PDF
+- Formatted with proper headings and sections
+- Ready for submission
+
+Data Persistence:
+- Auto-saves to the database
+- Works offline with local storage backup"
+
+---
+
+## SECTION 9: PWA FEATURES (2-3 minutes)
+
+### What to Show
+- Show the install prompt (if available)
+- Demonstrate offline mode
+- Show service worker in DevTools
+
+### Speaking Points
+"This is a fully-featured Progressive Web App:
+
+Installation:
+- Can be installed on desktop or mobile
+- Appears as a native app with its own icon
+- Launches in standalone mode without browser chrome
+
+Offline Functionality:
+[Turn off network in DevTools]
+- Watch - I'm now offline, but the app still works perfectly
+- I can view all my entries, create new ones, navigate everywhere
+- Changes are queued and sync when I'm back online
+[Turn network back on]
+- Now it's syncing my offline changes to the server
+
+Service Worker:
+- Caches essential assets for instant loading
+- Network-first strategy for API calls
+- Background sync for offline writes
+
+Technical Details:
+- Custom service worker in sw.js
+- IndexedDB via localforage for offline data
+- Sync queue for pending operations
+- Web App Manifest for installability"
+
+---
+
+## SECTION 10: RESPONSIVE DESIGN (1 minute)
+
+### What to Show
+- Resize the browser to mobile size
+- Show mobile navigation
+- Demonstrate touch-friendly interface
+
+### Speaking Points
+"The entire application is mobile-first responsive:
+
+- Cards stack vertically on mobile, grid on desktop
+- Touch-friendly 44x44 pixel tap targets
+- Bottom navigation on mobile for easy thumb access
+- Swipe gestures work throughout
+- Tested on Chrome, Firefox, Safari, and Edge"
+
+---
+
+## CONCLUSION (1 minute)
+
+### Closing Statement
+"To summarize, this Learning Journal PWA demonstrates:
+
+1. Modern React development with TypeScript and hooks
+2. Full-stack architecture with Express and PostgreSQL
+3. Offline-first PWA with service workers and IndexedDB
+4. Multiple API integrations - Weather, GitHub, Web Audio
+5. Creative features - Memory Game and Canvas tool
+6. Academic documentation through the Portfolio system
+
+Thank you for watching. The source code is available on GitHub, and the live application is deployed and accessible at the project URL.
+
+Any questions can be directed to [your email]."
+
+---
+
+## TIMING GUIDE
+
+| Section | Duration | Running Total |
+|---------|----------|---------------|
+| Introduction | 1-2 min | 2 min |
+| Dashboard | 1-2 min | 4 min |
+| Journal | 2-3 min | 7 min |
+| Projects | 1-2 min | 9 min |
+| Analytics | 1-2 min | 11 min |
+| Labs | 2-3 min | 14 min |
+| Memory Game | 2-3 min | 17 min |
+| Canvas | 2-3 min | 20 min |
+| Portfolio | 2-3 min | 23 min |
+| PWA Features | 2-3 min | 26 min |
+| Responsive | 1 min | 27 min |
+| Conclusion | 1 min | 28 min |
+
+Total Estimated Time: 25-30 minutes
+
+---
+
+## TIPS FOR RECORDING
+
+1. Speak slowly and clearly - viewers may be non-native English speakers
+2. Pause briefly when navigating to let the page load
+3. Move your mouse smoothly - jerky movements are distracting
+4. Zoom in on important UI elements if needed
+5. Have sample data ready - empty screens look unprofessional
+6. Test everything before recording - nothing worse than a bug mid-demo
+7. Use keyboard shortcuts where possible - looks more professional
+8. Mention file names/locations when discussing code
+9. Stay positive even if something goes wrong - just explain and move on
+10. End confidently - summarize key points and thank the viewer</div>
+    </div>
+
+  </div>
+
+  <script>
+    function downloadFile(type) {
+      const content = document.getElementById(type === 'quick-reference' ? 'quick-reference' : 'full-script').textContent;
+      const filename = type === 'quick-reference' ? 'Quick-Reference-Card.txt' : 'Video-Presentation-Script.txt';
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function copyContent(type) {
+      const content = document.getElementById(type === 'quick-reference' ? 'quick-reference' : 'full-script').textContent;
+      navigator.clipboard.writeText(content).then(() => {
+        const notice = document.getElementById(type === 'quick-reference' ? 'copy-notice-quick' : 'copy-notice-full');
+        notice.style.display = 'inline';
+        setTimeout(() => { notice.style.display = 'none'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
