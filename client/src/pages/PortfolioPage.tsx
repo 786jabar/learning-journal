@@ -97,11 +97,18 @@ During the initial setup phase, I explored various deployment options to underst
 The foundational PWA concepts I mastered during this phase include the web app manifest for controlling installation behaviour, service worker registration for enabling offline functionality, and the app shell architecture pattern that ensures fast initial loading. A significant challenge I encountered was configuring Git credentials consistently across different development environments, which I resolved by implementing SSH key-based authentication for secure, password-less repository access.
 
 \`\`\`javascript
-// Service Worker Registration
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .then(reg => console.log('SW registered'))
-    .catch(err => console.error('SW failed:', err));
+// Service Worker Registration (client/src/main.tsx)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js", { scope: "/" })
+      .then((registration) => {
+        console.log("SW registered with scope:", registration.scope);
+      })
+      .catch((error) => {
+        console.error("SW registration failed:", error);
+      });
+  });
 }
 \`\`\``,
 
@@ -233,14 +240,34 @@ The frontend focuses exclusively on user interface and experience, handling all 
 Each endpoint includes appropriate error handling, returning 400 for validation failures, 404 when requested resources cannot be found, and 500 for unexpected server errors. This consistent pattern provides predictable behaviour that frontend code can reliably handle.
 
 \`\`\`javascript
-// Express.js CRUD Implementation
-app.get('/api/reflections', async (req, res) => {
-  const data = await db.select().from(reflections);
-  res.json(data);
+// Express.js CRUD Implementation (server/routes.ts)
+// GET - Retrieve all journal entries for device
+app.get("/api/journals", async (req, res) => {
+  try {
+    const journals = await storage.getAllJournals(getDeviceId(req));
+    res.json(journals);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch journals" });
+  }
 });
-app.post('/api/reflections', async (req, res) => {
-  const newEntry = await db.insert(reflections).values(req.body).returning();
-  res.status(201).json(newEntry[0]);
+
+// POST - Create new journal entry with Zod validation
+app.post("/api/journals", async (req, res) => {
+  try {
+    insertJournalEntrySchema.parse({
+      title: req.body.title,
+      content: req.body.content,
+      tags: req.body.tags,
+      date: req.body.date ? new Date(req.body.date) : new Date(),
+    });
+    const journal = await storage.createJournal(req.body, getDeviceId(req));
+    res.status(201).json(journal);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create journal" });
+  }
 });
 \`\`\``,
 
@@ -257,13 +284,26 @@ Cross-Origin Resource Sharing (CORS) errors initially blocked frontend requests 
 Export functionality allows users to download their reflections in PDF format for printing, Markdown for portability to other applications, or JSON for data backup and migration purposes. This comprehensive feature set transforms the reflections from simple notes into a valuable tool for learning portfolio development.
 
 \`\`\`typescript
-// Drizzle Schema
-export const reflections = pgTable("reflections", {
-  id: serial("id").primaryKey(),
+// Drizzle ORM Schema (shared/schema.ts)
+export const journalEntries = pgTable("journal_entries", {
+  id: varchar("id", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  title: text("title").notNull(),
   content: text("content").notNull(),
-  category: varchar("category", { length: 100 }),
-  createdAt: timestamp("created_at").defaultNow(),
+  tags: text("tags").array().notNull().default(sql\`ARRAY[]::text[]\`),
+  date: timestamp("date").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+// Zod validation schema with drizzle-zod
+export const insertJournalEntrySchema = createInsertSchema(journalEntries)
+  .omit({ id: true, userId: true, createdAt: true, updatedAt: true })
+  .extend({
+    title: z.string().min(1, "Title is required").max(200),
+    content: z.string().min(1, "Content is required"),
+    tags: z.array(z.string()).default([]),
+  });
 \`\`\``,
 
   lab7_q1: `Progressive Web Application features transform a standard web application into a native-like experience that rivals traditional mobile apps. The most significant benefit is offline access, which proves crucial for users with unreliable internet connectivity who need continuous access to their learning materials. When network conditions deteriorate, the application continues functioning seamlessly because all essential assets and data are cached locally.
@@ -275,14 +315,40 @@ Installability allows users to add the application to their home screen, launchi
 Dynamic data follows a different pattern using IndexedDB through the localforage library for local persistence. When users make changes while offline, these edits are queued in a sync queue stored in IndexedDB. Upon connectivity restoration, detected through the online event, the queue is processed to synchronise changes with the server. API requests use a network-first strategy with cache fallback, attempting to fetch fresh data but gracefully serving cached responses when the network is unavailable.
 
 \`\`\`javascript
-// Service Worker Cache Strategy
-self.addEventListener('fetch', (e) => {
-  if (e.request.url.includes('/api/')) {
-    e.respondWith(networkFirst(e.request));
-  } else {
-    e.respondWith(cacheFirst(e.request));
+// Service Worker Cache Strategy (public/sw.js)
+const STATIC_CACHE = 'learning-journal-static-v4';
+const DYNAMIC_CACHE = 'learning-journal-dynamic-v4';
+
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+  
+  // Network first for API calls
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(networkFirst(event.request));
+    return;
   }
+  // Network first for navigation
+  if (event.request.mode === 'navigate') {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+  event.respondWith(networkFirst(event.request));
 });
+
+async function networkFirst(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.status === 200) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    const cachedResponse = await caches.match(request);
+    return cachedResponse || new Response('Offline', { status: 503 });
+  }
+}
 \`\`\``,
 
   lab7_q3: `To demonstrate and debug PWA capabilities, I implemented a dedicated PWA demonstration page accessible through the application menu. This page provides real-time visibility into the application's PWA status, serving both educational and debugging purposes.
@@ -298,15 +364,62 @@ Cache versioning proved particularly challenging, as outdated JavaScript and CSS
 The Celestial Memory Game represents the most substantial addition, featuring a visually striking space-themed card matching experience. The game utilises 30 unique celestial icons including planets, galaxies, and nebulae, each rendered with sophisticated SVG gradient effects. What sets this implementation apart is the procedurally-generated ambient music created using the Web Audio API. Rather than relying on audio files, the system generates a harmonious C major 7 chord through oscillator nodes, creating an evolving soundscape that enhances the meditative gameplay experience. Card animations employ CSS 3D transforms with perspective and backface-visibility for realistic flip effects.
 
 \`\`\`javascript
-// Web Audio API - Procedural Music Generation
-const audioCtx = new AudioContext();
-const osc = audioCtx.createOscillator();
-osc.frequency.value = 261.63; // C4 note
-osc.connect(audioCtx.destination);
-osc.start();
+// Web Audio API - Procedural Music (MemoryGamePage.tsx)
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+const masterGain = ctx.createGain();
+masterGain.gain.value = 0.12;
+masterGain.connect(ctx.destination);
+
+// C Major 7 chord: C4, E4, G4, B4
+const padNotes = [261.63, 329.63, 392.00, 493.88];
+padNotes.forEach((freq, i) => {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+  gain.gain.value = 0.08 - i * 0.01;
+  osc.connect(gain);
+  gain.connect(masterGain);
+  osc.start();
+});
+
+// Random pentatonic chimes
+const melodyNotes = [523.25, 587.33, 659.25, 783.99, 880.00];
+const playChime = () => {
+  const noteFreq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+  const chimeOsc = ctx.createOscillator();
+  chimeOsc.frequency.value = noteFreq;
+  chimeOsc.start();
+};
 \`\`\`
 
 The Professional Creative Canvas provides a complete drawing application demonstrating mastery of the HTML5 Canvas API. The implementation features multiple drawing tools including pen, eraser, line, rectangle, and circle shapes. A dual-canvas overlay architecture enables non-destructive editing where users see live previews of shapes before committing them to the canvas. The history system stores ImageData snapshots using useRef to avoid stale closure issues, supporting comprehensive undo/redo functionality. Additional features include PNG export, full touch device support, and a gallery system for saving artwork to IndexedDB.
+
+\`\`\`javascript
+// Canvas Coordinate System (CanvasPage.tsx)
+const canvasRef = useRef<HTMLCanvasElement>(null);
+const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
+const historyRef = useRef<DrawingState[]>([]);
+
+const getCoordinates = (e: React.MouseEvent | React.TouchEvent) => {
+  const canvas = canvasRef.current;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvasWidth / rect.width;
+  const scaleY = canvasHeight / rect.height;
+  
+  if ("touches" in e) {
+    const touch = e.touches[0] || e.changedTouches?.[0];
+    return {
+      x: (touch.clientX - rect.left) * scaleX,
+      y: (touch.clientY - rect.top) * scaleY,
+    };
+  }
+  return {
+    x: (e.clientX - rect.left) * scaleX,
+    y: (e.clientY - rect.top) * scaleY,
+  };
+};
+\`\`\`
 
 Beyond these primary features, the application includes mobile app-style navigation with a bottom navigation bar, an analytics dashboard with streak tracking and contribution heatmaps, and a complete achievements system with persistent badge milestones.`,
 
@@ -322,11 +435,28 @@ These implementation choices collectively showcase modern React development patt
 
 The memory game's 3D card flip animation required understanding the nuances of CSS 3D transforms. The key insight was that perspective must be set on the parent container, transform-style: preserve-3d must be applied to the flipping element, and backface-visibility: hidden is required on both card faces to prevent the back from showing through during rotation. Browser autoplay policies for Web Audio presented an unexpected challenge, as modern browsers prevent AudioContext creation without prior user interaction. The solution involved deferring audio initialisation until the first user click within the game interface.
 
-\`\`\`css
-/* CSS 3D Card Flip Implementation */
-.card { transform-style: preserve-3d; perspective: 1000px; }
-.card-face { backface-visibility: hidden; }
-.card.flipped { transform: rotateY(180deg); }
+\`\`\`jsx
+// CSS 3D Card Flip (MemoryGamePage.tsx)
+<div style={{ perspective: '1000px' }}>
+  <button
+    className="transition-transform duration-500"
+    style={{
+      transformStyle: 'preserve-3d',
+      transform: card.isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+    }}
+  >
+    {/* Front face - card back */}
+    <div 
+      className="absolute inset-0 rounded-xl"
+      style={{ backfaceVisibility: 'hidden' }}
+    />
+    {/* Back face - card icon */}
+    <div 
+      className="absolute inset-0 rounded-xl"
+      style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+    />
+  </button>
+</div>
 \`\`\`
 
 The canvas implementation faced coordinate accuracy issues where strokes appeared offset from the cursor position. This occurred because the canvas display size differed from its internal bitmap dimensions. The solution involved using getBoundingClientRect() to calculate the actual rendered dimensions and applying devicePixelRatio scaling for crisp rendering on high-DPI displays. Touch event handling required using changedTouches rather than touches for touchend events, since the touches array is empty when no fingers remain on the screen.`,
