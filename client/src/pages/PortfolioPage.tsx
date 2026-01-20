@@ -84,52 +84,44 @@ const prefilledData: PortfolioData = {
   githubLink: "https://github.com/yourusername/learning-journal-pwa",
   liveProjectLink: "https://yourusername.pythonanywhere.com",
   
-  introduction: `This portfolio documents my Learning Journal PWA developed for FGCT6021 Mobile Application Development. The application is built with React, TypeScript, Express.js, and PostgreSQL, featuring offline-first architecture with service workers and IndexedDB.
+  introduction: `This portfolio documents my development of a Learning Journal Progressive Web Application for FGCT6021 Mobile Application Development. The application demonstrates my understanding of modern web technologies and mobile-first design principles, serving as both a functional learning tool and a showcase of technical competencies acquired throughout the module.
 
-The project enables users to track learning progress through journal entries, manage projects, and engage with interactive features. Key technical achievements include implementing PWA capabilities for installability and offline access, integrating external APIs (Weather, GitHub), and creating the Celestial Memory Game with Web Audio API.
+The Learning Journal was built using React 18 with TypeScript for type-safe frontend development, paired with Node.js and Express.js on the backend. PostgreSQL serves as the primary database, accessed through Drizzle ORM for type-safe queries. The application implements a comprehensive offline-first architecture using Service Workers for asset caching and IndexedDB for local data persistence, ensuring users can continue working without internet connectivity.
 
-[See Figure 1: Application Architecture Diagram]
-[See Figure 2: Home Dashboard Screenshot]`,
+Beyond the core journaling functionality, I developed several interactive features that demonstrate advanced browser API integration. The Celestial Memory Game generates ambient background music procedurally using the Web Audio API, while the Professional Creative Canvas employs a dual-layer architecture for non-destructive drawing. These additions transform the application from a simple note-taking tool into an engaging learning platform that showcases the full potential of modern Progressive Web Applications.`,
 
-  lab1: `I set up the development environment by creating a GitHub repository for version control with meaningful commit messages. Visual Studio Code was configured with ESLint, Prettier, and TypeScript extensions.
+  lab1: `The first step in developing this application was establishing a robust development environment that would support collaborative work and professional coding practices. I created a GitHub repository to manage version control, ensuring that all changes were tracked with meaningful commit messages that describe the purpose of each modification. Visual Studio Code served as my primary development environment, configured with essential extensions including ESLint for code quality enforcement, Prettier for consistent formatting, and TypeScript language support for enhanced developer productivity.
 
-I explored PythonAnywhere for Flask deployment, learning about WSGI configuration and virtual environments. I also installed Android Studio to understand how PWAs can be packaged as native apps using Trusted Web Activities (TWA).
+During the initial setup phase, I explored various deployment options to understand how Progressive Web Applications can be hosted and distributed. PythonAnywhere provided insights into Flask-based deployment with WSGI configuration, while Android Studio demonstrated how PWAs can be packaged as native Android applications using Trusted Web Activities. This exploration was valuable in understanding the deployment landscape for modern web applications.
 
-Key PWA concepts mastered include manifest.webmanifest for installability, service workers for offline caching, and the app shell architecture. The main challenge was configuring Git credentials across environments, which I resolved using SSH key authentication.
-
-[See Figure 3: GitHub Repository Setup]
-[See Figure 4: VS Code Configuration with Extensions]
-[See Figure 5: Service Worker Code - sw.js]
+The foundational PWA concepts I mastered during this phase include the web app manifest for controlling installation behaviour, service worker registration for enabling offline functionality, and the app shell architecture pattern that ensures fast initial loading. A significant challenge I encountered was configuring Git credentials consistently across different development environments, which I resolved by implementing SSH key-based authentication for secure, password-less repository access.
 
 \`\`\`javascript
-// Service Worker Registration (index.html)
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(reg => console.log('SW registered'))
     .catch(err => console.error('SW failed:', err));
 }
-\`\`\`
+\`\`\``,
 
-GitHub Repository: [Your GitHub Link]
-Live Project: [Your PythonAnywhere Link]`,
+  lab2_q1: `My approach to responsive design followed mobile-first principles, beginning with a base viewport of 320 pixels and progressively enhancing the layout for larger screens. This methodology ensures that the core experience remains accessible on smaller devices while taking advantage of additional screen real estate when available.
 
-  lab2_q1: `I used mobile-first design, starting with 320px viewport and progressively enhancing for larger screens. Tailwind CSS breakpoints (sm: 640px, md: 768px, lg: 1024px) adjust layouts dynamically. Navigation uses horizontal scroll on mobile and full navbar on desktop. Cards stack vertically on mobile and display in grids on larger screens.
-
-[See Figure 6: Mobile vs Desktop Layout Comparison]
+Tailwind CSS provided the foundation for responsive styling through its breakpoint system. The sm breakpoint activates at 640 pixels, md at 768 pixels, and lg at 1024 pixels, allowing layouts to adapt fluidly across device categories. Navigation elements use horizontal scrolling on mobile devices to accommodate limited width, transitioning to a full navigation bar on desktop screens. Content cards stack vertically on mobile for easy thumb navigation, reorganising into responsive grid layouts on tablets and desktop displays.
 
 \`\`\`css
-/* Responsive Grid Example */
+/* Responsive Grid Implementation */
 .card-grid {
   @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
 }
 \`\`\``,
 
-  lab2_q2: `Flexbox and CSS Grid were the most useful concepts. Flexbox handles centering and navigation layouts, while Grid creates the dashboard with auto-fill and minmax() for responsive cards. The gap property simplifies spacing compared to margins.
+  lab2_q2: `Flexbox and CSS Grid emerged as the most valuable layout tools for this project, each serving distinct purposes within the interface design. Flexbox proved particularly effective for navigation layouts and content centering, providing intuitive control over element alignment and distribution along a single axis. Its flexibility made it ideal for header components and toolbar arrangements where items need to adapt to varying content sizes.
 
-[See Figure 7: Flexbox Navigation Code]
+CSS Grid became essential for creating the main dashboard layout, where cards needed to flow responsively across available space. The auto-fill keyword combined with minmax() creates a truly fluid grid that automatically adjusts column count based on container width. The gap property significantly simplified spacing management compared to traditional margin-based approaches, ensuring consistent gutters without complex calculations.
 
 \`\`\`css
-/* Dashboard Grid */
+/* Dashboard Grid Layout */
 .dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -137,13 +129,13 @@ Live Project: [Your PythonAnywhere Link]`,
 }
 \`\`\``,
 
-  lab2_q3: `Z-index stacking contexts were most challenging, especially for sticky headers and modal overlays. Understanding that transform and opacity create new stacking contexts was key. I used Tailwind's utilities to handle browser inconsistencies and the isolation property to contain stacking contexts.
+  lab2_q3: `The most challenging CSS concept I encountered was managing z-index stacking contexts, particularly when implementing sticky headers and modal overlay components. Initially, modals would appear behind other elements despite having high z-index values, which led me to investigate how stacking contexts are created and managed in CSS.
 
-[See Figure 8: Z-index Stacking Solution]`,
+The key insight was understanding that certain CSS properties, including transform and opacity, create new stacking contexts that isolate their children from the global z-index hierarchy. This explained why modals rendered within transformed containers would not layer correctly. I resolved these issues by carefully structuring the DOM and using Tailwind's isolation utility to contain stacking contexts where needed, preventing unexpected layering behaviour across the application.`,
 
-  lab3_q1: `I used getElementById() for unique elements like theme toggle buttons (O(1) lookup), querySelectorAll() for collections like cards and form inputs, and querySelector() for CSS selector-based targeting. In React, useRef hooks provide stable DOM references across re-renders.
+  lab3_q1: `DOM manipulation in this project required careful selection of appropriate methods depending on the use case. For unique elements such as the theme toggle button, I employed getElementById() which provides O(1) constant-time lookup efficiency through the browser's internal hash map. When working with collections of similar elements, such as journal entry cards or form inputs, querySelectorAll() proved more appropriate as it returns a NodeList of all matching elements that can be iterated.
 
-[See Figure 9: DOM Selection Code]
+For more complex selection requirements based on CSS selectors, querySelector() offered the flexibility needed for targeting elements by attributes, classes, or pseudo-selectors. In the React portions of the application, I transitioned to using useRef hooks which provide stable DOM references that persist across component re-renders without triggering unnecessary updates.
 
 \`\`\`javascript
 // DOM Selection Examples
@@ -152,46 +144,44 @@ const cards = document.querySelectorAll('.entry-card');
 const activeBtn = document.querySelector('button[data-active="true"]');
 \`\`\``,
 
-  lab3_q2: `Event listener timing was challenging - handlers executed before DOM loaded, causing null errors. I solved this using DOMContentLoaded in vanilla JS and useEffect hooks in React with cleanup functions to prevent memory leaks. Event propagation required stopPropagation() for nested clickable elements.
+  lab3_q2: `Event listener timing presented a significant challenge during development, as handlers would occasionally execute before the DOM had fully loaded, resulting in null reference errors when attempting to access elements. In vanilla JavaScript contexts, I resolved this by wrapping event listener registration within DOMContentLoaded callbacks to ensure the document structure was complete before any manipulation occurred.
 
-[See Figure 10: useEffect Event Listener Pattern]
+Within React components, the useEffect hook served as the primary mechanism for managing event listeners, with the cleanup function in the return statement ensuring listeners are properly removed when components unmount. This pattern prevents memory leaks that can occur when orphaned event listeners continue to reference unmounted components. For nested clickable elements, understanding event propagation was essential, and I employed stopPropagation() strategically to prevent unintended parent handler execution.
 
 \`\`\`javascript
-// React Event Listener Pattern
+// React Event Listener with Cleanup
 useEffect(() => {
-  const handleClick = (e) => { /* handler */ };
+  const handleClick = (e) => { /* handler logic */ };
   document.addEventListener('click', handleClick);
   return () => document.removeEventListener('click', handleClick);
 }, []);
 \`\`\``,
 
-  lab3_q3: `Chrome DevTools was essential for debugging. I used Console for logging, Sources for breakpoints, Network for API verification, and Application for IndexedDB/service worker inspection. Try-catch blocks provide user-friendly error messages through the toast system.
+  lab3_q3: `Chrome DevTools became an indispensable tool throughout the debugging process, providing comprehensive insights into application behaviour. The Console panel served as the primary output for logging statements and error tracking, while the Sources panel enabled step-through debugging with breakpoints at critical code paths. The Network panel was particularly valuable for verifying API request and response data, helping identify issues with fetch operations.
 
-[See Figure 11: Chrome DevTools Debugging Screenshot]`,
+For PWA-specific debugging, the Application panel provided visibility into IndexedDB contents, service worker registration status, and cached resources. Error handling throughout the application utilises try-catch blocks that display user-friendly messages through the toast notification system, ensuring users understand when operations fail without being exposed to technical error details.`,
 
-  lab4_q1: `**Storage APIs:** IndexedDB (via localforage) for offline persistence of entries - provides gigabytes capacity vs 5MB for localStorage. LocalStorage for simple preferences.
+  lab4_q1: `This application integrates multiple categories of APIs to deliver comprehensive functionality. For client-side storage, IndexedDB accessed through the localforage library provides the primary persistence layer, offering gigabytes of storage capacity compared to the 5MB limit of localStorage. This substantial capacity is essential for storing journal entries, project data, and cached assets for offline access. LocalStorage handles simpler requirements such as user preferences and theme settings.
 
-**Browser APIs:** Clipboard API for copy functionality, Notifications API for reminders, Geolocation API for location context, Web Audio API for game music.
+Browser APIs enhance the user experience through native platform integration. The Clipboard API enables one-click copying of content, the Notifications API delivers reminders and updates, and the Geolocation API provides location context for entries. The Web Audio API powers the procedural music generation in the Memory Game, creating an immersive audio experience without requiring pre-recorded audio files.
 
-**Third-Party APIs:** Open-Meteo Weather API (free, no key), GitHub REST API for profiles.
-
-[See Figure 12: Weather API Integration Code]
+For external data integration, the Open-Meteo Weather API provides current weather information without requiring an API key, while the GitHub REST API retrieves user profile information and repository statistics for developer-focused features.
 
 \`\`\`javascript
-// Weather API Fetch
+// Weather API Integration
 const response = await fetch(
   \`https://api.open-meteo.com/v1/forecast?latitude=\${lat}&longitude=\${lon}&current_weather=true\`
 );
 const data = await response.json();
 \`\`\``,
 
-  lab4_q2: `Weather API uses async/await fetch to get temperature and conditions, displayed with React components. GitHub API populates avatar images and repository counts. Clipboard API uses navigator.clipboard.writeText() with visual feedback. Loading states use skeleton components.
+  lab4_q2: `API integration follows a consistent pattern throughout the application using modern async/await syntax for clean, readable asynchronous code. The Weather API fetches current temperature and conditions based on user coordinates, with the response data rendered through dedicated React components that handle loading, error, and success states appropriately.
 
-[See Figure 13: API Data Display Components]`,
+The GitHub API integration populates user profile cards with avatar images, repository counts, and follower information, providing social context within the application. The Clipboard API implementation uses navigator.clipboard.writeText() paired with visual feedback through toast notifications, ensuring users receive confirmation when content is successfully copied. All API-dependent components display skeleton loading states during data fetching, preventing layout shifts and providing visual feedback that operations are in progress.`,
 
-  lab4_q3: `Main challenges: CORS issues (resolved with proper headers), rate limiting on GitHub API (cached responses in localStorage with expiration), browser autoplay policies for Web Audio (required user interaction to start audio context).
+  lab4_q3: `API integration presented several technical challenges that required thoughtful solutions. Cross-Origin Resource Sharing (CORS) restrictions initially blocked requests to external APIs, which I resolved by ensuring proper headers were configured on the server side and using appropriate request modes on the client.
 
-[See Figure 14: Error Handling Pattern]
+Rate limiting on the GitHub API required implementing a caching strategy where responses are stored in localStorage with expiration timestamps, reducing unnecessary repeated requests. Perhaps the most unexpected challenge was browser autoplay policies for the Web Audio API, which prevented audio context creation without prior user interaction. This was resolved by deferring audio initialisation until the first user click within the game interface.
 
 \`\`\`javascript
 try {
@@ -202,17 +192,17 @@ try {
 }
 \`\`\``,
 
-  lab4_q4: `APIs transform the PWA: IndexedDB enables full offline CRUD with sync queue, Weather API adds context to entries, Notifications keep users engaged, Web Audio creates the Memory Game soundscape with procedural C major 7 chords.
+  lab4_q4: `The integration of multiple APIs fundamentally transforms this application from a simple note-taking tool into a capable Progressive Web Application. IndexedDB enables complete offline CRUD operations with a sync queue that reconciles changes when connectivity returns, ensuring no user work is lost regardless of network conditions.
 
-[See Figure 15: Offline Sync Queue Implementation]`,
+The Weather API adds contextual awareness to journal entries, allowing users to record atmospheric conditions alongside their thoughts. The Notifications API maintains user engagement through timely reminders and updates. Perhaps most impressively, the Web Audio API creates the entire soundscape for the Celestial Memory Game through procedural generation, producing harmonious C major 7 chord progressions without requiring any audio file downloads.`,
 
-  lab5_q1: `JSON files on the server are accessible across devices (phone and laptop share data), while IndexedDB/localStorage are device-specific. JSON can be version-controlled with Git. However, browser storage is faster (milliseconds vs network round-trips). My architecture uses both: IndexedDB for offline speed, server JSON/PostgreSQL for sync.
+  lab5_q1: `The choice between server-side JSON files and browser-based storage involves important trade-offs that I carefully considered during the architecture design. Server-stored JSON files offer the significant advantage of cross-device accessibility, meaning data entered on a mobile phone is immediately available on a laptop browser. Additionally, JSON files can be version-controlled through Git, providing a history of data changes.
 
-[See Figure 16: Data Flow Architecture Diagram]`,
+However, browser storage technologies like IndexedDB and localStorage offer dramatically faster access times, measured in milliseconds rather than the hundreds of milliseconds required for network round-trips. My chosen architecture leverages both approaches: IndexedDB provides instant access to cached data for responsive user interaction, while the server maintains the authoritative copy that enables synchronisation across devices when connectivity is available.`,
 
-  lab5_q2: `Python scripts use json.load() to read, modify the dictionary, then json.dump() to save. Flask endpoints expose these as REST API. POST creates new reflections with auto-incremented IDs and timestamps.
+  lab5_q2: `Data manipulation through Python follows a straightforward read-modify-write pattern. The json.load() function parses JSON files into Python dictionaries, which can then be manipulated using standard dictionary operations. After modifications, json.dump() serialises the updated dictionary back to the file.
 
-[See Figure 17: Flask API Code]
+Flask provides the web framework for exposing these operations as RESTful API endpoints. The POST endpoint for creating new reflections demonstrates this pattern, automatically generating unique IDs by incrementing the maximum existing ID and adding timestamps to provide temporal context for each entry.
 
 \`\`\`python
 @app.route('/api/reflections', methods=['POST'])
@@ -226,24 +216,24 @@ def create_reflection():
     return jsonify(data), 201
 \`\`\``,
 
-  lab5_q3: `Locally, PWA shows data from IndexedDB instantly, then background-fetches from server to merge updates. On GitHub Pages (static hosting), JSON is frozen at deployment - no server to process writes. Dynamic features require PythonAnywhere, Replit, or similar platforms.
+  lab5_q3: `The behaviour difference between local development and deployed environments required careful consideration. During local development, the PWA loads data from IndexedDB instantaneously for a responsive experience, while simultaneously initiating background fetch requests to the server to detect and merge any updates from other devices.
 
-[See Figure 18: Local vs Deployed Comparison]`,
+When deployed to static hosting platforms like GitHub Pages, JSON data files are effectively frozen at the time of deployment since there is no server-side runtime to process write requests. This limitation means dynamic features such as creating new entries or updating existing data require deployment to platforms with server capabilities, such as PythonAnywhere, Replit, or similar services that can execute backend code.`,
 
-  lab5_q4: `Added reflections feature for quick daily insights with categories, markdown support, and timestamps. Complements main journal with a quick-capture option. Includes search, filtering, and PDF/Markdown export.
+  lab5_q4: `To complement the main journal functionality, I implemented a dedicated reflections feature designed for quick daily insights. Unlike full journal entries that may require substantial writing, reflections provide a lightweight capture mechanism for brief thoughts, observations, or reminders.
 
-[See Figure 19: Reflections Feature Screenshot]`,
+The reflections feature includes category tagging for organisation, full markdown support for formatted content, and automatic timestamps for temporal tracking. Search and filtering capabilities make it easy to locate specific reflections, while export options in PDF and Markdown formats enable users to extract their reflections for external use or portfolio building.`,
 
-  lab6_q1: `Frontend-backend separation enables data persistence across devices, server-side validation, and security. Frontend handles UI/UX, backend manages PostgreSQL storage and API logic. Without a backend, data is lost when browser storage clears. RESTful API design allows independent evolution of each layer.
+  lab6_q1: `The separation of frontend and backend concerns provides several critical advantages for this application. Most importantly, a dedicated backend enables data persistence across devices, meaning users can access their journal entries from any browser rather than being confined to a single device's local storage. Server-side validation ensures data integrity by checking inputs before they reach the database, while proper security measures protect sensitive information.
 
-[See Figure 20: Frontend-Backend Architecture]`,
+The frontend focuses exclusively on user interface and experience, handling all visual presentation and client-side interaction logic. The backend manages PostgreSQL database operations and API logic, providing a clean abstraction layer between the user interface and persistent storage. This RESTful API design allows each layer to evolve independently, facilitating maintenance and feature development without tightly coupled changes.`,
 
-  lab6_q2: `I use all four HTTP methods: GET for fetching (returns 200), POST for creating (returns 201), PUT for updating (returns 200), DELETE for removing (returns 204). Each returns appropriate status codes for errors (400, 404, 500).
+  lab6_q2: `The API implementation utilises all four standard HTTP methods to provide complete CRUD functionality. GET requests retrieve existing data and return status code 200 upon success. POST requests create new resources and return status code 201 to indicate successful creation. PUT requests update existing resources, returning 200 when modifications are applied. DELETE requests remove resources and return 204 to confirm deletion without a response body.
 
-[See Figure 21: Express.js CRUD Routes]
+Each endpoint includes appropriate error handling, returning 400 for validation failures, 404 when requested resources cannot be found, and 500 for unexpected server errors. This consistent pattern provides predictable behaviour that frontend code can reliably handle.
 
 \`\`\`javascript
-// Express CRUD Endpoints
+// Express.js CRUD Implementation
 app.get('/api/reflections', async (req, res) => {
   const data = await db.select().from(reflections);
   res.json(data);
@@ -254,17 +244,17 @@ app.post('/api/reflections', async (req, res) => {
 });
 \`\`\``,
 
-  lab6_q3: `Server-side processing validates data before saving (Zod schemas), prevents SQL injection, and enforces business logic. Browser-based reading can be tampered with via network inspection. Server enables multi-user isolation and secure data handling.
+  lab6_q3: `Server-side data processing provides essential security and reliability guarantees that client-side code cannot achieve. Input validation using Zod schemas ensures that all data conforms to expected formats before reaching the database, rejecting malformed or malicious inputs. The use of parameterised queries through Drizzle ORM prevents SQL injection attacks by ensuring user input is never directly concatenated into query strings.
 
-[See Figure 22: Zod Validation Schema]`,
+Additionally, server-side processing enables enforcement of business logic rules that could be circumvented if implemented only on the client. Browser-based storage and processing can be inspected and manipulated through developer tools, making client-side security measures insufficient for protecting sensitive operations. The server provides a trusted environment for multi-user data isolation and secure handling of authentication tokens.`,
 
-  lab6_q4: `Deployment challenges: file path differences (solved with os.path.abspath()), CORS errors (added Flask-CORS extension), virtual environment setup (pip install -r requirements.txt). On Replit, configured environment variables for DATABASE_URL and proper port binding.
+  lab6_q4: `Deploying the backend introduced several challenges that required systematic troubleshooting. File path handling differed between development and production environments, which I resolved by using os.path.abspath() to generate absolute paths that work consistently regardless of the current working directory.
 
-[See Figure 23: CORS Configuration]`,
+Cross-Origin Resource Sharing (CORS) errors initially blocked frontend requests to the API, which I addressed by adding the Flask-CORS extension with appropriate configuration. Virtual environment setup required careful dependency management through requirements.txt to ensure all necessary packages were available in the production environment. On Replit specifically, environment variables for DATABASE_URL and proper port binding configuration ensured the application connected to the database and listened on the correct network interface.`,
 
-  lab6_q5: `Built full CRUD for reflections with Express.js and Drizzle ORM. Features: markdown editing, category tagging, search/filtering, and PDF/JSON/Markdown export. Users can correct mistakes, update thoughts, and export for portfolio building.
+  lab6_q5: `The reflections feature demonstrates complete CRUD functionality implemented with Express.js and Drizzle ORM. Users can create new reflections with markdown-formatted content and category tags, view their existing reflections through a searchable and filterable interface, update entries to correct mistakes or add new thoughts, and delete reflections that are no longer needed.
 
-[See Figure 24: Drizzle ORM Schema]
+Export functionality allows users to download their reflections in PDF format for printing, Markdown for portability to other applications, or JSON for data backup and migration purposes. This comprehensive feature set transforms the reflections from simple notes into a valuable tool for learning portfolio development.
 
 \`\`\`typescript
 // Drizzle Schema
@@ -276,16 +266,16 @@ export const reflections = pgTable("reflections", {
 });
 \`\`\``,
 
-  lab7_q1: `PWA features provide offline access (crucial for poor connectivity), installability (launches without browser chrome), and push notifications for reminders. Service workers cache assets for instant loading. These transform a web app into a native-like experience.
+  lab7_q1: `Progressive Web Application features transform a standard web application into a native-like experience that rivals traditional mobile apps. The most significant benefit is offline access, which proves crucial for users with unreliable internet connectivity who need continuous access to their learning materials. When network conditions deteriorate, the application continues functioning seamlessly because all essential assets and data are cached locally.
 
-[See Figure 25: PWA Installation Flow]`,
+Installability allows users to add the application to their home screen, launching it without browser navigation chrome for an immersive, app-like experience. Push notifications enable timely reminders and engagement prompts that keep users connected to their learning journey. Service workers provide the foundation for these capabilities, caching assets for instant loading and intercepting network requests to enable offline functionality.`,
 
-  lab7_q2: `Service worker caches static assets (cache-first strategy) with versioned cache names. IndexedDB (via localforage) stores dynamic data locally. Offline edits queue in sync queue, processed when connectivity returns via 'online' event. API calls use network-first with cache fallback.
+  lab7_q2: `The caching strategy employs a dual approach tailored to different content types. Static assets including JavaScript bundles, CSS stylesheets, and images use a cache-first strategy, meaning the service worker serves cached content immediately while optionally checking for updates in the background. Version numbers in cache names enable clean cache invalidation when deploying new versions.
 
-[See Figure 26: Service Worker Code]
+Dynamic data follows a different pattern using IndexedDB through the localforage library for local persistence. When users make changes while offline, these edits are queued in a sync queue stored in IndexedDB. Upon connectivity restoration, detected through the online event, the queue is processed to synchronise changes with the server. API requests use a network-first strategy with cache fallback, attempting to fetch fresh data but gracefully serving cached responses when the network is unavailable.
 
 \`\`\`javascript
-// sw.js - Cache Strategy
+// Service Worker Cache Strategy
 self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/')) {
     e.respondWith(networkFirst(e.request));
@@ -295,93 +285,59 @@ self.addEventListener('fetch', (e) => {
 });
 \`\`\``,
 
-  lab7_q3: `Added PWA demo page showing: online/offline status indicator, service worker registration state, cache inspector, and "Install App" button capturing beforeinstallprompt event. Network indicator in navbar shows offline status. Useful for debugging and user education.
+  lab7_q3: `To demonstrate and debug PWA capabilities, I implemented a dedicated PWA demonstration page accessible through the application menu. This page provides real-time visibility into the application's PWA status, serving both educational and debugging purposes.
 
-[See Figure 27: PWA Demo Page Screenshot]`,
+The page displays current online/offline status with a visual indicator that updates dynamically using the online and offline events. Service worker registration state shows whether the worker is installing, waiting, or active. A cache inspector reveals all cached resources organised by cache name. The installation section captures the beforeinstallprompt event and provides a prominent Install App button that triggers the native installation dialog. Additionally, a network status indicator in the main navigation bar provides persistent visibility of connectivity state throughout the application.`,
 
-  lab7_q4: `Challenges: service worker scope missing nested routes (fixed with proper scope registration), cache versioning causing stale content (added version numbers and skipWaiting()). Tested with Chrome DevTools Application tab and Lighthouse PWA audits.
+  lab7_q4: `PWA deployment presented several challenges that required careful debugging and resolution. Initially, the service worker scope was incorrectly configured, intercepting requests only for the root path whilst missing nested routes like /journal and /projects. Navigation to these routes while offline would fail. I resolved this by ensuring proper scope registration and updating the fetch handler to return the cached app shell for navigation requests.
 
-[See Figure 28: Chrome DevTools Application Panel]`,
+Cache versioning proved particularly challenging, as outdated JavaScript and CSS files persisted after code updates, causing users to see stale content or experience errors from version mismatches. The solution involved including version numbers in cache names and adding cleanup logic in the install event to delete old caches. Testing utilised Chrome DevTools Application panel for inspecting service worker state and cache contents, alongside Lighthouse audits to verify PWA compliance.`,
 
-  mini_q1: `**1. Celestial Memory Game**
-- Space-themed card matching with 30 celestial icons (planets, galaxies, nebulae)
-- Web Audio API generates ambient C major 7 chord music with oscillators
-- 3D CSS card flip animations using transform-style: preserve-3d
-- Three game modes: Zen, Challenge, Constellation Quest
+  mini_q1: `The mini project component of this application encompasses several significant features that extend well beyond the core requirements, demonstrating advanced technical skills across multiple domains.
 
-[See Figure 29: Memory Game Screenshot]
-[See Figure 30: Web Audio API Code]
+The Celestial Memory Game represents the most substantial addition, featuring a visually striking space-themed card matching experience. The game utilises 30 unique celestial icons including planets, galaxies, and nebulae, each rendered with sophisticated SVG gradient effects. What sets this implementation apart is the procedurally-generated ambient music created using the Web Audio API. Rather than relying on audio files, the system generates a harmonious C major 7 chord through oscillator nodes, creating an evolving soundscape that enhances the meditative gameplay experience. Card animations employ CSS 3D transforms with perspective and backface-visibility for realistic flip effects.
 
 \`\`\`javascript
-// Web Audio - Create chord
+// Web Audio API - Procedural Music Generation
 const audioCtx = new AudioContext();
 const osc = audioCtx.createOscillator();
-osc.frequency.value = 261.63; // C4
+osc.frequency.value = 261.63; // C4 note
 osc.connect(audioCtx.destination);
 osc.start();
 \`\`\`
 
-**2. Professional Creative Canvas**
-- Drawing tools: pen, eraser, line, rectangle, circle
-- Dual-canvas overlay architecture for live shape preview
-- Undo/redo with ImageData snapshots in useRef
-- PNG export, touch support, gallery save to IndexedDB
+The Professional Creative Canvas provides a complete drawing application demonstrating mastery of the HTML5 Canvas API. The implementation features multiple drawing tools including pen, eraser, line, rectangle, and circle shapes. A dual-canvas overlay architecture enables non-destructive editing where users see live previews of shapes before committing them to the canvas. The history system stores ImageData snapshots using useRef to avoid stale closure issues, supporting comprehensive undo/redo functionality. Additional features include PNG export, full touch device support, and a gallery system for saving artwork to IndexedDB.
 
-[See Figure 31: Canvas Tool Screenshot]
-[See Figure 32: Canvas Code Architecture]
+Beyond these primary features, the application includes mobile app-style navigation with a bottom navigation bar, an analytics dashboard with streak tracking and contribution heatmaps, and a complete achievements system with persistent badge milestones.`,
 
-**3. Mobile App Navigation** - Bottom nav bar, menu grid, settings pages
+  mini_q2: `The decision to create a celestial-themed memory game rather than a generic implementation was driven by educational alignment and user engagement considerations. The space exploration theme evokes wonder and curiosity, emotions that align naturally with the learning journal's educational purpose. The 30 custom icons featuring multi-stop SVG gradients give the game a distinct visual identity that users find memorable and want to return to.
 
-**4. Analytics Dashboard** - Streak tracking, activity charts, contribution heatmap
+The choice to implement procedural music generation through the Web Audio API rather than embedding audio files demonstrates advanced browser API integration whilst providing practical benefits. Oscillator-based synthesis creates an evolving, non-repetitive soundscape that would be impossible to achieve with pre-recorded audio of reasonable file size. This approach also eliminates audio file loading times and reduces the application bundle size.
 
-**5. Achievements System** - Badge milestones with persistent storage`,
+The canvas overlay architecture decision stemmed from understanding user expectations for drawing applications. Non-destructive editing allows users to see exactly what they are drawing before committing, matching the behaviour of professional tools. Storing history state in useRef rather than useState prevents the stale closure bugs that commonly plague canvas applications where event handlers capture outdated state values.
 
-  mini_q2: `**Why Celestial Theme:** Space theme evokes wonder and curiosity, aligning with educational purpose. Distinct from generic card games with 30 custom icons featuring SVG gradients.
+These implementation choices collectively showcase modern React development patterns including useState for UI state, useEffect for side effects and cleanup, useCallback for memoised handlers, and useRef for imperative DOM access and mutable references.`,
 
-**Why Web Audio API:** Procedural music (no audio files) demonstrates advanced browser APIs. Oscillators create evolving, non-repetitive soundscape impossible with pre-recorded audio.
+  mini_q3: `Development of the mini project features presented numerous technical challenges that required systematic debugging and creative problem-solving.
 
-**Why Canvas Overlay Architecture:** Non-destructive editing shows shapes before committing. useRef for history avoids stale closure issues common in canvas apps.
-
-**Why React Patterns:** Demonstrates useState, useEffect, useCallback, and useRef - core hooks for professional React development.
-
-[See Figure 33: Technical Architecture Decisions]`,
-
-  mini_q3: `**Memory Game Challenges:**
-- 3D card flip required perspective on parent, transform-style: preserve-3d, and backface-visibility: hidden
-- Web Audio autoplay policy required user interaction before AudioContext creation
-- Stale closures in achievements fixed with functional state updates: setState(prev => {...})
-
-[See Figure 34: CSS 3D Transform Code]
+The memory game's 3D card flip animation required understanding the nuances of CSS 3D transforms. The key insight was that perspective must be set on the parent container, transform-style: preserve-3d must be applied to the flipping element, and backface-visibility: hidden is required on both card faces to prevent the back from showing through during rotation. Browser autoplay policies for Web Audio presented an unexpected challenge, as modern browsers prevent AudioContext creation without prior user interaction. The solution involved deferring audio initialisation until the first user click within the game interface.
 
 \`\`\`css
-/* 3D Card Flip */
+/* CSS 3D Card Flip Implementation */
 .card { transform-style: preserve-3d; perspective: 1000px; }
 .card-face { backface-visibility: hidden; }
 .card.flipped { transform: rotateY(180deg); }
 \`\`\`
 
-**Canvas Challenges:**
-- Coordinate offset fixed with getBoundingClientRect() and devicePixelRatio scaling
-- Touch events: use changedTouches[0] (not touches[0]) for touchend
-- History stored in useRef to avoid stale closures
+The canvas implementation faced coordinate accuracy issues where strokes appeared offset from the cursor position. This occurred because the canvas display size differed from its internal bitmap dimensions. The solution involved using getBoundingClientRect() to calculate the actual rendered dimensions and applying devicePixelRatio scaling for crisp rendering on high-DPI displays. Touch event handling required using changedTouches rather than touches for touchend events, since the touches array is empty when no fingers remain on the screen.`,
 
-[See Figure 35: Canvas Coordinate Transformation]`,
+  mini_q4: `Given additional development time and resources, several strategic improvements would elevate the Learning Journal to a production-ready platform with expanded capabilities.
 
-  mini_q4: `**Future Improvements:**
+Real-time multiplayer functionality using WebSocket technology would enable competitive memory game matches and collaborative study groups with live presence indicators. This would transform the solitary learning experience into a connected community activity. Integration of AI capabilities through the OpenAI API would provide intelligent features such as automatic tag suggestions, content summarisation, and personalised learning recommendations based on entry analysis.
 
-1. **Real-Time Multiplayer** - WebSocket-based competitive Memory Game matches, study groups with live presence
+Native mobile app packaging through Capacitor would unlock deeper device integration including biometric authentication, camera access for document scanning, and reliable background synchronisation. App store distribution would improve discoverability and user trust compared to PWA installation. Social features would create a learning community where users can share achievements, form study groups, and participate in collaborative challenges with community rewards.
 
-2. **AI Features** - Auto-tagging, content summarization, learning recommendations using OpenAI API
-
-3. **Native App Packaging** - Capacitor for iOS/Android with biometric auth and camera integration
-
-4. **Social Features** - Public profiles, study groups, learning challenges with community rewards
-
-5. **Voice Notes** - MediaRecorder API with speech-to-text for audio journal entries
-
-6. **Accessibility** - WCAG 2.1 AA compliance, screen reader testing, keyboard navigation
-
-[See Figure 36: Future Roadmap Diagram]`,
+Voice note functionality using the MediaRecorder API combined with speech-to-text transcription would support learners who prefer verbal processing or need to capture thoughts quickly. Finally, comprehensive accessibility improvements targeting WCAG 2.1 AA compliance would ensure the application serves users who rely on assistive technologies, including proper heading hierarchy, ARIA landmarks, and complete keyboard navigation.`,
 
   appendices: `**Appendix A: Technology Stack**
 
