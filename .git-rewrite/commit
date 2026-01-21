@@ -1,0 +1,14 @@
+tree 2cea3580ca70abdb5d571f4e6ec64572eeb9c132
+parent 640daa2f4e009c23ea8095609d74924d9109e78d
+author jabar80702 <42442948-jabar80702@users.noreply.replit.com> 1762889549 +0000
+committer jabar80702 <42442948-jabar80702@users.noreply.replit.com> 1762889549 +0000
+
+Enhance visual appeal with dynamic animations and interactive effects
+
+Integrates several CSS animations and hover effects into the application, including gradient shifts, pulse glows, spin animations, and enhanced card hover interactions. Also adds animated background elements to AnalyticsPage and HomePage, and applies the 'glow-button' class to the new journal entry button on HomePage. The 'page-transition' class is added to both pages for smoother navigation.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 4238a746-465f-42ad-bbfb-29c2d03f4ed3
+Replit-Commit-Checkpoint-Type: full_checkpoint
+Replit-Commit-Event-Id: cdabae08-819f-43c1-9331-869503faaede
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/76f5493c-9360-4629-8bff-a1fef93782bc/4238a746-465f-42ad-bbfb-29c2d03f4ed3/CUt0RRi
